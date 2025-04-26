@@ -1,27 +1,25 @@
-// leaderboard.js - Sistema simple de Leaderboard
+// leaderboard.js - Sistema de Leaderboard Top 5 🏆
 
-const leaderboard = [];
+function loadLeaderboard() {
+    const scores = JSON.parse(localStorage.getItem('topScores')) || [];
+    return scores.sort((a, b) => b - a).slice(0, 5);
+}
 
-export function updateLeaderboard(playerName, score) {
-    leaderboard.push({ playerName, score });
-    leaderboard.sort((a, b) => b.score - a.score);
-    if (leaderboard.length > 5) leaderboard.length = 5;
-    renderLeaderboard();
+function saveScore(playerScore) {
+    let scores = JSON.parse(localStorage.getItem('topScores')) || [];
+    scores.push(playerScore);
+    scores = scores.sort((a, b) => b - a).slice(0, 5);
+    localStorage.setItem('topScores', JSON.stringify(scores));
 }
 
 function renderLeaderboard() {
-    const table = document.getElementById('scoreTable').querySelector('tbody');
-    table.innerHTML = '';
-    leaderboard.forEach((entry, index) => {
+    const leaderboard = loadLeaderboard();
+    const tableBody = document.getElementById('scoreTable').querySelector('tbody');
+    tableBody.innerHTML = '';
+
+    leaderboard.forEach((score, index) => {
         const row = document.createElement('tr');
-        row.innerHTML = `<td>${index + 1}. ${entry.playerName}</td><td>${entry.score}</td>`;
-        table.appendChild(row);
+        row.innerHTML = `<td>Player ${index + 1}</td><td>${score}</td>`;
+        tableBody.appendChild(row);
     });
 }
-
-// Inicializamos con datos ficticios
-updateLeaderboard('Player1', 300);
-updateLeaderboard('Player2', 250);
-updateLeaderboard('Player3', 200);
-updateLeaderboard('Player4', 150);
-updateLeaderboard('Player5', 100);
