@@ -22,6 +22,9 @@ function arenaSweep() {
 
         player.score += rowCount * 10;
         rowCount *= 2;
+
+        // 💥 Explosión de partículas al limpiar línea
+        createParticles(canvas.width/2/20, canvas.height/2/20, '#FE11C5');
     }
 }
 
@@ -98,9 +101,7 @@ function drawMatrix(matrix, offset) {
         row.forEach((value, x) => {
             if (value !== 0) {
                 context.fillStyle = colors[value];
-                context.fillRect(x + offset.x,
-                                 y + offset.y,
-                                 1, 1);
+                context.fillRect(x + offset.x, y + offset.y, 1, 1);
             }
         });
     });
@@ -112,6 +113,7 @@ function draw() {
 
     drawMatrix(arena, {x:0, y:0});
     drawMatrix(player.matrix, player.pos);
+    updateParticles(context);
 }
 
 function merge(arena, player) {
@@ -147,8 +149,7 @@ function playerReset() {
     const pieces = 'TJLOSZI';
     player.matrix = createPiece(pieces[pieces.length * Math.random() | 0]);
     player.pos.y = 0;
-    player.pos.x = (arena[0].length / 2 | 0) -
-                   (player.matrix[0].length / 2 | 0);
+    player.pos.x = (arena[0].length / 2 | 0) - (player.matrix[0].length / 2 | 0);
 
     if (collide(arena, player)) {
         arena.forEach(row => row.fill(0));
@@ -175,13 +176,7 @@ function playerRotate(dir) {
 function rotate(matrix, dir) {
     for (let y = 0; y < matrix.length; ++y) {
         for (let x = 0; x < y; ++x) {
-            [
-                matrix[x][y],
-                matrix[y][x],
-            ] = [
-                matrix[y][x],
-                matrix[x][y],
-            ];
+            [matrix[x][y], matrix[y][x]] = [matrix[y][x], matrix[x][y]];
         }
     }
     if (dir > 0) {
@@ -192,7 +187,7 @@ function rotate(matrix, dir) {
 }
 
 let dropCounter = 0;
-let dropInterval = 1000;
+let dropInterval = 700; // ⚡ Más rápido ahora
 
 let lastTime = 0;
 
@@ -210,20 +205,18 @@ function update(time = 0) {
 }
 
 function updateScore() {
-    document.getElementById('scoreTable').querySelector('tbody').innerHTML = 
+    document.getElementById('scoreTable').querySelector('tbody').innerHTML =
         `<tr><td>YOU</td><td>${player.score}</td></tr>`;
 }
 
 document.addEventListener('keydown', event => {
-    if (event.keyCode === 37) {
+    if (event.key === 'ArrowLeft' || event.key === 'a') {
         playerMove(-1);
-    } else if (event.keyCode === 39) {
+    } else if (event.key === 'ArrowRight' || event.key === 'b') {
         playerMove(1);
-    } else if (event.keyCode === 40) {
+    } else if (event.key === 'ArrowDown' || event.key === 's') {
         playerDrop();
-    } else if (event.keyCode === 81) {
-        playerRotate(-1);
-    } else if (event.keyCode === 87) {
+    } else if (event.key === 'ArrowUp' || event.key === 'w') {
         playerRotate(1);
     }
 });
