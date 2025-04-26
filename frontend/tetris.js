@@ -4,18 +4,22 @@ const context = canvas.getContext('2d');
 
 context.scale(20, 20);
 
-// Partículas básicas dummy para evitar errores
-function updateParticles(ctx) {}
-
 function arenaSweep() {
     let rowCount = 1;
-    outer: for (let y = arena.length - 1; y >= 0; --y) {
-        if (arena[y].every(cell => cell !== 0)) {
-            arena.splice(y, 1);
-            arena.unshift(new Array(12).fill(0));
-            player.score += rowCount * 10;
-            rowCount *= 2;
+    outer: for (let y = arena.length - 1; y > 0; --y) {
+        for (let x = 0; x < arena[y].length; ++x) {
+            if (arena[y][x] === 0) {
+                continue outer;
+            }
         }
+        const row = arena.splice(y, 1)[0].fill(0);
+        arena.unshift(row);
+        ++y;
+
+        player.score += rowCount * 100;
+        rowCount *= 2;
+
+        createParticles(canvas.width / 2 / 20, canvas.height / 2 / 20, '#FE11C5');
     }
 }
 
@@ -102,10 +106,9 @@ function draw() {
     context.fillStyle = '#000';
     context.fillRect(0, 0, canvas.width, canvas.height);
 
-    drawMatrix(arena, {x:0, y:0});
+    drawMatrix(arena, {x: 0, y: 0});
     drawMatrix(player.matrix, player.pos);
-
-    updateParticles(context); // ← aunque no haya partículas ahora
+    updateParticles(context);
 }
 
 function merge(arena, player) {
@@ -139,7 +142,7 @@ function playerMove(dir) {
 
 function playerReset() {
     const pieces = 'TJLOSZI';
-    player.matrix = createPiece(pieces[Math.floor(Math.random() * pieces.length)]);
+    player.matrix = createPiece(pieces[pieces.length * Math.random() | 0]);
     player.pos.y = 0;
     player.pos.x = (arena[0].length / 2 | 0) - (player.matrix[0].length / 2 | 0);
 
@@ -179,7 +182,7 @@ function rotate(matrix, dir) {
 }
 
 let dropCounter = 0;
-let dropInterval = 500;
+let dropInterval = 500; // Caída más rápida
 
 let lastTime = 0;
 
@@ -204,7 +207,7 @@ function updateScore() {
 document.addEventListener('keydown', event => {
     if (event.key === 'ArrowLeft' || event.key === 'a') {
         playerMove(-1);
-    } else if (event.key === 'ArrowRight' || event.key === 'b') {
+    } else if (event.key === 'ArrowRight' || event.key === 'd') {
         playerMove(1);
     } else if (event.key === 'ArrowDown' || event.key === 's') {
         playerDrop();
@@ -227,17 +230,23 @@ const colors = [
 const arena = createMatrix(12, 20);
 
 const player = {
-    pos: {x:0, y:0},
+    pos: {x: 0, y: 0},
     matrix: null,
     score: 0,
 };
 
-canvas.style.display = 'none';
+canvas.style.display = 'none'; // Ocultar canvas al inicio
+
+const music = new Audio('music.mp3');
+music.loop = true;
+music.volume = 0.5;
 
 document.getElementById('startGame').addEventListener('click', () => {
     canvas.style.display = 'block';
     document.getElementById('startGame').disabled = true;
+    music.play();
     playerReset();
     update();
 });
+
 
