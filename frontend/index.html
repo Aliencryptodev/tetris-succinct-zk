@@ -6,13 +6,16 @@
     <title>Tetris Succinct zkProof</title>
     <style>
         body {
-            background-color: #FFFFFF;
+            background: url('assets/background.png') no-repeat center center fixed;
+            background-size: cover;
             color: #781961;
             font-family: 'Poppins', sans-serif;
             display: flex;
             flex-direction: column;
             align-items: center;
             padding: 20px;
+            margin: 0;
+            overflow-x: hidden;
         }
         h1 {
             color: #FE11C5;
@@ -26,6 +29,7 @@
             border-radius: 10px;
             margin: 10px;
             cursor: pointer;
+            transition: background 0.3s;
         }
         button:hover {
             background-color: #781961;
@@ -34,11 +38,18 @@
             margin-top: 20px;
             border-collapse: collapse;
             width: 80%;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 10px;
         }
         th, td {
             padding: 10px;
             text-align: center;
             border-bottom: 1px solid #ddd;
+        }
+        #tetris {
+            margin-top: 20px;
+            background: black;
+            display: none;
         }
     </style>
 </head>
@@ -50,9 +61,8 @@
 <button id="submit">Submit Proof</button>
 <button id="startGame">Start Game 🎮</button>
 
-<canvas id="tetris" width="240" height="400" style="display:none; background:black;"></canvas>
+<canvas id="tetris" width="240" height="400"></canvas>
 
-    
 <h2>🏆 Verified Players</h2>
 <table id="scoreTable">
     <thead>
@@ -62,10 +72,11 @@
     </tbody>
 </table>
 
-<script src="app.js"></script>
-<script src="tetris.js"></script>
-<script src="sound.js"></script>
-<script src="particles.js"></script>
+<script src="frontend/sound.js"></script>
+<script src="frontend/particles.js"></script>
+<script src="frontend/leaderboard.js"></script>
+<script src="frontend/tetris.js"></script>
+<script src="frontend/app.js" type="module"></script>
 
 </body>
 </html>
