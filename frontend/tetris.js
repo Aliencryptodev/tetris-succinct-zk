@@ -4,22 +4,18 @@ const context = canvas.getContext('2d');
 
 context.scale(20, 20);
 
+// Partículas básicas dummy para evitar errores
+function updateParticles(ctx) {}
+
 function arenaSweep() {
     let rowCount = 1;
-    outer: for (let y = arena.length -1; y > 0; --y) {
-        for (let x = 0; x < arena[y].length; ++x) {
-            if (arena[y][x] === 0) {
-                continue outer;
-            }
+    outer: for (let y = arena.length - 1; y >= 0; --y) {
+        if (arena[y].every(cell => cell !== 0)) {
+            arena.splice(y, 1);
+            arena.unshift(new Array(12).fill(0));
+            player.score += rowCount * 10;
+            rowCount *= 2;
         }
-        const row = arena.splice(y, 1)[0].fill(0);
-        arena.unshift(row);
-        ++y;
-
-        player.score += rowCount * 10;
-        rowCount *= 2;
-
-        createParticles(canvas.width/2/20, canvas.height/2/20, '#FE11C5');
     }
 }
 
@@ -29,7 +25,7 @@ function collide(arena, player) {
         for (let x = 0; x < m[y].length; ++x) {
             if (m[y][x] !== 0 &&
                 (arena[y + o.y] &&
-                 arena[y + o.y][x + o.x]) !== 0) {
+                arena[y + o.y][x + o.x]) !== 0) {
                 return true;
             }
         }
@@ -108,7 +104,8 @@ function draw() {
 
     drawMatrix(arena, {x:0, y:0});
     drawMatrix(player.matrix, player.pos);
-    updateParticles(context);
+
+    updateParticles(context); // ← aunque no haya partículas ahora
 }
 
 function merge(arena, player) {
@@ -142,10 +139,9 @@ function playerMove(dir) {
 
 function playerReset() {
     const pieces = 'TJLOSZI';
-    player.matrix = createPiece(pieces[pieces.length * Math.random() | 0]);
+    player.matrix = createPiece(pieces[Math.floor(Math.random() * pieces.length)]);
     player.pos.y = 0;
-    player.pos.x = (arena[0].length / 2 | 0) -
-                   (player.matrix[0].length / 2 | 0);
+    player.pos.x = (arena[0].length / 2 | 0) - (player.matrix[0].length / 2 | 0);
 
     if (collide(arena, player)) {
         arena.forEach(row => row.fill(0));
@@ -183,7 +179,7 @@ function rotate(matrix, dir) {
 }
 
 let dropCounter = 0;
-let dropInterval = 700;
+let dropInterval = 500;
 
 let lastTime = 0;
 
@@ -244,3 +240,4 @@ document.getElementById('startGame').addEventListener('click', () => {
     playerReset();
     update();
 });
+
