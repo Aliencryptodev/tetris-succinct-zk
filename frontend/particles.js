@@ -1,5 +1,5 @@
 
-// particles.js - Sistema de partículas mejorado final ✅
+// particles.js - Sistema de partículas rosadas explosivas 💥
 
 const particles = [];
 
