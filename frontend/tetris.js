@@ -1,5 +1,4 @@
 
-// tetris.js actualizado con puntos y leaderboard
 
 const canvas = document.getElementById('tetris');
 const context = canvas.getContext('2d');
