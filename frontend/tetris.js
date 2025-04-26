@@ -12,7 +12,6 @@ function arenaSweep() {
             arena.unshift(new Array(12).fill(0));
             player.score += 100;
             rowCount *= 2;
-
             createParticles(canvas.width / 2 / 20, canvas.height / 2 / 20, '#FE11C5');
         }
     }
@@ -22,9 +21,7 @@ function collide(arena, player) {
     const [m, o] = [player.matrix, player.pos];
     for (let y = 0; y < m.length; ++y) {
         for (let x = 0; x < m[y].length; ++x) {
-            if (m[y][x] !== 0 &&
-                (arena[y + o.y] &&
-                arena[y + o.y][x + o.x]) !== 0) {
+            if (m[y][x] !== 0 && (arena[y + o.y] && arena[y + o.y][x + o.x]) !== 0) {
                 return true;
             }
         }
@@ -41,49 +38,13 @@ function createMatrix(w, h) {
 }
 
 function createPiece(type) {
-    if (type === 'T') {
-        return [
-            [0, 0, 0],
-            [1, 1, 1],
-            [0, 1, 0],
-        ];
-    } else if (type === 'O') {
-        return [
-            [2, 2],
-            [2, 2],
-        ];
-    } else if (type === 'L') {
-        return [
-            [0, 3, 0],
-            [0, 3, 0],
-            [0, 3, 3],
-        ];
-    } else if (type === 'J') {
-        return [
-            [0, 4, 0],
-            [0, 4, 0],
-            [4, 4, 0],
-        ];
-    } else if (type === 'I') {
-        return [
-            [0, 5, 0, 0],
-            [0, 5, 0, 0],
-            [0, 5, 0, 0],
-            [0, 5, 0, 0],
-        ];
-    } else if (type === 'S') {
-        return [
-            [0, 6, 6],
-            [6, 6, 0],
-            [0, 0, 0],
-        ];
-    } else if (type === 'Z') {
-        return [
-            [7, 7, 0],
-            [0, 7, 7],
-            [0, 0, 0],
-        ];
-    }
+    if (type === 'T') return [[0,0,0],[1,1,1],[0,1,0]];
+    else if (type === 'O') return [[2,2],[2,2]];
+    else if (type === 'L') return [[0,3,0],[0,3,0],[0,3,3]];
+    else if (type === 'J') return [[0,4,0],[0,4,0],[4,4,0]];
+    else if (type === 'I') return [[0,5,0,0],[0,5,0,0],[0,5,0,0],[0,5,0,0]];
+    else if (type === 'S') return [[0,6,6],[6,6,0],[0,0,0]];
+    else if (type === 'Z') return [[7,7,0],[0,7,7],[0,0,0]];
 }
 
 function drawMatrix(matrix, offset) {
@@ -100,8 +61,7 @@ function drawMatrix(matrix, offset) {
 function draw() {
     context.fillStyle = '#000';
     context.fillRect(0, 0, canvas.width, canvas.height);
-
-    drawMatrix(arena, {x: 0, y: 0});
+    drawMatrix(arena, {x:0, y:0});
     drawMatrix(player.matrix, player.pos);
     updateParticles(context);
 }
@@ -171,16 +131,12 @@ function rotate(matrix, dir) {
             [matrix[x][y], matrix[y][x]] = [matrix[y][x], matrix[x][y]];
         }
     }
-    if (dir > 0) {
-        matrix.forEach(row => row.reverse());
-    } else {
-        matrix.reverse();
-    }
+    if (dir > 0) matrix.forEach(row => row.reverse());
+    else matrix.reverse();
 }
 
 let dropCounter = 0;
 let dropInterval = 500;
-
 let lastTime = 0;
 
 function update(time = 0) {
@@ -191,7 +147,6 @@ function update(time = 0) {
     if (dropCounter > dropInterval) {
         playerDrop();
     }
-
     draw();
     requestAnimationFrame(update);
 }
@@ -213,24 +168,9 @@ document.addEventListener('keydown', event => {
     }
 });
 
-const colors = [
-    null,
-    '#FE11C5',
-    '#781961',
-    '#FF66CC',
-    '#CC00FF',
-    '#FF99FF',
-    '#FF33FF',
-    '#FF00CC',
-];
-
+const colors = [null,'#FE11C5','#781961','#FF66CC','#CC00FF','#FF99FF','#FF33FF','#FF00CC'];
 const arena = createMatrix(12, 20);
-
-const player = {
-    pos: {x: 0, y: 0},
-    matrix: null,
-    score: 0,
-};
+const player = { pos: {x:0, y:0}, matrix: null, score: 0 };
 
 canvas.style.display = 'none';
 
@@ -258,3 +198,4 @@ document.getElementById('startGame').addEventListener('click', () => {
     playerReset();
     update();
 });
+
