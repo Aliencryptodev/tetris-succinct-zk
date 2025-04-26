@@ -1,4 +1,6 @@
 
+// tetris.js actualizado con puntos y leaderboard
+
 const canvas = document.getElementById('tetris');
 const context = canvas.getContext('2d');
 
@@ -6,20 +8,13 @@ context.scale(20, 20);
 
 function arenaSweep() {
     let rowCount = 1;
-    outer: for (let y = arena.length - 1; y > 0; --y) {
-        for (let x = 0; x < arena[y].length; ++x) {
-            if (arena[y][x] === 0) {
-                continue outer;
-            }
+    outer: for (let y = arena.length - 1; y >= 0; --y) {
+        if (arena[y].every(cell => cell !== 0)) { // Si la fila está llena
+            arena.splice(y, 1);  // Elimina la fila
+            arena.unshift(new Array(12).fill(0)); // Agrega una fila vacía al principio
+            player.score += 100; // Sumar 100 puntos por fila eliminada
+            rowCount *= 2; // Aumentar el multiplicador para más filas eliminadas
         }
-        const row = arena.splice(y, 1)[0].fill(0);
-        arena.unshift(row);
-        ++y;
-
-        player.score += rowCount * 100;
-        rowCount *= 2;
-
-        createParticles(canvas.width / 2 / 20, canvas.height / 2 / 20, '#FE11C5');
     }
 }
 
@@ -29,7 +24,7 @@ function collide(arena, player) {
         for (let x = 0; x < m[y].length; ++x) {
             if (m[y][x] !== 0 &&
                 (arena[y + o.y] &&
-                arena[y + o.y][x + o.x]) !== 0) {
+                 arena[y + o.y][x + o.x]) !== 0) {
                 return true;
             }
         }
@@ -237,16 +232,29 @@ const player = {
 
 canvas.style.display = 'none'; // Ocultar canvas al inicio
 
-const music = new Audio('music.mp3');
-music.loop = true;
-music.volume = 0.5;
+// Función para guardar el score
+function saveScore() {
+    let scores = JSON.parse(localStorage.getItem('topScores')) || [];
+    scores.push(player.score);
+    scores = scores.sort((a, b) => b - a).slice(0, 5);
+    localStorage.setItem('topScores', JSON.stringify(scores));
+}
+
+// Función para mostrar el leaderboard
+function updateLeaderboard() {
+    const leaderboard = JSON.parse(localStorage.getItem('topScores')) || [];
+    const leaderboardTable = document.getElementById('scoreTable').getElementsByTagName('tbody')[0];
+    leaderboardTable.innerHTML = '';
+    leaderboard.forEach((score, index) => {
+        const row = leaderboardTable.insertRow();
+        row.insertCell(0).textContent = `Player ${index + 1}`;
+        row.insertCell(1).textContent = score;
+    });
+}
 
 document.getElementById('startGame').addEventListener('click', () => {
     canvas.style.display = 'block';
     document.getElementById('startGame').disabled = true;
-    music.play();
     playerReset();
     update();
 });
-
-
