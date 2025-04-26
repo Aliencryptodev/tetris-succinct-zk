@@ -2,7 +2,6 @@
 const canvas = document.getElementById('tetris');
 const context = canvas.getContext('2d');
 
-
 context.scale(20, 20);
 
 function arenaSweep() {
@@ -237,11 +236,11 @@ const player = {
     score: 0,
 };
 
-canvas.style.display = 'none'; // Ocultar canvas al inicio
+canvas.style.display = 'none';
 
 document.getElementById('startGame').addEventListener('click', () => {
-    canvas.style.display = 'block'; // Mostrar canvas
-    music.play(); // Iniciar música
+    canvas.style.display = 'block';
+    document.getElementById('startGame').disabled = true;
     playerReset();
     update();
 });
