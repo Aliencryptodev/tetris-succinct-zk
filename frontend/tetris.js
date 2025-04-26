@@ -23,7 +23,7 @@ function collide(arena, player) {
         for (let x = 0; x < m[y].length; ++x) {
             if (m[y][x] !== 0 &&
                 (arena[y + o.y] &&
-                arena[y + o.y][x + o.x]) !== 0) {
+                 arena[y + o.y][x + o.x]) !== 0) {
                 return true;
             }
         }
@@ -63,7 +63,8 @@ function drawMatrix(matrix, offset) {
 function draw() {
     context.fillStyle = '#000';
     context.fillRect(0, 0, canvas.width, canvas.height);
-    drawMatrix(arena, {x: 0, y: 0});
+
+    drawMatrix(arena, {x:0, y:0});
     drawMatrix(player.matrix, player.pos);
     updateParticles(context);
 }
@@ -99,7 +100,7 @@ function playerMove(dir) {
 
 function playerReset() {
     const pieces = 'TJLOSZI';
-    player.matrix = createPiece(pieces[pieces.length * Math.random() | 0]);
+    player.matrix = createPiece(pieces[Math.floor(Math.random() * pieces.length)]);
     player.pos.y = 0;
     player.pos.x = (arena[0].length / 2 | 0) - (player.matrix[0].length / 2 | 0);
 
@@ -172,7 +173,7 @@ document.addEventListener('keydown', event => {
 
 const colors = [null, '#FE11C5', '#781961', '#FF66CC', '#CC00FF', '#FF99FF', '#FF33FF', '#FF00CC'];
 const arena = createMatrix(12, 20);
-const player = { pos: {x: 0, y: 0}, matrix: null, score: 0 };
+const player = { pos: {x:0, y:0}, matrix: null, score: 0 };
 
 canvas.style.display = 'none';
 
@@ -185,7 +186,7 @@ function saveScore() {
 
 function updateLeaderboard() {
     const leaderboard = JSON.parse(localStorage.getItem('topScores')) || [];
-    const leaderboardTable = document.getElementById('scoreTable').getElementsByTagName('tbody')[0];
+    const leaderboardTable = document.getElementById('scoreTable').querySelector('tbody');
     leaderboardTable.innerHTML = '';
     leaderboard.forEach((score, index) => {
         const row = leaderboardTable.insertRow();
@@ -197,6 +198,7 @@ function updateLeaderboard() {
 document.getElementById('startGame').addEventListener('click', () => {
     canvas.style.display = 'block';
     document.getElementById('startGame').disabled = true;
+    startMusic();
     playerReset();
     update();
 });
