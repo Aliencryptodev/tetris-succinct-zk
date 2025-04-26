@@ -1,10 +1,7 @@
 
-const canvas = document.createElement('canvas');
+const canvas = document.getElementById('tetris');
 const context = canvas.getContext('2d');
 
-canvas.width = 240;
-canvas.height = 400;
-document.body.appendChild(canvas);
 
 context.scale(20, 20);
 
