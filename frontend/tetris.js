@@ -23,7 +23,6 @@ function arenaSweep() {
         player.score += rowCount * 10;
         rowCount *= 2;
 
-        // 💥 Explosión de partículas al limpiar línea
         createParticles(canvas.width/2/20, canvas.height/2/20, '#FE11C5');
     }
 }
@@ -149,7 +148,8 @@ function playerReset() {
     const pieces = 'TJLOSZI';
     player.matrix = createPiece(pieces[pieces.length * Math.random() | 0]);
     player.pos.y = 0;
-    player.pos.x = (arena[0].length / 2 | 0) - (player.matrix[0].length / 2 | 0);
+    player.pos.x = (arena[0].length / 2 | 0) -
+                   (player.matrix[0].length / 2 | 0);
 
     if (collide(arena, player)) {
         arena.forEach(row => row.fill(0));
@@ -187,7 +187,7 @@ function rotate(matrix, dir) {
 }
 
 let dropCounter = 0;
-let dropInterval = 700; // ⚡ Más rápido ahora
+let dropInterval = 700;
 
 let lastTime = 0;
 
@@ -240,5 +240,11 @@ const player = {
     score: 0,
 };
 
-playerReset();
-update();
+canvas.style.display = 'none'; // Ocultar canvas al inicio
+
+document.getElementById('startGame').addEventListener('click', () => {
+    canvas.style.display = 'block'; // Mostrar canvas
+    music.play(); // Iniciar música
+    playerReset();
+    update();
+});
