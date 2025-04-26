@@ -40,6 +40,11 @@
             text-align: center;
             border-bottom: 1px solid #ddd;
         }
+        #tetris {
+            margin-top: 20px;
+            background: black;
+            display: none;
+        }
     </style>
 </head>
 <body>
@@ -50,7 +55,7 @@
 <button id="submit">Submit Proof</button>
 <button id="startGame">Start Game 🎮</button>
 
-<canvas id="tetris" width="240" height="400" style="background-color: black; display: none;"></canvas>
+<canvas id="tetris" width="240" height="400"></canvas>
 
 <h2>🏆 Verified Players</h2>
 <table id="scoreTable">
@@ -61,12 +66,17 @@
     </tbody>
 </table>
 
-<script src="app.js"></script>
-<script src="tetris.js"></script>
-<script src="sound.js"></script>
-<script src="particles.js"></script>
-<script src="leaderboard.js"></script>
+<script src="frontend/app.js" type="module"></script>
+<script src="frontend/tetris.js"></script>
+<script src="frontend/sound.js"></script>
+<script src="frontend/particles.js"></script>
+<script src="frontend/leaderboard.js"></script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        renderLeaderboard();
+    });
+</script>
 
 </body>
 </html>
-
