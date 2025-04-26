@@ -1,6 +1,4 @@
 
-// particles.js - sistema de partículas mejorado
-
 const particles = [];
 
 function createParticles(x, y, color) {
