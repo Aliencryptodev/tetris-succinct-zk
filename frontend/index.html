@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -74,11 +73,20 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', () => {
-        renderLeaderboard();
+        document.getElementById('startGame').addEventListener('click', () => {
+            canvas.style.display = 'block';  // Mostrar el juego
+            playMusic();                    // Iniciar música
+            playerReset();                   // Crear primera pieza
+            update();                        // Empezar animación
+        });
+
+        renderLeaderboard(); // Leaderboard sigue cargando como siempre
     });
 </script>
 
 </body>
 </html>
+
+
 
 
