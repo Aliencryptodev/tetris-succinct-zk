@@ -1,3 +1,4 @@
+// sound.js - Música retro arcade 🎶
 
 const music = new Audio('assets/music.mp3');
 music.loop = true;
@@ -10,6 +11,3 @@ function startMusic() {
 function pauseMusic() {
     music.pause();
 }
-
-// Opcional: Iniciar música al conectar wallet o iniciar juego
-// startMusic();
