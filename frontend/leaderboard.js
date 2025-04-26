@@ -1,14 +1,27 @@
+// leaderboard.js - Sistema simple de Leaderboard
 
-// leaderboard.js - Gestionar el Top 5 ✅
+const leaderboard = [];
 
-function updateLeaderboard() {
-    const leaderboard = JSON.parse(localStorage.getItem('topScores')) || [];
-    const leaderboardTable = document.getElementById('scoreTable').getElementsByTagName('tbody')[0];
-    leaderboardTable.innerHTML = '';
+export function updateLeaderboard(playerName, score) {
+    leaderboard.push({ playerName, score });
+    leaderboard.sort((a, b) => b.score - a.score);
+    if (leaderboard.length > 5) leaderboard.length = 5;
+    renderLeaderboard();
+}
 
-    leaderboard.forEach((score, index) => {
-        const row = leaderboardTable.insertRow();
-        row.insertCell(0).textContent = `Player ${index + 1}`;
-        row.insertCell(1).textContent = score;
+function renderLeaderboard() {
+    const table = document.getElementById('scoreTable').querySelector('tbody');
+    table.innerHTML = '';
+    leaderboard.forEach((entry, index) => {
+        const row = document.createElement('tr');
+        row.innerHTML = `<td>${index + 1}. ${entry.playerName}</td><td>${entry.score}</td>`;
+        table.appendChild(row);
     });
 }
+
+// Inicializamos con datos ficticios
+updateLeaderboard('Player1', 300);
+updateLeaderboard('Player2', 250);
+updateLeaderboard('Player3', 200);
+updateLeaderboard('Player4', 150);
+updateLeaderboard('Player5', 100);
