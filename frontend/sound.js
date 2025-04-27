@@ -1,13 +1,14 @@
-// sound.js - Versión FINAL 🎶
-
+// sound.js
 const music = new Audio('assets/music.mp3');
-music.preload = "auto";  // <--- MUY IMPORTANTE
+music.preload = "auto";  // Precargar la música
 music.loop = true;
 music.volume = 0.5;
 
 function playMusic() {
     music.currentTime = 0;
-    music.play()
-      .then(() => console.log('🎶 Música iniciada correctamente'))
-      .catch(err => console.log('⚠️ Error reproduciendo música:', err));
+    music.play().catch(e => console.log('Error al reproducir la música:', e));
+}
+
+function pauseMusic() {
+    music.pause();
 }
