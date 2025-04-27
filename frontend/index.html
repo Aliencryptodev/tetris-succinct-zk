@@ -73,19 +73,22 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', () => {
+        // Evento para iniciar el juego cuando el jugador presione el botón
         document.getElementById('startGame').addEventListener('click', () => {
-            canvas.style.display = 'block';  // Mostrar el juego
-            playMusic();                    // Iniciar música
-            playerReset();                   // Crear primera pieza
-            update();                        // Empezar animación
+            canvas.style.display = 'block';  // Mostrar el canvas del juego
+            playMusic();                    // Iniciar la música
+            playerReset();                   // Crear la primera pieza
+            update();                        // Iniciar la animación
+            document.getElementById('startGame').disabled = true; // Deshabilitar el botón mientras se juega
         });
 
-        renderLeaderboard(); // Leaderboard sigue cargando como siempre
+        renderLeaderboard(); // Cargar y mostrar el leaderboard
     });
 </script>
 
 </body>
 </html>
+
 
 
 
