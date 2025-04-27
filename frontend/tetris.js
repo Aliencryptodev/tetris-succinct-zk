@@ -1,4 +1,3 @@
-
 const canvas = document.getElementById('tetris');
 const context = canvas.getContext('2d');
 
@@ -107,22 +106,26 @@ function playerReset() {
     player.pos.y = 0;
     player.pos.x = (arena[0].length / 2 | 0) - (player.matrix[0].length / 2 | 0);
 
+    // Game Over detection
     if (collide(arena, player)) {
-        gameOver = true; // 🔥 Activamos Game Over
+        gameOver = true; // 🔥 Activar Game Over
 
-        arena.forEach(row => row.fill(0));
-        saveScore();
-        updateLeaderboard();
-        player.score = 0;
-        updateScore();
+        arena.forEach(row => row.fill(0));  // Limpiar el tablero
+        saveScore();  // Guardar puntaje
+        updateLeaderboard();  // Actualizar leaderboard
+        player.score = 0;  // Resetear puntaje
+        updateScore();  // Mostrar puntaje actualizado
 
         setTimeout(() => {
             context.fillStyle = '#FE11C5';
             context.font = '2rem Poppins';
-            context.fillText('GAME OVER', 2, 10);
+            context.fillText('GAME OVER', canvas.width / 2 - 70, canvas.height / 2);  // Mostrar Game Over
         }, 100);
 
-        pauseMusic(); // Parar música
+        pauseMusic();  // Pausar música
+
+        // Habilitar botón de inicio nuevamente
+        document.getElementById('startGame').disabled = false;
     }
 }
 
@@ -157,7 +160,7 @@ let lastTime = 0;
 
 function update(time = 0) {
     if (gameOver) {
-        return; // 🔥 Si game over, no seguimos actualizando
+        return;  // 🔥 Detener actualización si el juego terminó
     }
 
     const deltaTime = time - lastTime;
