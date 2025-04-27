@@ -22,6 +22,12 @@
             display: flex;
             justify-content: space-between;
             width: 80%; /* Hacemos que todo ocupe un 80% del ancho */
+            background-image: url('https://github.com/Aliencryptodev/tetris-succinct-zk/blob/main/assets/background.png'); /* Añadido el background con enlace completo */
+            background-size: cover;
+            background-position: center;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
         }
 
         .game-container {
@@ -39,7 +45,7 @@
             justify-content: flex-start;
             align-items: flex-start;
             padding: 20px;
-            background-color: #FFF;
+            background-color: rgba(255, 255, 255, 0.8); /* Fondo semi-transparente */
             border-radius: 10px;
             box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
         }
@@ -58,7 +64,7 @@
             border-radius: 10px;
             margin: 10px;
             cursor: pointer;
-            width: 200px; /* Hacemos los botones más grandes */
+            width: 200px;
         }
 
         button:hover {
@@ -82,37 +88,6 @@
             background: black;
             display: none;
         }
-
-        /* Estilo de los botones táctiles */
-        #buttons-container {
-            display: flex;
-            justify-content: center;
-            margin-top: 20px;
-        }
-
-        .button {
-            background-color: #FE11C5;
-            color: white;
-            border: none;
-            padding: 15px;
-            font-size: 1.5rem;
-            border-radius: 10px;
-            margin: 10px;
-            cursor: pointer;
-            width: 80px;
-            height: 80px;
-        }
-
-        .button:hover {
-            background-color: #781961;
-        }
-
-        /* Ocultar botones táctiles en dispositivos de escritorio */
-        @media (min-width: 768px) {
-            #buttons-container {
-                display: none;
-            }
-        }
     </style>
 </head>
 <body>
@@ -121,18 +96,9 @@
     <!-- Área del juego -->
     <div class="game-container">
         <h1>Tetris Succinct zkProof 🌸</h1>
-        <!-- Se elimina el botón de "Connect Wallet" -->
         <button id="submit">Submit Proof</button>
         <button id="startGame">Start Game 🎮</button>
         <canvas id="tetris" width="240" height="400"></canvas>
-
-        <!-- Contenedor de botones táctiles para móvil -->
-        <div id="buttons-container">
-            <button id="left" class="button">←</button>
-            <button id="rotate" class="button">↑</button>
-            <button id="down" class="button">↓</button>
-            <button id="right" class="button">→</button>
-        </div>
     </div>
 
     <!-- Leaderboard -->
@@ -164,23 +130,6 @@
         });
 
         renderLeaderboard(); // Leaderboard sigue cargando como siempre
-
-        // Eventos para los botones táctiles
-        document.getElementById('left').addEventListener('click', () => {
-            playerMove(-1); // Mover la pieza a la izquierda
-        });
-
-        document.getElementById('right').addEventListener('click', () => {
-            playerMove(1); // Mover la pieza a la derecha
-        });
-
-        document.getElementById('down').addEventListener('click', () => {
-            playerDrop(); // Dejar caer la pieza
-        });
-
-        document.getElementById('rotate').addEventListener('click', () => {
-            playerRotate(1); // Rotar la pieza
-        });
     });
 
     // Prevent page scrolling when pressing arrow keys
