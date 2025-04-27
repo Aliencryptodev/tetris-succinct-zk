@@ -4,6 +4,8 @@ const context = canvas.getContext('2d');
 
 context.scale(20, 20);
 
+let gameOver = false; // 🔥 Nueva variable global
+
 function arenaSweep() {
     let rowCount = 1;
     outer: for (let y = arena.length - 1; y >= 0; --y) {
@@ -13,6 +15,7 @@ function arenaSweep() {
             player.score += 100;
             rowCount *= 2;
             createParticles(canvas.width / 2 / 20, canvas.height / 2 / 20, '#FE11C5');
+            playLineClearSound();
         }
     }
 }
@@ -105,25 +108,23 @@ function playerReset() {
     player.pos.x = (arena[0].length / 2 | 0) - (player.matrix[0].length / 2 | 0);
 
     if (collide(arena, player)) {
-        // GAME OVER DETECTADO
+        gameOver = true; // 🔥 Activamos Game Over
+
         arena.forEach(row => row.fill(0));
         saveScore();
         updateLeaderboard();
         player.score = 0;
         updateScore();
 
-        // ✨ Mostrar texto Game Over
         setTimeout(() => {
             context.fillStyle = '#FE11C5';
             context.font = '2rem Poppins';
-            context.fillText('GAME OVER', 3, 10);
+            context.fillText('GAME OVER', 2, 10);
         }, 100);
 
-        // ✨ Pausar música
-        pauseMusic();
+        pauseMusic(); // Parar música
     }
 }
-
 
 function playerRotate(dir) {
     const pos = player.pos.x;
@@ -155,6 +156,10 @@ let dropInterval = 500;
 let lastTime = 0;
 
 function update(time = 0) {
+    if (gameOver) {
+        return; // 🔥 Si game over, no seguimos actualizando
+    }
+
     const deltaTime = time - lastTime;
     lastTime = time;
 
@@ -210,7 +215,7 @@ function updateLeaderboard() {
 document.getElementById('startGame').addEventListener('click', () => {
     canvas.style.display = 'block';
     document.getElementById('startGame').disabled = true;
-    startMusic();
+    playMusic();
     playerReset();
     update();
 });
