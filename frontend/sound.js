@@ -1,5 +1,5 @@
 // sound.js
-const music = new Audio('/assets/music.mp3');
+const music = new Audio('https://raw.githubusercontent.com/Aliencryptodev/tetris-succinct-zk/main/assets/assets/music.mp3');
 music.preload = "auto";  // Precargar la música
 music.loop = true;
 music.volume = 0.5;
