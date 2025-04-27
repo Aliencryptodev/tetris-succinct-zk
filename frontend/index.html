@@ -16,18 +16,12 @@
             padding: 20px;
             height: 100vh; /* Usamos toda la altura de la pantalla */
             margin: 0;
-            background-image: url('https://raw.githubusercontent.com/Aliencryptodev/tetris-succinct-zk/main/assets/background.png'); /* Cambié la ruta a assets/background.png */
-            background-size: cover; /* Para cubrir todo el fondo */
-            background-position: center; /* Centrar la imagen */
         }
 
         .container {
             display: flex;
             justify-content: space-between;
             width: 80%; /* Hacemos que todo ocupe un 80% del ancho */
-            background-color: rgba(255, 255, 255, 0.8); /* Fondo blanco con opacidad para resaltar el contenido */
-            border-radius: 20px; /* Bordes redondeados */
-            padding: 20px;
         }
 
         .game-container {
@@ -88,6 +82,37 @@
             background: black;
             display: none;
         }
+
+        /* Estilo de los botones táctiles */
+        #buttons-container {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .button {
+            background-color: #FE11C5;
+            color: white;
+            border: none;
+            padding: 15px;
+            font-size: 1.5rem;
+            border-radius: 10px;
+            margin: 10px;
+            cursor: pointer;
+            width: 80px;
+            height: 80px;
+        }
+
+        .button:hover {
+            background-color: #781961;
+        }
+
+        /* Ocultar botones táctiles en dispositivos de escritorio */
+        @media (min-width: 768px) {
+            #buttons-container {
+                display: none;
+            }
+        }
     </style>
 </head>
 <body>
@@ -100,6 +125,14 @@
         <button id="submit">Submit Proof</button>
         <button id="startGame">Start Game 🎮</button>
         <canvas id="tetris" width="240" height="400"></canvas>
+
+        <!-- Contenedor de botones táctiles para móvil -->
+        <div id="buttons-container">
+            <button id="left" class="button">←</button>
+            <button id="rotate" class="button">↑</button>
+            <button id="down" class="button">↓</button>
+            <button id="right" class="button">→</button>
+        </div>
     </div>
 
     <!-- Leaderboard -->
@@ -131,12 +164,29 @@
         });
 
         renderLeaderboard(); // Leaderboard sigue cargando como siempre
+
+        // Eventos para los botones táctiles
+        document.getElementById('left').addEventListener('click', () => {
+            playerMove(-1); // Mover la pieza a la izquierda
+        });
+
+        document.getElementById('right').addEventListener('click', () => {
+            playerMove(1); // Mover la pieza a la derecha
+        });
+
+        document.getElementById('down').addEventListener('click', () => {
+            playerDrop(); // Dejar caer la pieza
+        });
+
+        document.getElementById('rotate').addEventListener('click', () => {
+            playerRotate(1); // Rotar la pieza
+        });
     });
 
-    // Prevenir el desplazamiento de la página cuando se presionan las teclas de flecha
+    // Prevent page scrolling when pressing arrow keys
     document.addEventListener('keydown', function(event) {
         if (event.key === "ArrowUp" || event.key === "ArrowDown") {
-            event.preventDefault(); // Prevenir la acción predeterminada (desplazamiento)
+            event.preventDefault(); // Prevent default action (scrolling)
         }
     });
 </script>
