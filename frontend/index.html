@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -16,12 +15,18 @@
             padding: 20px;
             height: 100vh; /* Usamos toda la altura de la pantalla */
             margin: 0;
+            background-image: url('assets/background.png'); /* Imagen de fondo */
+            background-size: cover; /* Para cubrir todo el fondo */
+            background-position: center; /* Centrar la imagen */
         }
 
         .container {
             display: flex;
             justify-content: space-between;
             width: 80%; /* Hacemos que todo ocupe un 80% del ancho */
+            background-color: rgba(255, 255, 255, 0.8); /* Fondo blanco con opacidad para resaltar el contenido */
+            border-radius: 20px; /* Bordes redondeados */
+            padding: 20px;
         }
 
         .game-container {
@@ -127,10 +132,10 @@
         renderLeaderboard(); // Leaderboard sigue cargando como siempre
     });
 
-    // Prevent page scrolling when pressing arrow keys
+    // Prevenir el desplazamiento de la página cuando se presionan las teclas de flecha
     document.addEventListener('keydown', function(event) {
         if (event.key === "ArrowUp" || event.key === "ArrowDown") {
-            event.preventDefault(); // Prevent default action (scrolling)
+            event.preventDefault(); // Prevenir la acción predeterminada (desplazamiento)
         }
     });
 </script>
