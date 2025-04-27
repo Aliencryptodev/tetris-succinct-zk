@@ -6,20 +6,49 @@
     <title>Tetris Succinct zkProof</title>
     <style>
         body {
-            background-color: #FFFFFF;
+            background-color: #F1F1F1; /* Fondo claro */
             color: #781961;
             font-family: 'Poppins', sans-serif;
             display: flex;
-            flex-direction: column;
+            flex-direction: row; /* Colocamos el contenido en fila */
+            justify-content: center; /* Centrado horizontal */
             align-items: center;
-            justify-content: space-between;
-            height: 100vh;
+            padding: 20px;
+            height: 100vh; /* Usamos toda la altura de la pantalla */
             margin: 0;
         }
+
+        .container {
+            display: flex;
+            justify-content: space-between;
+            width: 80%; /* Hacemos que todo ocupe un 80% del ancho */
+        }
+
+        .game-container {
+            flex: 0 0 70%; /* El área del juego ocupará el 70% */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+
+        .leaderboard-container {
+            flex: 0 0 30%; /* El leaderboard ocupará el 30% */
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: flex-start;
+            padding: 20px;
+            background-color: #FFF;
+            border-radius: 10px;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
         h1 {
             color: #FE11C5;
-            margin-top: 20px;
+            text-align: center;
         }
+
         button {
             background-color: #FE11C5;
             color: white;
@@ -29,63 +58,55 @@
             border-radius: 10px;
             margin: 10px;
             cursor: pointer;
+            width: 200px; /* Hacemos los botones más grandes */
         }
+
         button:hover {
             background-color: #781961;
         }
-        .main-container {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            flex-direction: column;
-        }
-        #tetris {
-            margin-top: 20px;
-            background: black;
-            display: none;
-        }
-        .sidebar {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            background-color: #fff;
-            padding: 10px;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
-            font-size: 1.2rem;
-        }
+
         table {
             margin-top: 20px;
             border-collapse: collapse;
             width: 100%;
         }
+
         th, td {
             padding: 10px;
             text-align: center;
             border-bottom: 1px solid #ddd;
         }
+
+        #tetris {
+            margin-top: 20px;
+            background: black;
+            display: none;
+        }
     </style>
 </head>
 <body>
 
-<h1>Tetris Succinct zkProof 🌸</h1>
+<div class="container">
+    <!-- Área del juego -->
+    <div class="game-container">
+        <h1>Tetris Succinct zkProof 🌸</h1>
+        <button id="connect">Connect Wallet</button>
+        <button id="submit">Submit Proof</button>
+        <button id="startGame">Start Game 🎮</button>
+        <canvas id="tetris" width="240" height="400"></canvas>
+    </div>
 
-<div class="main-container">
-    <button id="submit">Submit Proof</button>
-    <button id="startGame">Start Game 🎮</button>
-
-    <canvas id="tetris" width="240" height="400"></canvas>
-</div>
-
-<div class="sidebar">
-    <h2>🏆 Verified Players</h2>
-    <table id="scoreTable">
-        <thead>
-            <tr><th>Player</th><th>Score</th></tr>
-        </thead>
-        <tbody>
-        </tbody>
-    </table>
+    <!-- Leaderboard -->
+    <div class="leaderboard-container">
+        <h2>🏆 Verified Players</h2>
+        <table id="scoreTable">
+            <thead>
+                <tr><th>Player</th><th>Score</th></tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+    </div>
 </div>
 
 <script src="app.js" type="module"></script>
@@ -96,13 +117,6 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', () => {
-        // Prevenir el movimiento de la página al presionar las flechas
-        document.addEventListener('keydown', (event) => {
-            if (event.key === 'ArrowDown' || event.key === 'ArrowUp' || event.key === 'ArrowLeft' || event.key === 'ArrowRight') {
-                event.preventDefault();
-            }
-        });
-
         document.getElementById('startGame').addEventListener('click', () => {
             canvas.style.display = 'block';  // Mostrar el juego
             playMusic();                    // Iniciar música
