@@ -191,6 +191,12 @@ document.addEventListener('keydown', event => {
     }
 });
 
+// Botones táctiles para móviles
+document.getElementById('left').addEventListener('click', () => playerMove(-1));
+document.getElementById('right').addEventListener('click', () => playerMove(1));
+document.getElementById('down').addEventListener('click', () => playerDrop());
+document.getElementById('rotate').addEventListener('click', () => playerRotate(1));
+
 const colors = [null, '#FE11C5', '#781961', '#FF66CC', '#CC00FF', '#FF99FF', '#FF33FF', '#FF00CC'];
 const arena = createMatrix(12, 20);
 const player = { pos: {x:0, y:0}, matrix: null, score: 0 };
@@ -222,3 +228,4 @@ document.getElementById('startGame').addEventListener('click', () => {
     playerReset();
     update();
 });
+
