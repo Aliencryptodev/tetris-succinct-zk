@@ -105,13 +105,25 @@ function playerReset() {
     player.pos.x = (arena[0].length / 2 | 0) - (player.matrix[0].length / 2 | 0);
 
     if (collide(arena, player)) {
+        // GAME OVER DETECTADO
         arena.forEach(row => row.fill(0));
         saveScore();
         updateLeaderboard();
         player.score = 0;
         updateScore();
+
+        // ✨ Mostrar texto Game Over
+        setTimeout(() => {
+            context.fillStyle = '#FE11C5';
+            context.font = '2rem Poppins';
+            context.fillText('GAME OVER', 3, 10);
+        }, 100);
+
+        // ✨ Pausar música
+        pauseMusic();
     }
 }
+
 
 function playerRotate(dir) {
     const pos = player.pos.x;
