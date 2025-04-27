@@ -126,6 +126,13 @@
 
         renderLeaderboard(); // Leaderboard sigue cargando como siempre
     });
+
+    // Prevent page scrolling when pressing arrow keys
+    document.addEventListener('keydown', function(event) {
+        if (event.key === "ArrowUp" || event.key === "ArrowDown") {
+            event.preventDefault(); // Prevent default action (scrolling)
+        }
+    });
 </script>
 
 </body>
