@@ -221,7 +221,7 @@ function showShareButton(score) {
 // Mostrar imagen de Game Over
 function showGameOver() {
     const img = new Image();
-    img.src = 'https://raw.githubusercontent.com/Aliencryptodev/tetris-succinct-zk/main/assets/gameover-resized.png';
+    img.src = 'https://raw.githubusercontent.com/Aliencryptodev/tetris-succinct-zk/main/assets/gameover_resized.png';
     img.onload = () => {
         context.drawImage(img, (canvas.width / 2) - 120, (canvas.height / 2) - 60, 240, 120);
     };
