@@ -94,7 +94,7 @@ function arenaSweep() {
         if (player.linesCleared >= 10) {
             player.level++;
             player.linesCleared -= 10;
-            dropInterval = Math.max(100, dropInterval - 50); // Velocidad más rápida
+            dropInterval = Math.max(100, dropInterval - 50); // Velocidad creciente
         }
     }
 }
@@ -207,8 +207,8 @@ canvas.style.display = 'none';
 
 function saveScore() {
     let scores = JSON.parse(localStorage.getItem('topScores')) || [];
-    scores.push(player.score);
-    scores = scores.sort((a, b) => b - a).slice(0, 5);
+    scores.push({name: player.name || 'YOU', score: player.score});
+    scores = scores.sort((a, b) => b.score - a.score).slice(0, 5);
     localStorage.setItem('topScores', JSON.stringify(scores));
 }
 
@@ -216,10 +216,10 @@ function updateLeaderboard() {
     const leaderboard = JSON.parse(localStorage.getItem('topScores')) || [];
     const leaderboardTable = document.getElementById('scoreTable').querySelector('tbody');
     leaderboardTable.innerHTML = '';
-    leaderboard.forEach((score, index) => {
+    leaderboard.forEach((entry, index) => {
         const row = leaderboardTable.insertRow();
-        row.insertCell(0).textContent = `Player ${index + 1}`;
-        row.insertCell(1).textContent = score;
+        row.insertCell(0).textContent = `${entry.name}`;
+        row.insertCell(1).textContent = entry.score;
     });
 }
 
@@ -274,6 +274,7 @@ function showShareButton(score) {
 
     document.querySelector('.game-container').appendChild(shareButton);
 }
+
 
 
 
