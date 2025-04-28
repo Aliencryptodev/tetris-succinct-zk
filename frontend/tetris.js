@@ -4,7 +4,7 @@ const context = canvas.getContext('2d');
 
 context.scale(20, 20);
 
-let gameOver = false; // 🔥 Nueva variable global
+let gameOver = false;
 
 function arenaSweep() {
     let rowCount = 1;
@@ -107,25 +107,22 @@ function playerReset() {
     player.pos.y = 0;
     player.pos.x = (arena[0].length / 2 | 0) - (player.matrix[0].length / 2 | 0);
 
-    // Game Over detection
     if (collide(arena, player)) {
-        gameOver = true; // 🔥 Activar Game Over
+        gameOver = true;
 
-        arena.forEach(row => row.fill(0));  // Limpiar el tablero
-        saveScore();  // Guardar puntaje
-        updateLeaderboard();  // Actualizar leaderboard
-        player.score = 0;  // Resetear puntaje
-        updateScore();  // Mostrar puntaje actualizado
+        arena.forEach(row => row.fill(0));
+        saveScore();
+        updateLeaderboard();
+        player.score = 0;
+        updateScore();
 
         setTimeout(() => {
             context.fillStyle = '#FE11C5';
             context.font = '2rem Poppins';
-            context.fillText('GAME OVER', canvas.width / 2 - 70, canvas.height / 2);  // Mostrar Game Over
+            context.fillText('GAME OVER', 3, 10);
         }, 100);
 
-        pauseMusic();  // Pausar música
-
-        // Habilitar botón de inicio nuevamente
+        pauseMusic();
         document.getElementById('startGame').disabled = false;
     }
 }
@@ -161,7 +158,7 @@ let lastTime = 0;
 
 function update(time = 0) {
     if (gameOver) {
-        return;  // 🔥 Detener actualización si el juego terminó
+        return;
     }
 
     const deltaTime = time - lastTime;
@@ -177,20 +174,8 @@ function update(time = 0) {
 
 function updateScore() {
     document.getElementById('scoreTable').querySelector('tbody').innerHTML =
-        <tr><td>YOU</td><td>${player.score}</td></tr>;
+        `<tr><td>YOU</td><td>${player.score}</td></tr>`;
 }
-
-document.addEventListener('keydown', event => {
-    if (event.key === 'ArrowLeft' || event.key === 'a') {
-        playerMove(-1);
-    } else if (event.key === 'ArrowRight' || event.key === 'd') {
-        playerMove(1);
-    } else if (event.key === 'ArrowDown' || event.key === 's') {
-        playerDrop();
-    } else if (event.key === 'ArrowUp' || event.key === 'w') {
-        playerRotate(1);
-    }
-});
 
 const colors = [null, '#FE11C5', '#781961', '#FF66CC', '#CC00FF', '#FF99FF', '#FF33FF', '#FF00CC'];
 const arena = createMatrix(12, 20);
@@ -211,15 +196,7 @@ function updateLeaderboard() {
     leaderboardTable.innerHTML = '';
     leaderboard.forEach((score, index) => {
         const row = leaderboardTable.insertRow();
-        row.insertCell(0).textContent = Player ${index + 1};
+        row.insertCell(0).textContent = `Player ${index + 1}`;
         row.insertCell(1).textContent = score;
     });
 }
-
-document.getElementById('startGame').addEventListener('click', () => {
-    canvas.style.display = 'block';
-    document.getElementById('startGame').disabled = true;
-    playMusic();
-    playerReset();
-    update();
-});
