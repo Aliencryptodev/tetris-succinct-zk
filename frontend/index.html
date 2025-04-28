@@ -4,7 +4,10 @@
 <head>
   <meta charset="UTF-8">
   <title>Tetris Succinct zkProof</title>
+
+  <!-- Viewport para móviles -->
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
   <style>
     body {
       background: url('https://raw.githubusercontent.com/Aliencryptodev/tetris-succinct-zk/main/assets/background.png') no-repeat center center fixed;
@@ -18,12 +21,16 @@
       padding: 20px;
       height: 100vh;
       margin: 0;
+      overflow: hidden;
     }
+
     .container {
       display: flex;
       justify-content: space-between;
-      width: 80%;
+      width: 90%;
+      max-width: 1200px;
     }
+
     .game-container {
       flex: 0 0 70%;
       display: flex;
@@ -31,21 +38,24 @@
       align-items: center;
       flex-direction: column;
     }
+
     .leaderboard-container {
-      flex: 0 0 30%;
-      display: flex;
-      flex-direction: column;
-      justify-content: flex-start;
-      align-items: flex-start;
-      padding: 20px;
+      flex: 0 0 28%;
       background-color: rgba(255, 255, 255, 0.9);
       border-radius: 10px;
       box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      align-items: center;
     }
+
     h1 {
       color: #FE11C5;
       text-align: center;
     }
+
     button {
       background-color: #FE11C5;
       color: white;
@@ -58,39 +68,40 @@
       width: 200px;
       touch-action: manipulation;
     }
+
     button:hover {
       background-color: #781961;
     }
+
     table {
       margin-top: 20px;
       border-collapse: collapse;
       width: 100%;
     }
+
     th, td {
       padding: 10px;
       text-align: center;
       border-bottom: 1px solid #ddd;
     }
+
     #tetris {
       margin-top: 20px;
       background: black;
       display: none;
     }
+
     .mobile-controls {
       display: none;
       margin-top: 20px;
     }
+
     .mobile-controls button {
       margin: 5px;
       padding: 10px 20px;
       font-size: 1.2rem;
     }
-    #shareTwitter {
-      display: none;
-      margin-top: 20px;
-      padding: 10px 20px;
-      font-size: 1.2rem;
-    }
+
     @media (max-width: 768px) {
       .container {
         flex-direction: column;
@@ -100,6 +111,10 @@
         display: flex;
         flex-wrap: wrap;
         justify-content: center;
+      }
+      .leaderboard-container {
+        margin-top: 20px;
+        width: 100%;
       }
     }
   </style>
@@ -112,14 +127,16 @@
     <button id="submit">Submit Proof</button>
     <button id="startGame">Start Game 🎮</button>
     <canvas id="tetris" width="240" height="400"></canvas>
+
+    <!-- Botones de control móviles -->
     <div class="mobile-controls">
       <button id="left">⬅️</button>
       <button id="rotate">🔄</button>
       <button id="right">➡️</button>
       <button id="down">⬇️</button>
     </div>
-    <button id="shareTwitter">🕎 Share on Twitter</button>
   </div>
+
   <div class="leaderboard-container">
     <h2>🏆 Verified Players</h2>
     <table id="scoreTable">
@@ -138,15 +155,6 @@
 <script src="leaderboard.js"></script>
 
 <script>
-const shareButton = document.getElementById('shareTwitter');
-
-shareButton.addEventListener('click', () => {
-  const score = window.player?.score || 0;
-  const tweet = `I just scored ${score} points playing Tetris Succinct zkProof! 🌸🚀`;
-  const url = `https://twitter.com/intent/tweet?text=${encodeURIComponent(tweet)}&url=${encodeURIComponent(window.location.href)}`;
-  window.open(url, '_blank');
-});
-
 document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('startGame').addEventListener('click', () => {
     canvas.style.display = 'block';
@@ -157,6 +165,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   renderLeaderboard();
 
+  // Simulación de teclas para controles móviles
   const simulateKey = (key) => {
     const event = new KeyboardEvent('keydown', { key });
     document.dispatchEvent(event);
@@ -168,8 +177,9 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('down').addEventListener('click', () => simulateKey('ArrowDown'));
 });
 
-document.addEventListener('keydown', function(event) {
-  if (event.key === "ArrowUp" || event.key === "ArrowDown") {
+// Bloquear scroll con flechas
+document.addEventListener('keydown', (event) => {
+  if (["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"].includes(event.key)) {
     event.preventDefault();
   }
 });
