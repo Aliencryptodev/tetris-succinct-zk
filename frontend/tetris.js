@@ -5,7 +5,7 @@ const context = canvas.getContext('2d');
 context.scale(20, 20);
 
 let gameOver = false;
-let finalScore = 0; // Guardar puntuación final
+let finalScore = 0;
 
 function arenaSweep() {
     let rowCount = 1;
@@ -25,8 +25,7 @@ function collide(arena, player) {
     const [m, o] = [player.matrix, player.pos];
     for (let y = 0; y < m.length; ++y) {
         for (let x = 0; x < m[y].length; ++x) {
-            if (m[y][x] !== 0 &&
-                (arena[y + o.y] && arena[y + o.y][x + o.x]) !== 0) {
+            if (m[y][x] !== 0 && (arena[y + o.y] && arena[y + o.y][x + o.x]) !== 0) {
                 return true;
             }
         }
@@ -36,9 +35,7 @@ function collide(arena, player) {
 
 function createMatrix(w, h) {
     const matrix = [];
-    while (h--) {
-        matrix.push(new Array(w).fill(0));
-    }
+    while (h--) matrix.push(new Array(w).fill(0));
     return matrix;
 }
 
@@ -108,18 +105,17 @@ function playerReset() {
     player.pos.x = (arena[0].length / 2 | 0) - (player.matrix[0].length / 2 | 0);
 
     if (collide(arena, player)) {
+        finalScore = player.score;
         gameOver = true;
-        finalScore = player.score; // Guardamos la puntuación final
 
         arena.forEach(row => row.fill(0));
         saveScore();
         updateLeaderboard();
         updateScore();
-
         pauseMusic();
 
         setTimeout(() => {
-            showGameOver();
+            drawGameOverScreen();
             showShareButton(finalScore);
         }, 100);
     }
@@ -210,13 +206,15 @@ function updateLeaderboard() {
     });
 }
 
-// Reiniciar juego
+// Botón Start Game
 document.getElementById('startGame').addEventListener('click', () => {
     canvas.style.display = 'block';
     document.getElementById('startGame').disabled = true;
+
     const existingShareButton = document.getElementById('shareButton');
     if (existingShareButton) existingShareButton.remove();
 
+    context.clearRect(0, 0, canvas.width, canvas.height);
     gameOver = false;
     arena.forEach(row => row.fill(0));
     player.score = 0;
@@ -225,12 +223,22 @@ document.getElementById('startGame').addEventListener('click', () => {
     update();
 });
 
-// Mostrar Game Over
-function showGameOver() {
+// NUEVO: Dibujar pantalla de Game Over con imagen
+function drawGameOverScreen() {
     const img = new Image();
     img.src = 'https://raw.githubusercontent.com/Aliencryptodev/tetris-succinct-zk/main/assets/gameover-resized.png';
     img.onload = () => {
-        context.drawImage(img, (canvas.width / 2) - 120, (canvas.height / 2) - 60, 240, 120);
+        context.globalAlpha = 0; // Animación fade in
+        const fadeIn = setInterval(() => {
+            if (context.globalAlpha < 1) {
+                context.globalAlpha += 0.05;
+                context.clearRect(0, 0, canvas.width, canvas.height);
+                context.drawImage(img, (canvas.width / 2) - 120, (canvas.height / 2) - 60, 240, 120);
+            } else {
+                clearInterval(fadeIn);
+                context.globalAlpha = 1; // Restaurar
+            }
+        }, 30);
     };
 }
 
