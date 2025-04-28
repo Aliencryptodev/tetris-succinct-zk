@@ -128,7 +128,7 @@
     <button id="startGame">Start Game 🎮</button>
     <canvas id="tetris" width="240" height="400"></canvas>
 
-    <!-- Botones de control móviles -->
+    <!-- Botones móviles -->
     <div class="mobile-controls">
       <button id="left">⬅️</button>
       <button id="rotate">🔄</button>
@@ -148,6 +148,7 @@
   </div>
 </div>
 
+<!-- Scripts -->
 <script src="app.js" type="module"></script>
 <script src="tetris.js"></script>
 <script src="sound.js"></script>
@@ -165,7 +166,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   renderLeaderboard();
 
-  // Simulación de teclas para controles móviles
+  // Simular teclas para móviles
   const simulateKey = (key) => {
     const event = new KeyboardEvent('keydown', { key });
     document.dispatchEvent(event);
@@ -177,7 +178,7 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('down').addEventListener('click', () => simulateKey('ArrowDown'));
 });
 
-// Bloquear scroll con flechas
+// Evitar scroll con flechas
 document.addEventListener('keydown', (event) => {
   if (["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"].includes(event.key)) {
     event.preventDefault();
@@ -187,6 +188,7 @@ document.addEventListener('keydown', (event) => {
 
 </body>
 </html>
+
 
 
 
