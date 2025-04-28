@@ -4,9 +4,13 @@
 <head>
     <meta charset="UTF-8">
     <title>Tetris Succinct zkProof</title>
+
+    <!-- ✅ Prevención de zoom en móviles -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
     <style>
         body {
-            background: url('https://github.com/Aliencryptodev/tetris-succinct-zk/blob/main/assets/background.png') no-repeat center center fixed;
+            background: url('https://aliencryptodev.github.io/tetris-succinct-zk/assets/background.png') no-repeat center center fixed;
             background-size: cover;
             color: #781961;
             font-family: 'Poppins', sans-serif;
@@ -40,9 +44,9 @@
             justify-content: flex-start;
             align-items: flex-start;
             padding: 20px;
-            background-color: rgba(255, 255, 255, 0.8);
+            background-color: rgba(255, 255, 255, 0.9);
             border-radius: 10px;
-            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
         }
 
         h1 {
@@ -60,6 +64,7 @@
             margin: 10px;
             cursor: pointer;
             width: 200px;
+            touch-action: manipulation; /* ✅ Evita zoom en botones móviles */
         }
 
         button:hover {
@@ -84,16 +89,28 @@
             display: none;
         }
 
-        /* Estilos botones móviles */
+        /* ✅ Controles para móviles */
         .mobile-controls {
-            margin-top: 10px;
-            display: flex;
-            gap: 10px;
+            display: none;
+            margin-top: 20px;
         }
+
         .mobile-controls button {
-            padding: 10px;
-            font-size: 1rem;
-            width: 50px;
+            margin: 5px;
+            padding: 10px 20px;
+            font-size: 1.2rem;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+                align-items: center;
+            }
+            .mobile-controls {
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
         }
     </style>
 </head>
@@ -102,14 +119,16 @@
 <div class="container">
     <div class="game-container">
         <h1>Tetris Succinct zkProof 🌸</h1>
+        <button id="submit">Submit Proof</button>
         <button id="startGame">Start Game 🎮</button>
         <canvas id="tetris" width="240" height="400"></canvas>
 
+        <!-- ✅ Controles táctiles para móviles -->
         <div class="mobile-controls">
-            <button id="leftBtn">←</button>
-            <button id="rotateBtn">⟳</button>
-            <button id="rightBtn">→</button>
-            <button id="downBtn">↓</button>
+            <button id="left">⬅️</button>
+            <button id="rotate">🔄</button>
+            <button id="right">➡️</button>
+            <button id="down">⬇️</button>
         </div>
     </div>
 
@@ -139,25 +158,25 @@
             update();
         });
 
-        document.getElementById('leftBtn').addEventListener('click', () => playerMove(-1));
-        document.getElementById('rightBtn').addEventListener('click', () => playerMove(1));
-        document.getElementById('rotateBtn').addEventListener('click', () => playerRotate(1));
-        document.getElementById('downBtn').addEventListener('click', () => playerDrop());
+        // Controles móviles táctiles
+        document.getElementById('left').addEventListener('click', () => playerMove(-1));
+        document.getElementById('right').addEventListener('click', () => playerMove(1));
+        document.getElementById('down').addEventListener('click', () => playerDrop());
+        document.getElementById('rotate').addEventListener('click', () => playerRotate(1));
 
         renderLeaderboard();
     });
 
-    // Bloquear scroll al usar flechas
-    window.addEventListener("keydown", function(e) {
-        if(["ArrowUp","ArrowDown","ArrowLeft","ArrowRight"].includes(e.key)) {
-            e.preventDefault();
+    // Prevenir scroll flechas arriba/abajo
+    document.addEventListener('keydown', function(event) {
+        if (event.key === "ArrowUp" || event.key === "ArrowDown") {
+            event.preventDefault();
         }
     });
 </script>
 
 </body>
 </html>
-
 
 
 
