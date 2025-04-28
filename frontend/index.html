@@ -2,145 +2,145 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Tetris Succinct zkProof</title>
+  <meta charset="UTF-8">
+  <title>Tetris Succinct zkProof</title>
 
-    <!-- ✅ Prevención de zoom en móviles -->
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <!-- Evitar zoom en móviles -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
-    <style>
-        body {
-            background: url('https://raw.githubusercontent.com/Aliencryptodev/tetris-succinct-zk/main/assets/background.png') no-repeat center center fixed;
-            background-size: cover;
-            color: #781961;
-            font-family: 'Poppins', sans-serif;
-            display: flex;
-            flex-direction: row;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-            height: 100vh;
-            margin: 0;
-        }
+  <style>
+    body {
+      background: url('https://raw.githubusercontent.com/Aliencryptodev/tetris-succinct-zk/main/assets/background.png') no-repeat center center fixed;
+      background-size: cover;
+      color: #781961;
+      font-family: 'Poppins', sans-serif;
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+      height: 100vh;
+      margin: 0;
+    }
 
-        .container {
-            display: flex;
-            justify-content: space-between;
-            width: 80%;
-        }
+    .container {
+      display: flex;
+      justify-content: space-between;
+      width: 80%;
+    }
 
-        .game-container {
-            flex: 0 0 70%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            flex-direction: column;
-        }
+    .game-container {
+      flex: 0 0 70%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+    }
 
-        .leaderboard-container {
-            flex: 0 0 30%;
-            display: flex;
-            flex-direction: column;
-            justify-content: flex-start;
-            align-items: flex-start;
-            padding: 20px;
-            background-color: rgba(255, 255, 255, 0.9);
-            border-radius: 10px;
-            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
-        }
+    .leaderboard-container {
+      flex: 0 0 30%;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      align-items: flex-start;
+      padding: 20px;
+      background-color: rgba(255, 255, 255, 0.9);
+      border-radius: 10px;
+      box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
+    }
 
-        h1 {
-            color: #FE11C5;
-            text-align: center;
-        }
+    h1 {
+      color: #FE11C5;
+      text-align: center;
+    }
 
-        button {
-            background-color: #FE11C5;
-            color: white;
-            border: none;
-            padding: 15px 30px;
-            font-size: 1.2rem;
-            border-radius: 10px;
-            margin: 10px;
-            cursor: pointer;
-            width: 200px;
-            touch-action: manipulation; /* ✅ Evita zoom en botones móviles */
-        }
+    button {
+      background-color: #FE11C5;
+      color: white;
+      border: none;
+      padding: 15px 30px;
+      font-size: 1.2rem;
+      border-radius: 10px;
+      margin: 10px;
+      cursor: pointer;
+      width: 200px;
+      touch-action: manipulation;
+    }
 
-        button:hover {
-            background-color: #781961;
-        }
+    button:hover {
+      background-color: #781961;
+    }
 
-        table {
-            margin-top: 20px;
-            border-collapse: collapse;
-            width: 100%;
-        }
+    table {
+      margin-top: 20px;
+      border-collapse: collapse;
+      width: 100%;
+    }
 
-        th, td {
-            padding: 10px;
-            text-align: center;
-            border-bottom: 1px solid #ddd;
-        }
+    th, td {
+      padding: 10px;
+      text-align: center;
+      border-bottom: 1px solid #ddd;
+    }
 
-        #tetris {
-            margin-top: 20px;
-            background: black;
-            display: none;
-        }
+    #tetris {
+      margin-top: 20px;
+      background: black;
+      display: none;
+    }
 
-        /* ✅ Controles para móviles */
-        .mobile-controls {
-            display: none;
-            margin-top: 20px;
-        }
+    /* Controles táctiles */
+    .mobile-controls {
+      display: none;
+      margin-top: 20px;
+    }
 
-        .mobile-controls button {
-            margin: 5px;
-            padding: 10px 20px;
-            font-size: 1.2rem;
-        }
+    .mobile-controls button {
+      margin: 5px;
+      padding: 10px 20px;
+      font-size: 1.2rem;
+    }
 
-        @media (max-width: 768px) {
-            .container {
-                flex-direction: column;
-                align-items: center;
-            }
-            .mobile-controls {
-                display: flex;
-                flex-wrap: wrap;
-                justify-content: center;
-            }
-        }
-    </style>
+    @media (max-width: 768px) {
+      .container {
+        flex-direction: column;
+        align-items: center;
+      }
+      .mobile-controls {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+    }
+  </style>
 </head>
 <body>
 
 <div class="container">
-    <div class="game-container">
-        <h1>Tetris Succinct zkProof 🌸</h1>
-        <button id="submit">Submit Proof</button>
-        <button id="startGame">Start Game 🎮</button>
-        <canvas id="tetris" width="240" height="400"></canvas>
+  <div class="game-container">
+    <h1>Tetris Succinct zkProof 🌸</h1>
+    <button id="submit">Submit Proof</button>
+    <button id="startGame">Start Game 🎮</button>
+    <canvas id="tetris" width="240" height="400"></canvas>
 
-        <!-- ✅ Controles táctiles para móviles -->
-        <div class="mobile-controls">
-            <button id="left">⬅️</button>
-            <button id="rotate">🔄</button>
-            <button id="right">➡️</button>
-            <button id="down">⬇️</button>
-        </div>
+    <!-- Controles móviles -->
+    <div class="mobile-controls">
+      <button id="left">⬅️</button>
+      <button id="rotate">🔄</button>
+      <button id="right">➡️</button>
+      <button id="down">⬇️</button>
     </div>
+  </div>
 
-    <div class="leaderboard-container">
-        <h2>🏆 Verified Players</h2>
-        <table id="scoreTable">
-            <thead>
-                <tr><th>Player</th><th>Score</th></tr>
-            </thead>
-            <tbody></tbody>
-        </table>
-    </div>
+  <div class="leaderboard-container">
+    <h2>🏆 Verified Players</h2>
+    <table id="scoreTable">
+      <thead>
+        <tr><th>Player</th><th>Score</th></tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </div>
 </div>
 
 <script src="app.js" type="module"></script>
@@ -150,34 +150,38 @@
 <script src="leaderboard.js"></script>
 
 <script>
-    document.addEventListener('DOMContentLoaded', () => {
-        document.getElementById('startGame').addEventListener('click', () => {
-            canvas.style.display = 'block';
-            playMusic();
-            playerReset();
-            update();
-        });
+document.addEventListener('DOMContentLoaded', () => {
+  document.getElementById('startGame').addEventListener('click', () => {
+    canvas.style.display = 'block';
+    playMusic();
+    playerReset();
+    update();
+  });
 
-        // Controles móviles táctiles
-        document.getElementById('left').addEventListener('click', () => playerMove(-1));
-        document.getElementById('right').addEventListener('click', () => playerMove(1));
-        document.getElementById('down').addEventListener('click', () => playerDrop());
-        document.getElementById('rotate').addEventListener('click', () => playerRotate(1));
+  renderLeaderboard();
 
-        renderLeaderboard();
-    });
+  // Controles móviles: generar eventos de teclado
+  const simulateKey = (key) => {
+    const event = new KeyboardEvent('keydown', { key });
+    document.dispatchEvent(event);
+  };
 
-    // Prevenir scroll flechas arriba/abajo
-    document.addEventListener('keydown', function(event) {
-        if (event.key === "ArrowUp" || event.key === "ArrowDown") {
-            event.preventDefault();
-        }
-    });
+  document.getElementById('left').addEventListener('click', () => simulateKey('ArrowLeft'));
+  document.getElementById('right').addEventListener('click', () => simulateKey('ArrowRight'));
+  document.getElementById('rotate').addEventListener('click', () => simulateKey('ArrowUp'));
+  document.getElementById('down').addEventListener('click', () => simulateKey('ArrowDown'));
+});
+
+// Evitar scroll flechas arriba/abajo
+document.addEventListener('keydown', function(event) {
+  if (event.key === "ArrowUp" || event.key === "ArrowDown") {
+    event.preventDefault();
+  }
+});
 </script>
 
 </body>
 </html>
-
 
 
 
