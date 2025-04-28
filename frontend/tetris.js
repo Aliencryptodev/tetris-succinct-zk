@@ -7,31 +7,13 @@ context.scale(20, 20);
 let gameOver = false;
 let finalScore = 0;
 
-function arenaSweep() {
-    let rowCount = 1;
-    outer: for (let y = arena.length - 1; y >= 0; --y) {
-        if (arena[y].every(cell => cell !== 0)) {
-            arena.splice(y, 1);
-            arena.unshift(new Array(12).fill(0));
-            player.score += 100;
-            rowCount *= 2;
-            createParticles(canvas.width / 2 / 20, canvas.height / 2 / 20, '#FE11C5');
-            playLineClearSound();
-        }
-    }
-}
+const colors = [null, '#FE11C5', '#781961', '#FF66CC', '#CC00FF', '#FF99FF', '#FF33FF', '#FF00CC'];
+const arena = createMatrix(12, 20);
+const player = { pos: {x:0, y:0}, matrix: null, score: 0 };
 
-function collide(arena, player) {
-    const [m, o] = [player.matrix, player.pos];
-    for (let y = 0; y < m.length; ++y) {
-        for (let x = 0; x < m[y].length; ++x) {
-            if (m[y][x] !== 0 && (arena[y + o.y] && arena[y + o.y][x + o.x]) !== 0) {
-                return true;
-            }
-        }
-    }
-    return false;
-}
+let dropCounter = 0;
+let dropInterval = 500;
+let lastTime = 0;
 
 function createMatrix(w, h) {
     const matrix = [];
@@ -49,6 +31,29 @@ function createPiece(type) {
     if (type === 'Z') return [[7,7,0],[0,7,7],[0,0,0]];
 }
 
+function collide(arena, player) {
+    const [m, o] = [player.matrix, player.pos];
+    for (let y = 0; y < m.length; ++y) {
+        for (let x = 0; x < m[y].length; ++x) {
+            if (m[y][x] !== 0 &&
+                (arena[y + o.y] && arena[y + o.y][x + o.x]) !== 0) {
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
+function merge(arena, player) {
+    player.matrix.forEach((row, y) => {
+        row.forEach((value, x) => {
+            if (value !== 0) {
+                arena[y + player.pos.y][x + player.pos.x] = value;
+            }
+        });
+    });
+}
+
 function drawMatrix(matrix, offset) {
     matrix.forEach((row, y) => {
         row.forEach((value, x) => {
@@ -63,20 +68,41 @@ function drawMatrix(matrix, offset) {
 function draw() {
     context.fillStyle = '#000';
     context.fillRect(0, 0, canvas.width, canvas.height);
-
     drawMatrix(arena, {x:0, y:0});
     drawMatrix(player.matrix, player.pos);
     updateParticles(context);
 }
 
-function merge(arena, player) {
-    player.matrix.forEach((row, y) => {
-        row.forEach((value, x) => {
-            if (value !== 0) {
-                arena[y + player.pos.y][x + player.pos.x] = value;
-            }
-        });
-    });
+function rotate(matrix, dir) {
+    for (let y = 0; y < matrix.length; ++y) {
+        for (let x = 0; x < y; ++x) {
+            [matrix[x][y], matrix[y][x]] = [matrix[y][x], matrix[x][y]];
+        }
+    }
+    if (dir > 0) matrix.forEach(row => row.reverse());
+    else matrix.reverse();
+}
+
+function playerReset() {
+    const pieces = 'TJLOSZI';
+    player.matrix = createPiece(pieces[Math.floor(Math.random() * pieces.length)]);
+    player.pos.y = 0;
+    player.pos.x = (arena[0].length / 2 | 0) - (player.matrix[0].length / 2 | 0);
+
+    if (collide(arena, player)) {
+        gameOver = true;
+        finalScore = player.score;
+        arena.forEach(row => row.fill(0));
+        saveScore();
+        updateLeaderboard();
+        updateScore();
+        pauseMusic();
+
+        setTimeout(() => {
+            showGameOver();
+            showShareButton(finalScore);
+        }, 200);
+    }
 }
 
 function playerDrop() {
@@ -93,32 +119,7 @@ function playerDrop() {
 
 function playerMove(dir) {
     player.pos.x += dir;
-    if (collide(arena, player)) {
-        player.pos.x -= dir;
-    }
-}
-
-function playerReset() {
-    const pieces = 'TJLOSZI';
-    player.matrix = createPiece(pieces[Math.floor(Math.random() * pieces.length)]);
-    player.pos.y = 0;
-    player.pos.x = (arena[0].length / 2 | 0) - (player.matrix[0].length / 2 | 0);
-
-    if (collide(arena, player)) {
-        finalScore = player.score;
-        gameOver = true;
-
-        arena.forEach(row => row.fill(0));
-        saveScore();
-        updateLeaderboard();
-        updateScore();
-        pauseMusic();
-
-        setTimeout(() => {
-            drawGameOverScreen();
-            showShareButton(finalScore);
-        }, 100);
-    }
+    if (collide(arena, player)) player.pos.x -= dir;
 }
 
 function playerRotate(dir) {
@@ -136,31 +137,26 @@ function playerRotate(dir) {
     }
 }
 
-function rotate(matrix, dir) {
-    for (let y = 0; y < matrix.length; ++y) {
-        for (let x = 0; x < y; ++x) {
-            [matrix[x][y], matrix[y][x]] = [matrix[y][x], matrix[x][y]];
+function arenaSweep() {
+    let rowCount = 1;
+    outer: for (let y = arena.length - 1; y >= 0; --y) {
+        if (arena[y].every(cell => cell !== 0)) {
+            arena.splice(y, 1);
+            arena.unshift(new Array(12).fill(0));
+            player.score += 100 * rowCount;
+            rowCount *= 2;
+            createParticles(canvas.width / 2 / 20, canvas.height / 2 / 20, '#FE11C5');
+            playLineClearSound();
         }
     }
-    if (dir > 0) matrix.forEach(row => row.reverse());
-    else matrix.reverse();
 }
-
-let dropCounter = 0;
-let dropInterval = 500;
-let lastTime = 0;
 
 function update(time = 0) {
     if (gameOver) return;
-
     const deltaTime = time - lastTime;
     lastTime = time;
     dropCounter += deltaTime;
-
-    if (dropCounter > dropInterval) {
-        playerDrop();
-    }
-
+    if (dropCounter > dropInterval) playerDrop();
     draw();
     requestAnimationFrame(update);
 }
@@ -171,23 +167,15 @@ function updateScore() {
 }
 
 document.addEventListener('keydown', event => {
-    if (event.key === 'ArrowLeft' || event.key === 'a') {
-        playerMove(-1);
-    } else if (event.key === 'ArrowRight' || event.key === 'd') {
-        playerMove(1);
-    } else if (event.key === 'ArrowDown' || event.key === 's') {
-        playerDrop();
-    } else if (event.key === 'ArrowUp' || event.key === 'w') {
-        playerRotate(1);
-    }
+    if (event.key === 'ArrowLeft' || event.key === 'a') playerMove(-1);
+    else if (event.key === 'ArrowRight' || event.key === 'd') playerMove(1);
+    else if (event.key === 'ArrowDown' || event.key === 's') playerDrop();
+    else if (event.key === 'ArrowUp' || event.key === 'w') playerRotate(1);
 });
-
-const colors = [null, '#FE11C5', '#781961', '#FF66CC', '#CC00FF', '#FF99FF', '#FF33FF', '#FF00CC'];
-const arena = createMatrix(12, 20);
-const player = { pos: {x:0, y:0}, matrix: null, score: 0 };
 
 canvas.style.display = 'none';
 
+// Save and load leaderboard
 function saveScore() {
     let scores = JSON.parse(localStorage.getItem('topScores')) || [];
     scores.push(player.score);
@@ -204,42 +192,6 @@ function updateLeaderboard() {
         row.insertCell(0).textContent = `Player ${index + 1}`;
         row.insertCell(1).textContent = score;
     });
-}
-
-// Botón Start Game
-document.getElementById('startGame').addEventListener('click', () => {
-    canvas.style.display = 'block';
-    document.getElementById('startGame').disabled = true;
-
-    const existingShareButton = document.getElementById('shareButton');
-    if (existingShareButton) existingShareButton.remove();
-
-    context.clearRect(0, 0, canvas.width, canvas.height);
-    gameOver = false;
-    arena.forEach(row => row.fill(0));
-    player.score = 0;
-    playMusic();
-    playerReset();
-    update();
-});
-
-// NUEVO: Dibujar pantalla de Game Over con imagen
-function drawGameOverScreen() {
-    const img = new Image();
-    img.src = 'https://raw.githubusercontent.com/Aliencryptodev/tetris-succinct-zk/main/assets/gameover-resized.png';
-    img.onload = () => {
-        context.globalAlpha = 0; // Animación fade in
-        const fadeIn = setInterval(() => {
-            if (context.globalAlpha < 1) {
-                context.globalAlpha += 0.05;
-                context.clearRect(0, 0, canvas.width, canvas.height);
-                context.drawImage(img, (canvas.width / 2) - 120, (canvas.height / 2) - 60, 240, 120);
-            } else {
-                clearInterval(fadeIn);
-                context.globalAlpha = 1; // Restaurar
-            }
-        }, 30);
-    };
 }
 
 // Botón para compartir puntuación
@@ -265,6 +217,30 @@ function showShareButton(score) {
 
     document.querySelector('.game-container').appendChild(shareButton);
 }
+
+// Mostrar imagen de Game Over
+function showGameOver() {
+    const img = new Image();
+    img.src = 'https://raw.githubusercontent.com/Aliencryptodev/tetris-succinct-zk/main/assets/gameover-resized.png';
+    img.onload = () => {
+        context.drawImage(img, (canvas.width / 2) - 120, (canvas.height / 2) - 60, 240, 120);
+    };
+}
+
+// Botón Start Game
+document.getElementById('startGame').addEventListener('click', () => {
+    canvas.style.display = 'block';
+    document.getElementById('startGame').disabled = true;
+    const existingShareButton = document.getElementById('shareButton');
+    if (existingShareButton) existingShareButton.remove();
+    gameOver = false;
+    arena.forEach(row => row.fill(0));
+    player.score = 0;
+    playMusic();
+    playerReset();
+    update();
+});
+
 
 
 
