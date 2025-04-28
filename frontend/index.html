@@ -4,21 +4,22 @@
 <head>
   <meta charset="UTF-8">
   <title>Tetris Succinct zkProof</title>
+
+  <!-- Viewport para móviles -->
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
   <style>
     body {
       background: url('https://raw.githubusercontent.com/Aliencryptodev/tetris-succinct-zk/main/assets/background.png') no-repeat center center fixed;
       background-size: cover;
-      color: #781961;
       font-family: 'Poppins', sans-serif;
+      color: #781961;
+      margin: 0;
+      padding: 0;
       display: flex;
-      flex-direction: row;
       justify-content: center;
       align-items: center;
-      padding: 20px;
       height: 100vh;
-      margin: 0;
       overflow: hidden;
     }
 
@@ -41,11 +42,16 @@
       background: rgba(255, 255, 255, 0.9);
       border-radius: 10px;
       padding: 20px;
-      box-shadow: 0px 4px 6px rgba(0,0,0,0.2);
+      box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.15);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
     }
 
     h1 {
       color: #FE11C5;
+      margin-bottom: 20px;
+      text-align: center;
     }
 
     button {
@@ -57,7 +63,7 @@
       border-radius: 10px;
       margin: 10px;
       cursor: pointer;
-      width: 200px;
+      width: 220px;
       touch-action: manipulation;
     }
 
@@ -65,33 +71,36 @@
       background-color: #781961;
     }
 
-    table {
+    #tetris {
+      background: black;
       margin-top: 20px;
+      display: none;
+    }
+
+    table {
       width: 100%;
+      margin-top: 20px;
       border-collapse: collapse;
     }
 
     th, td {
       padding: 10px;
-      border-bottom: 1px solid #ddd;
       text-align: center;
+      border-bottom: 1px solid #ddd;
     }
 
-    #tetris {
-      margin-top: 20px;
-      background: black;
-      display: none;
-    }
-
+    /* Controles móviles */
     .mobile-controls {
       display: none;
       margin-top: 20px;
+      flex-wrap: wrap;
+      justify-content: center;
     }
 
     .mobile-controls button {
       margin: 5px;
+      font-size: 1.5rem;
       padding: 10px 20px;
-      font-size: 1.2rem;
     }
 
     @media (max-width: 768px) {
@@ -99,14 +108,12 @@
         flex-direction: column;
         align-items: center;
       }
+      .leaderboard-container {
+        width: 100%;
+        margin-top: 20px;
+      }
       .mobile-controls {
         display: flex;
-        flex-wrap: wrap;
-        justify-content: center;
-      }
-      .leaderboard-container {
-        margin-top: 20px;
-        width: 100%;
       }
     }
   </style>
@@ -120,8 +127,12 @@
     <button id="submit">Submit Proof</button>
     <button id="startGame">Start Game 🎮</button>
 
+    <!-- NUEVO: Mostrar nivel -->
+    <div id="levelDisplay" style="margin-top:10px; font-size: 1.2rem; color: #781961;">Level: 0</div>
+
     <canvas id="tetris" width="240" height="400"></canvas>
 
+    <!-- Controles móviles -->
     <div class="mobile-controls">
       <button id="left">⬅️</button>
       <button id="rotate">🔄</button>
@@ -133,7 +144,9 @@
   <div class="leaderboard-container">
     <h2>🏆 Verified Players</h2>
     <table id="scoreTable">
-      <thead><tr><th>Player</th><th>Score</th></tr></thead>
+      <thead>
+        <tr><th>Player</th><th>Score</th></tr>
+      </thead>
       <tbody></tbody>
     </table>
   </div>
@@ -156,6 +169,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   renderLeaderboard();
 
+  // Botones móviles simulan teclado
   const simulateKey = (key) => {
     const event = new KeyboardEvent('keydown', { key });
     document.dispatchEvent(event);
@@ -167,8 +181,8 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('down').addEventListener('click', () => simulateKey('ArrowDown'));
 });
 
-// Evitar scroll flechas
-document.addEventListener('keydown', function(event) {
+// Bloquear scroll flechas
+document.addEventListener('keydown', (event) => {
   if (["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"].includes(event.key)) {
     event.preventDefault();
   }
@@ -177,6 +191,7 @@ document.addEventListener('keydown', function(event) {
 
 </body>
 </html>
+
 
 
 
