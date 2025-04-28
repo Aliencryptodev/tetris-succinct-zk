@@ -10,4 +10,4 @@ Bienvenido al primer Tetris Succinct zk-Verified del mundo.
 
 ...
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new)
+
