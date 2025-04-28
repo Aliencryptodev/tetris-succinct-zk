@@ -5,8 +5,10 @@ const context = canvas.getContext('2d');
 context.scale(20, 20);
 
 let gameOver = false;
-let gameOverImage = new Image();
-gameOverImage.src = "https://raw.githubusercontent.com/Aliencryptodev/tetris-succinct-zk/main/assets/gameover_resized.png"; // ✅ Imagen Game Over
+let showGameOverImage = false;
+
+const gameOverImage = new Image();
+gameOverImage.src = 'https://raw.githubusercontent.com/Aliencryptodev/tetris-succinct-zk/main/assets/gameover_resized.png';
 
 function arenaSweep() {
     let rowCount = 1;
@@ -72,6 +74,10 @@ function draw() {
     drawMatrix(arena, {x:0, y:0});
     drawMatrix(player.matrix, player.pos);
     updateParticles(context);
+
+    if (showGameOverImage) {
+        context.drawImage(gameOverImage, 1, 4, 10, 10);
+    }
 }
 
 function merge(arena, player) {
@@ -111,21 +117,14 @@ function playerReset() {
 
     if (collide(arena, player)) {
         gameOver = true;
-
+        showGameOverImage = true;
         arena.forEach(row => row.fill(0));
         saveScore();
         updateLeaderboard();
         player.score = 0;
         updateScore();
-
-        setTimeout(() => {
-            context.clearRect(0, 0, canvas.width, canvas.height);
-            context.drawImage(gameOverImage, 0, 0, canvas.width, canvas.height);
-            document.getElementById('startGame').disabled = false;
-            document.getElementById('shareScore').style.display = 'block'; // Mostrar botón share
-        }, 100);
-
         pauseMusic();
+        document.getElementById('startGame').disabled = false;
     }
 }
 
@@ -160,6 +159,7 @@ let lastTime = 0;
 
 function update(time = 0) {
     if (gameOver) {
+        draw();
         return;
     }
 
@@ -197,6 +197,21 @@ const player = { pos: {x:0, y:0}, matrix: null, score: 0 };
 
 canvas.style.display = 'none';
 
+document.getElementById('startGame').addEventListener('click', () => {
+    // Reset full game
+    gameOver = false;
+    showGameOverImage = false;
+    arena.forEach(row => row.fill(0));
+    player.score = 0;
+    updateScore();
+    canvas.style.display = 'block';
+    document.getElementById('startGame').disabled = true;
+    playMusic();
+    playerReset();
+    lastTime = 0;
+    update();
+});
+
 function saveScore() {
     let scores = JSON.parse(localStorage.getItem('topScores')) || [];
     scores.push(player.score);
@@ -214,24 +229,5 @@ function updateLeaderboard() {
         row.insertCell(1).textContent = score;
     });
 }
-
-// 🎯 Función para compartir puntuación en Twitter
-document.getElementById('shareScore').addEventListener('click', () => {
-    const text = encodeURIComponent(`¡He logrado ${player.score} puntos en Tetris Succinct zkProof! 🌸🎮`);
-    const url = encodeURIComponent(window.location.href);
-    const twitterUrl = `https://twitter.com/intent/tweet?text=${text}&url=${url}`;
-    window.open(twitterUrl, '_blank');
-});
-
-// Botón de start
-document.getElementById('startGame').addEventListener('click', () => {
-    canvas.style.display = 'block';
-    document.getElementById('startGame').disabled = true;
-    document.getElementById('shareScore').style.display = 'none'; // Ocultar share mientras jugamos
-    playMusic();
-    gameOver = false;
-    playerReset();
-    update();
-});
 
 
