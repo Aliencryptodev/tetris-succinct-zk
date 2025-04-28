@@ -5,8 +5,8 @@ const context = canvas.getContext('2d');
 context.scale(20, 20);
 
 let gameOver = false;
+let finalScore = 0; // Guardar puntuación final
 
-// Arena logic
 function arenaSweep() {
     let rowCount = 1;
     outer: for (let y = arena.length - 1; y >= 0; --y) {
@@ -21,7 +21,6 @@ function arenaSweep() {
     }
 }
 
-// Collision detection
 function collide(arena, player) {
     const [m, o] = [player.matrix, player.pos];
     for (let y = 0; y < m.length; ++y) {
@@ -35,7 +34,6 @@ function collide(arena, player) {
     return false;
 }
 
-// Create empty matrix
 function createMatrix(w, h) {
     const matrix = [];
     while (h--) {
@@ -44,18 +42,16 @@ function createMatrix(w, h) {
     return matrix;
 }
 
-// Create tetromino shapes
 function createPiece(type) {
     if (type === 'T') return [[0,0,0],[1,1,1],[0,1,0]];
-    else if (type === 'O') return [[2,2],[2,2]];
-    else if (type === 'L') return [[0,3,0],[0,3,0],[0,3,3]];
-    else if (type === 'J') return [[0,4,0],[0,4,0],[4,4,0]];
-    else if (type === 'I') return [[0,5,0,0],[0,5,0,0],[0,5,0,0],[0,5,0,0]];
-    else if (type === 'S') return [[0,6,6],[6,6,0],[0,0,0]];
-    else if (type === 'Z') return [[7,7,0],[0,7,7],[0,0,0]];
+    if (type === 'O') return [[2,2],[2,2]];
+    if (type === 'L') return [[0,3,0],[0,3,0],[0,3,3]];
+    if (type === 'J') return [[0,4,0],[0,4,0],[4,4,0]];
+    if (type === 'I') return [[0,5,0,0],[0,5,0,0],[0,5,0,0],[0,5,0,0]];
+    if (type === 'S') return [[0,6,6],[6,6,0],[0,0,0]];
+    if (type === 'Z') return [[7,7,0],[0,7,7],[0,0,0]];
 }
 
-// Draw matrices
 function drawMatrix(matrix, offset) {
     matrix.forEach((row, y) => {
         row.forEach((value, x) => {
@@ -67,7 +63,6 @@ function drawMatrix(matrix, offset) {
     });
 }
 
-// Drawing everything
 function draw() {
     context.fillStyle = '#000';
     context.fillRect(0, 0, canvas.width, canvas.height);
@@ -77,7 +72,6 @@ function draw() {
     updateParticles(context);
 }
 
-// Merge player into arena
 function merge(arena, player) {
     player.matrix.forEach((row, y) => {
         row.forEach((value, x) => {
@@ -88,7 +82,6 @@ function merge(arena, player) {
     });
 }
 
-// Move down
 function playerDrop() {
     player.pos.y++;
     if (collide(arena, player)) {
@@ -101,7 +94,6 @@ function playerDrop() {
     dropCounter = 0;
 }
 
-// Move horizontally
 function playerMove(dir) {
     player.pos.x += dir;
     if (collide(arena, player)) {
@@ -109,7 +101,6 @@ function playerMove(dir) {
     }
 }
 
-// Reset player
 function playerReset() {
     const pieces = 'TJLOSZI';
     player.matrix = createPiece(pieces[Math.floor(Math.random() * pieces.length)]);
@@ -117,27 +108,23 @@ function playerReset() {
     player.pos.x = (arena[0].length / 2 | 0) - (player.matrix[0].length / 2 | 0);
 
     if (collide(arena, player)) {
-        // Game Over detected
         gameOver = true;
+        finalScore = player.score; // Guardamos la puntuación final
+
         arena.forEach(row => row.fill(0));
         saveScore();
         updateLeaderboard();
-        player.score = 0;
         updateScore();
 
-        setTimeout(() => {
-            context.fillStyle = '#FE11C5';
-            context.font = '2rem Poppins';
-            context.fillText('GAME OVER', canvas.width / 2 - 70, canvas.height / 2);
-            showShareButton(player.score); // 👈 Añadimos botón de compartir
-        }, 100);
-
         pauseMusic();
-        document.getElementById('startGame').disabled = false;
+
+        setTimeout(() => {
+            showGameOver();
+            showShareButton(finalScore);
+        }, 100);
     }
 }
 
-// Rotate piece
 function playerRotate(dir) {
     const pos = player.pos.x;
     let offset = 1;
@@ -153,7 +140,6 @@ function playerRotate(dir) {
     }
 }
 
-// Rotate matrix
 function rotate(matrix, dir) {
     for (let y = 0; y < matrix.length; ++y) {
         for (let x = 0; x < y; ++x) {
@@ -164,7 +150,6 @@ function rotate(matrix, dir) {
     else matrix.reverse();
 }
 
-// Main update loop
 let dropCounter = 0;
 let dropInterval = 500;
 let lastTime = 0;
@@ -175,20 +160,20 @@ function update(time = 0) {
     const deltaTime = time - lastTime;
     lastTime = time;
     dropCounter += deltaTime;
+
     if (dropCounter > dropInterval) {
         playerDrop();
     }
+
     draw();
     requestAnimationFrame(update);
 }
 
-// Update score
 function updateScore() {
     document.getElementById('scoreTable').querySelector('tbody').innerHTML =
         `<tr><td>YOU</td><td>${player.score}</td></tr>`;
 }
 
-// Keyboard control
 document.addEventListener('keydown', event => {
     if (event.key === 'ArrowLeft' || event.key === 'a') {
         playerMove(-1);
@@ -201,7 +186,6 @@ document.addEventListener('keydown', event => {
     }
 });
 
-// Setup
 const colors = [null, '#FE11C5', '#781961', '#FF66CC', '#CC00FF', '#FF99FF', '#FF33FF', '#FF00CC'];
 const arena = createMatrix(12, 20);
 const player = { pos: {x:0, y:0}, matrix: null, score: 0 };
@@ -226,20 +210,34 @@ function updateLeaderboard() {
     });
 }
 
-// Start button logic
+// Reiniciar juego
 document.getElementById('startGame').addEventListener('click', () => {
     canvas.style.display = 'block';
     document.getElementById('startGame').disabled = true;
+    const existingShareButton = document.getElementById('shareButton');
+    if (existingShareButton) existingShareButton.remove();
+
     gameOver = false;
     arena.forEach(row => row.fill(0));
+    player.score = 0;
     playMusic();
     playerReset();
     update();
 });
 
-// NEW: Button to share score
+// Mostrar Game Over
+function showGameOver() {
+    const img = new Image();
+    img.src = 'https://raw.githubusercontent.com/Aliencryptodev/tetris-succinct-zk/main/assets/gameover-resized.png';
+    img.onload = () => {
+        context.drawImage(img, (canvas.width / 2) - 120, (canvas.height / 2) - 60, 240, 120);
+    };
+}
+
+// Botón para compartir puntuación
 function showShareButton(score) {
     const shareButton = document.createElement('button');
+    shareButton.id = 'shareButton';
     shareButton.innerText = 'Share on Twitter 🐦';
     shareButton.style.backgroundColor = '#1DA1F2';
     shareButton.style.color = 'white';
