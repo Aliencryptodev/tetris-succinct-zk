@@ -1,3 +1,4 @@
+
 const canvas = document.getElementById('tetris');
 const context = canvas.getContext('2d');
 
@@ -176,7 +177,7 @@ function update(time = 0) {
 
 function updateScore() {
     document.getElementById('scoreTable').querySelector('tbody').innerHTML =
-        `<tr><td>YOU</td><td>${player.score}</td></tr>`;
+        <tr><td>YOU</td><td>${player.score}</td></tr>;
 }
 
 document.addEventListener('keydown', event => {
@@ -190,12 +191,6 @@ document.addEventListener('keydown', event => {
         playerRotate(1);
     }
 });
-
-// Botones táctiles para móviles
-document.getElementById('left').addEventListener('click', () => playerMove(-1));
-document.getElementById('right').addEventListener('click', () => playerMove(1));
-document.getElementById('down').addEventListener('click', () => playerDrop());
-document.getElementById('rotate').addEventListener('click', () => playerRotate(1));
 
 const colors = [null, '#FE11C5', '#781961', '#FF66CC', '#CC00FF', '#FF99FF', '#FF33FF', '#FF00CC'];
 const arena = createMatrix(12, 20);
@@ -216,7 +211,7 @@ function updateLeaderboard() {
     leaderboardTable.innerHTML = '';
     leaderboard.forEach((score, index) => {
         const row = leaderboardTable.insertRow();
-        row.insertCell(0).textContent = `Player ${index + 1}`;
+        row.insertCell(0).textContent = Player ${index + 1};
         row.insertCell(1).textContent = score;
     });
 }
@@ -228,4 +223,3 @@ document.getElementById('startGame').addEventListener('click', () => {
     playerReset();
     update();
 });
-
