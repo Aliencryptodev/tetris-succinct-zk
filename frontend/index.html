@@ -5,7 +5,6 @@
   <meta charset="UTF-8">
   <title>Tetris Succinct zkProof</title>
 
-  <!-- Viewport para móviles -->
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
   <style>
@@ -37,6 +36,7 @@
       justify-content: center;
       align-items: center;
       flex-direction: column;
+      position: relative;
     }
 
     .leaderboard-container {
@@ -128,7 +128,6 @@
     <button id="startGame">Start Game 🎮</button>
     <canvas id="tetris" width="240" height="400"></canvas>
 
-    <!-- Botones móviles -->
     <div class="mobile-controls">
       <button id="left">⬅️</button>
       <button id="rotate">🔄</button>
@@ -157,6 +156,8 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', () => {
+  const canvas = document.getElementById('tetris');
+
   document.getElementById('startGame').addEventListener('click', () => {
     canvas.style.display = 'block';
     playMusic();
@@ -166,7 +167,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   renderLeaderboard();
 
-  // Simular teclas para móviles
+  // Controles móviles simulando teclas
   const simulateKey = (key) => {
     const event = new KeyboardEvent('keydown', { key });
     document.dispatchEvent(event);
@@ -178,7 +179,7 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('down').addEventListener('click', () => simulateKey('ArrowDown'));
 });
 
-// Evitar scroll con flechas
+// Bloquear scroll flechas
 document.addEventListener('keydown', (event) => {
   if (["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"].includes(event.key)) {
     event.preventDefault();
@@ -188,6 +189,7 @@ document.addEventListener('keydown', (event) => {
 
 </body>
 </html>
+
 
 
 
