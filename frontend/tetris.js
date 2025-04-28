@@ -9,7 +9,7 @@ let finalScore = 0;
 
 const colors = [null, '#FE11C5', '#781961', '#FF66CC', '#CC00FF', '#FF99FF', '#FF33FF', '#FF00CC'];
 const arena = createMatrix(12, 20);
-const player = { pos: {x:0, y:0}, matrix: null, score: 0 };
+const player = { pos: {x:0, y:0}, matrix: null, score: 0, linesCleared: 0, level: 0, name: '' };
 
 let dropCounter = 0;
 let dropInterval = 500;
@@ -17,7 +17,9 @@ let lastTime = 0;
 
 function createMatrix(w, h) {
     const matrix = [];
-    while (h--) matrix.push(new Array(w).fill(0));
+    while (h--) {
+        matrix.push(new Array(w).fill(0));
+    }
     return matrix;
 }
 
@@ -29,6 +31,26 @@ function createPiece(type) {
     if (type === 'I') return [[0,5,0,0],[0,5,0,0],[0,5,0,0],[0,5,0,0]];
     if (type === 'S') return [[0,6,6],[6,6,0],[0,0,0]];
     if (type === 'Z') return [[7,7,0],[0,7,7],[0,0,0]];
+}
+
+function drawMatrix(matrix, offset) {
+    matrix.forEach((row, y) => {
+        row.forEach((value, x) => {
+            if (value !== 0) {
+                context.fillStyle = colors[value];
+                context.fillRect(x + offset.x, y + offset.y, 1, 1);
+            }
+        });
+    });
+}
+
+function draw() {
+    context.fillStyle = '#000';
+    context.fillRect(0, 0, canvas.width, canvas.height);
+
+    drawMatrix(arena, {x:0, y:0});
+    drawMatrix(player.matrix, player.pos);
+    updateParticles(context);
 }
 
 function collide(arena, player) {
@@ -54,23 +76,61 @@ function merge(arena, player) {
     });
 }
 
-function drawMatrix(matrix, offset) {
-    matrix.forEach((row, y) => {
-        row.forEach((value, x) => {
-            if (value !== 0) {
-                context.fillStyle = colors[value];
-                context.fillRect(x + offset.x, y + offset.y, 1, 1);
-            }
-        });
-    });
+function arenaSweep() {
+    let rowCount = 0;
+    outer: for (let y = arena.length - 1; y >= 0; --y) {
+        if (arena[y].every(cell => cell !== 0)) {
+            arena.splice(y, 1);
+            arena.unshift(new Array(12).fill(0));
+            rowCount++;
+            createParticles(canvas.width / 2 / 20, (y + 0.5), '#FE11C5');
+            playLineClearSound();
+        }
+    }
+    if (rowCount > 0) {
+        player.score += rowCount * 100;
+        player.linesCleared += rowCount;
+
+        if (player.linesCleared >= 10) {
+            player.level++;
+            player.linesCleared -= 10;
+            dropInterval = Math.max(100, dropInterval - 50); // Velocidad más rápida
+        }
+    }
 }
 
-function draw() {
-    context.fillStyle = '#000';
-    context.fillRect(0, 0, canvas.width, canvas.height);
-    drawMatrix(arena, {x:0, y:0});
-    drawMatrix(player.matrix, player.pos);
-    updateParticles(context);
+function playerDrop() {
+    player.pos.y++;
+    if (collide(arena, player)) {
+        player.pos.y--;
+        merge(arena, player);
+        playerReset();
+        arenaSweep();
+        updateScore();
+    }
+    dropCounter = 0;
+}
+
+function playerMove(dir) {
+    player.pos.x += dir;
+    if (collide(arena, player)) {
+        player.pos.x -= dir;
+    }
+}
+
+function playerRotate(dir) {
+    const pos = player.pos.x;
+    let offset = 1;
+    rotate(player.matrix, dir);
+    while (collide(arena, player)) {
+        player.pos.x += offset;
+        offset = -(offset + (offset > 0 ? 1 : -1));
+        if (offset > player.matrix[0].length) {
+            rotate(player.matrix, -dir);
+            player.pos.x = pos;
+            return;
+        }
+    }
 }
 
 function rotate(matrix, dir) {
@@ -92,6 +152,7 @@ function playerReset() {
     if (collide(arena, player)) {
         gameOver = true;
         finalScore = player.score;
+
         arena.forEach(row => row.fill(0));
         saveScore();
         updateLeaderboard();
@@ -101,81 +162,49 @@ function playerReset() {
         setTimeout(() => {
             showGameOver();
             showShareButton(finalScore);
-        }, 200);
-    }
-}
-
-function playerDrop() {
-    player.pos.y++;
-    if (collide(arena, player)) {
-        player.pos.y--;
-        merge(arena, player);
-        playerReset();
-        arenaSweep();
-        updateScore();
-    }
-    dropCounter = 0;
-}
-
-function playerMove(dir) {
-    player.pos.x += dir;
-    if (collide(arena, player)) player.pos.x -= dir;
-}
-
-function playerRotate(dir) {
-    const pos = player.pos.x;
-    let offset = 1;
-    rotate(player.matrix, dir);
-    while (collide(arena, player)) {
-        player.pos.x += offset;
-        offset = -(offset + (offset > 0 ? 1 : -1));
-        if (offset > player.matrix[0].length) {
-            rotate(player.matrix, -dir);
-            player.pos.x = pos;
-            return;
-        }
-    }
-}
-
-function arenaSweep() {
-    let rowCount = 1;
-    outer: for (let y = arena.length - 1; y >= 0; --y) {
-        if (arena[y].every(cell => cell !== 0)) {
-            arena.splice(y, 1);
-            arena.unshift(new Array(12).fill(0));
-            player.score += 100 * rowCount;
-            rowCount *= 2;
-            createParticles(canvas.width / 2 / 20, canvas.height / 2 / 20, '#FE11C5');
-            playLineClearSound();
-        }
+        }, 100);
     }
 }
 
 function update(time = 0) {
     if (gameOver) return;
+
     const deltaTime = time - lastTime;
     lastTime = time;
     dropCounter += deltaTime;
-    if (dropCounter > dropInterval) playerDrop();
+
+    if (dropCounter > dropInterval) {
+        playerDrop();
+    }
+
     draw();
     requestAnimationFrame(update);
 }
 
 function updateScore() {
-    document.getElementById('scoreTable').querySelector('tbody').innerHTML =
-        `<tr><td>YOU</td><td>${player.score}</td></tr>`;
+    const tbody = document.getElementById('scoreTable').querySelector('tbody');
+    tbody.innerHTML = `<tr><td>${player.name || 'YOU'}</td><td>${player.score}</td></tr>`;
+
+    const levelDisplay = document.getElementById('levelDisplay');
+    if (levelDisplay) {
+        levelDisplay.textContent = `Level: ${player.level}`;
+    }
 }
 
 document.addEventListener('keydown', event => {
-    if (event.key === 'ArrowLeft' || event.key === 'a') playerMove(-1);
-    else if (event.key === 'ArrowRight' || event.key === 'd') playerMove(1);
-    else if (event.key === 'ArrowDown' || event.key === 's') playerDrop();
-    else if (event.key === 'ArrowUp' || event.key === 'w') playerRotate(1);
+    if (event.key === 'ArrowLeft' || event.key === 'a') {
+        playerMove(-1);
+    } else if (event.key === 'ArrowRight' || event.key === 'd') {
+        playerMove(1);
+    } else if (event.key === 'ArrowDown' || event.key === 's') {
+        playerDrop();
+    } else if (event.key === 'ArrowUp' || event.key === 'w') {
+        playerRotate(1);
+    }
 });
 
 canvas.style.display = 'none';
 
-// Save and load leaderboard
 function saveScore() {
     let scores = JSON.parse(localStorage.getItem('topScores')) || [];
     scores.push(player.score);
@@ -194,7 +223,35 @@ function updateLeaderboard() {
     });
 }
 
-// Botón para compartir puntuación
+document.getElementById('startGame').addEventListener('click', () => {
+    player.name = prompt('Enter your Twitter username (without @):') || 'YOU';
+    player.linesCleared = 0;
+    player.level = 0;
+    dropInterval = 500;
+
+    canvas.style.display = 'block';
+    document.getElementById('startGame').disabled = true;
+
+    const existingShareButton = document.getElementById('shareButton');
+    if (existingShareButton) existingShareButton.remove();
+
+    context.clearRect(0, 0, canvas.width, canvas.height);
+    gameOver = false;
+    arena.forEach(row => row.fill(0));
+    player.score = 0;
+    playMusic();
+    playerReset();
+    update();
+});
+
+function showGameOver() {
+    const img = new Image();
+    img.src = 'https://raw.githubusercontent.com/Aliencryptodev/tetris-succinct-zk/main/assets/gameover-resized.png';
+    img.onload = () => {
+        context.drawImage(img, (canvas.width / 2) - 120, (canvas.height / 2) - 60, 240, 120);
+    };
+}
+
 function showShareButton(score) {
     const shareButton = document.createElement('button');
     shareButton.id = 'shareButton';
@@ -210,7 +267,7 @@ function showShareButton(score) {
     shareButton.style.display = 'block';
 
     shareButton.onclick = () => {
-        const tweet = `🎮 I scored ${score} points in Tetris Succinct zkProof! 🌸 Created by @doctordr1on. Try to beat me! https://tetris-succinct-zk.vercel.app`;
+        const tweet = `🎮 I scored ${score} points in Tetris Succinct zkProof! 🌸 Created by @${player.name}. Try to beat me! https://tetris-succinct-zk.vercel.app`;
         const twitterURL = `https://twitter.com/intent/tweet?text=${encodeURIComponent(tweet)}`;
         window.open(twitterURL, '_blank');
     };
@@ -218,28 +275,6 @@ function showShareButton(score) {
     document.querySelector('.game-container').appendChild(shareButton);
 }
 
-// Mostrar imagen de Game Over
-function showGameOver() {
-    const img = new Image();
-    img.src = 'https://raw.githubusercontent.com/Aliencryptodev/tetris-succinct-zk/main/assets/gameover_resized.png';
-    img.onload = () => {
-        context.drawImage(img, (canvas.width / 2) - 120, (canvas.height / 2) - 60, 240, 120);
-    };
-}
-
-// Botón Start Game
-document.getElementById('startGame').addEventListener('click', () => {
-    canvas.style.display = 'block';
-    document.getElementById('startGame').disabled = true;
-    const existingShareButton = document.getElementById('shareButton');
-    if (existingShareButton) existingShareButton.remove();
-    gameOver = false;
-    arena.forEach(row => row.fill(0));
-    player.score = 0;
-    playMusic();
-    playerReset();
-    update();
-});
 
 
 
