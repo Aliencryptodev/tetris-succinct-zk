@@ -6,32 +6,27 @@
     <title>Tetris Succinct zkProof</title>
     <style>
         body {
-            background-color: #F1F1F1; /* Fondo claro */
+            background: url('https://aliencryptodev.github.io/tetris-succinct-zk/assets/background.png') no-repeat center center fixed;
+            background-size: cover;
             color: #781961;
             font-family: 'Poppins', sans-serif;
             display: flex;
-            flex-direction: row; /* Colocamos el contenido en fila */
-            justify-content: center; /* Centrado horizontal */
+            flex-direction: row;
+            justify-content: center;
             align-items: center;
             padding: 20px;
-            height: 100vh; /* Usamos toda la altura de la pantalla */
+            height: 100vh;
             margin: 0;
         }
 
         .container {
             display: flex;
             justify-content: space-between;
-            width: 80%; /* Hacemos que todo ocupe un 80% del ancho */
-            background-image: url('https://github.com/Aliencryptodev/tetris-succinct-zk/blob/main/assets/background.png'); /* Añadido el background con enlace completo */
-            background-size: cover;
-            background-position: center;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+            width: 80%;
         }
 
         .game-container {
-            flex: 0 0 70%; /* El área del juego ocupará el 70% */
+            flex: 0 0 70%;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -39,13 +34,13 @@
         }
 
         .leaderboard-container {
-            flex: 0 0 30%; /* El leaderboard ocupará el 30% */
+            flex: 0 0 30%;
             display: flex;
             flex-direction: column;
             justify-content: flex-start;
             align-items: flex-start;
             padding: 20px;
-            background-color: rgba(255, 255, 255, 0.8); /* Fondo semi-transparente */
+            background-color: rgba(255, 255, 255, 0.8);
             border-radius: 10px;
             box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
         }
@@ -88,28 +83,43 @@
             background: black;
             display: none;
         }
+
+        /* Estilos botones móviles */
+        .mobile-controls {
+            margin-top: 10px;
+            display: flex;
+            gap: 10px;
+        }
+        .mobile-controls button {
+            padding: 10px;
+            font-size: 1rem;
+            width: 50px;
+        }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <!-- Área del juego -->
     <div class="game-container">
         <h1>Tetris Succinct zkProof 🌸</h1>
-        <button id="submit">Submit Proof</button>
         <button id="startGame">Start Game 🎮</button>
         <canvas id="tetris" width="240" height="400"></canvas>
+
+        <div class="mobile-controls">
+            <button id="leftBtn">←</button>
+            <button id="rotateBtn">⟳</button>
+            <button id="rightBtn">→</button>
+            <button id="downBtn">↓</button>
+        </div>
     </div>
 
-    <!-- Leaderboard -->
     <div class="leaderboard-container">
         <h2>🏆 Verified Players</h2>
         <table id="scoreTable">
             <thead>
                 <tr><th>Player</th><th>Score</th></tr>
             </thead>
-            <tbody>
-            </tbody>
+            <tbody></tbody>
         </table>
     </div>
 </div>
@@ -123,25 +133,31 @@
 <script>
     document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('startGame').addEventListener('click', () => {
-            canvas.style.display = 'block';  // Mostrar el juego
-            playMusic();                    // Iniciar música
-            playerReset();                   // Crear primera pieza
-            update();                        // Empezar animación
+            canvas.style.display = 'block';
+            playMusic();
+            playerReset();
+            update();
         });
 
-        renderLeaderboard(); // Leaderboard sigue cargando como siempre
+        document.getElementById('leftBtn').addEventListener('click', () => playerMove(-1));
+        document.getElementById('rightBtn').addEventListener('click', () => playerMove(1));
+        document.getElementById('rotateBtn').addEventListener('click', () => playerRotate(1));
+        document.getElementById('downBtn').addEventListener('click', () => playerDrop());
+
+        renderLeaderboard();
     });
 
-    // Prevent page scrolling when pressing arrow keys
-    document.addEventListener('keydown', function(event) {
-        if (event.key === "ArrowUp" || event.key === "ArrowDown") {
-            event.preventDefault(); // Prevent default action (scrolling)
+    // Bloquear scroll al usar flechas
+    window.addEventListener("keydown", function(e) {
+        if(["ArrowUp","ArrowDown","ArrowLeft","ArrowRight"].includes(e.key)) {
+            e.preventDefault();
         }
     });
 </script>
 
 </body>
 </html>
+
 
 
 
