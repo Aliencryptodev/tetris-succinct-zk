@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -34,12 +35,13 @@
       background-color: black;
       display: none;
       z-index: 5;
+      border-radius: 10px;
     }
 
     #leaderboard-container {
       position: absolute;
       top: 20.5%;
-      left: 51.8%;
+      right: 8.2%;
       width: 300px;
       height: 500px;
       background: rgba(255, 255, 255, 0.92);
@@ -70,7 +72,7 @@
     #controls {
       position: absolute;
       top: 75%;
-      left: 14.5%;
+      left: 13.5%;
       display: flex;
       gap: 10px;
       z-index: 6;
@@ -88,12 +90,39 @@
 
     #dancerGif {
       position: absolute;
-      top: 58.6%;
-      left: 57.2%;
+      top: 66.2%;
+      right: 11.8%;
       width: 120px;
       height: auto;
       display: none;
       z-index: 6;
+    }
+
+    .mobile-controls {
+      position: absolute;
+      bottom: 5%;
+      left: 13%;
+      display: none;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 8px;
+      z-index: 6;
+    }
+
+    .mobile-controls button {
+      background-color: #FE11C5;
+      border: none;
+      color: white;
+      font-size: 1.5rem;
+      padding: 10px 20px;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    @media (max-width: 768px) {
+      .mobile-controls {
+        display: flex;
+      }
     }
   </style>
 </head>
@@ -113,11 +142,18 @@
 </div>
 
 <div id="controls">
-  <button id="startGame">Start Game 🎮</button>
   <button id="submit">Submit Proof</button>
+  <button id="startGame">Start Game 🎮</button>
 </div>
 
-<img src="https://raw.githubusercontent.com/Aliencryptodev/tetris-succinct-zk/main/assets/dancer.gif" id="dancerGif" alt="dancer">
+<img src="https://raw.githubusercontent.com/Aliencryptodev/tetris-succinct-zk/main/assets/freakybird.gif" id="dancerGif" alt="dancer">
+
+<div class="mobile-controls">
+  <button id="left">⬅️</button>
+  <button id="rotate">🔄</button>
+  <button id="right">➡️</button>
+  <button id="down">⬇️</button>
+</div>
 
 <script src="app.js" type="module"></script>
 <script src="tetris.js"></script>
@@ -132,13 +168,29 @@
       document.getElementById('dancerGif').style.display = 'block';
       startGame();
     });
+
     updateLeaderboard();
+
+    const simulateKey = (key) => {
+      const event = new KeyboardEvent('keydown', { key });
+      document.dispatchEvent(event);
+    };
+
+    document.getElementById('left').addEventListener('click', () => simulateKey('ArrowLeft'));
+    document.getElementById('right').addEventListener('click', () => simulateKey('ArrowRight'));
+    document.getElementById('rotate').addEventListener('click', () => simulateKey('ArrowUp'));
+    document.getElementById('down').addEventListener('click', () => simulateKey('ArrowDown'));
+  });
+
+  document.addEventListener('keydown', (event) => {
+    if (["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"].includes(event.key)) {
+      event.preventDefault();
+    }
   });
 </script>
 
 </body>
 </html>
-
 
 
 
