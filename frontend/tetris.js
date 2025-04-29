@@ -215,6 +215,11 @@ function showGameOver() {
 }
 
 function showShareButton(score) {
+    const existingButton = document.getElementById('shareButton');
+    if (existingButton) {
+        existingButton.remove();
+    }
+
     const shareButton = document.createElement('button');
     shareButton.id = 'shareButton';
     shareButton.innerText = 'Share on Twitter 🐦';
@@ -229,10 +234,14 @@ function showShareButton(score) {
     shareButton.style.display = 'block';
 
     shareButton.onclick = () => {
-        const tweet = `🎮 I scored ${score} points in Tetris Succinct zkProof! 🌸 Created by @${playerName}. Try to beat me! https://tetris-succinct-zk.vercel.app`;
+        const tweet = `🎮 I scored ${score} points in Tetris Succinct zkProof! 🌸 Created by @doctordr1on. Try to beat me! https://tetris-succinct-zk.vercel.app`;
         const twitterURL = `https://twitter.com/intent/tweet?text=${encodeURIComponent(tweet)}`;
         window.open(twitterURL, '_blank');
     };
+
+    document.querySelector('.game-container').appendChild(shareButton);
+}
+
 
     document.querySelector('.game-container').appendChild(shareButton);
 }
