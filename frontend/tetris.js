@@ -212,10 +212,11 @@ function updateLeaderboard() {
         .sort((a, b) => b.score - a.score)
         .slice(0, 5);
 
-    sorted.forEach((entry) => {
+    sorted.forEach((entry, index) => {
         const row = leaderboardTable.insertRow();
-        row.insertCell(0).textContent = entry.name || "Player";
-        row.insertCell(1).textContent = entry.score;
+        row.insertCell(0).textContent = `#${index + 1}`;
+        row.insertCell(1).textContent = entry.name || "Player";
+        row.insertCell(2).textContent = entry.score;
     });
 }
 
