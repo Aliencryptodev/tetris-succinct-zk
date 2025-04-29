@@ -113,12 +113,6 @@ function playerDrop() {
 
 }
 
-function playerMove(dir) {
-    player.pos.x += dir;
-    if (collide(arena, player)) {
-        player.pos.x -= dir;
-    }
-}
 
 function playerReset() {
     const pieces = 'TJLOSZI';
