@@ -4,12 +4,11 @@
 <head>
   <meta charset="UTF-8">
   <title>Tetris Succinct zkProof</title>
-
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
   <style>
     body {
-      background: url('https://raw.githubusercontent.com/Aliencryptodev/tetris-succinct-zk/main/assets/background.png') no-repeat center center fixed;
+      background: url('assets/background.png') no-repeat center center fixed;
       background-size: cover;
       font-family: 'Poppins', sans-serif;
       color: #781961;
@@ -26,30 +25,34 @@
       display: flex;
       justify-content: space-between;
       width: 90%;
-      max-width: 1200px;
+      max-width: 1920px;
+      height: 100vh;
     }
 
     .game-container {
-      flex: 0 0 70%;
+      flex: 0 0 65%;
       display: flex;
       flex-direction: column;
       align-items: center;
+      justify-content: center;
     }
 
     .leaderboard-container {
-      flex: 0 0 28%;
-      background: rgba(255, 255, 255, 0.9);
-      border-radius: 10px;
+      flex: 0 0 30%;
+      background: rgba(255, 255, 255, 0.85);
+      border-radius: 20px;
       padding: 20px;
-      box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.15);
+      box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.2);
       display: flex;
       flex-direction: column;
       align-items: center;
+      height: 90%;
+      overflow-y: auto;
     }
 
     h1 {
       color: #FE11C5;
-      margin-bottom: 20px;
+      margin-bottom: 10px;
       text-align: center;
     }
 
@@ -63,7 +66,6 @@
       margin: 10px;
       cursor: pointer;
       width: 220px;
-      touch-action: manipulation;
     }
 
     button:hover {
@@ -72,6 +74,14 @@
 
     #tetris {
       background: black;
+      margin-top: 20px;
+      display: none;
+      border-radius: 10px;
+    }
+
+    #freakybird-gif {
+      width: 180px;
+      height: auto;
       margin-top: 20px;
       display: none;
     }
@@ -105,6 +115,7 @@
       .container {
         flex-direction: column;
         align-items: center;
+        height: auto;
       }
       .leaderboard-container {
         width: 100%;
@@ -118,13 +129,13 @@
 </head>
 
 <body>
-
 <div class="container">
   <div class="game-container">
     <h1>Tetris Succinct zkProof 🌸</h1>
     <button id="submit">Submit Proof</button>
     <button id="startGame">Start Game 🎮</button>
     <canvas id="tetris" width="240" height="400"></canvas>
+    <img id="freakybird-gif" src="assets/freakybird.gif" alt="freakybird gif" />
 
     <div class="mobile-controls">
       <button id="left">⬅️</button>
@@ -155,6 +166,7 @@
 document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('startGame').addEventListener('click', () => {
     canvas.style.display = 'block';
+    document.getElementById('freakybird-gif').style.display = 'block';
     startGame();
   });
 
@@ -177,7 +189,7 @@ document.addEventListener('keydown', (event) => {
   }
 });
 </script>
-
 </body>
 </html>
+
 
