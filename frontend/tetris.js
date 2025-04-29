@@ -191,11 +191,12 @@ function updateLeaderboard() {
     const leaderboard = JSON.parse(localStorage.getItem('topScores')) || [];
     const leaderboardTable = document.getElementById('scoreTable').querySelector('tbody');
     leaderboardTable.innerHTML = '';
-    leaderboard.forEach((score, index) => {
-        if (score !== null && score !== undefined) {
+
+    leaderboard.forEach((entry) => {
+        if (entry && entry.score > 0) { // SOLO si tienen puntuación mayor que 0
             const row = leaderboardTable.insertRow();
-            row.insertCell(0).textContent = `Player ${index + 1}`;
-            row.insertCell(1).textContent = score;
+            row.insertCell(0).textContent = entry.name || "Player";
+            row.insertCell(1).textContent = entry.score;
         }
     });
 }
