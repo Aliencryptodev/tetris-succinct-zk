@@ -7,14 +7,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
   <style>
-    html {
-      transform: scale(1);
-      transform-origin: top left;
-      width: 100vw;
-      height: 100vh;
-      overflow: hidden;
-    }
-
     body {
       background: url('https://raw.githubusercontent.com/Aliencryptodev/tetris-succinct-zk/main/assets/background.png') no-repeat center center fixed;
       background-size: cover;
@@ -26,6 +18,14 @@
       width: 100vw;
       overflow: hidden;
       position: relative;
+    }
+
+    html {
+      transform: scale(1);
+      transform-origin: top left;
+      width: 100vw;
+      height: 100vh;
+      overflow: hidden;
     }
 
     #tetris {
@@ -122,6 +122,21 @@
       }
     }
   </style>
+
+  <!-- ✅ BLOQUEO DE ZOOM -->
+  <script>
+    window.addEventListener('wheel', function(e) {
+      if (e.ctrlKey) {
+        e.preventDefault();
+      }
+    }, { passive: false });
+
+    window.addEventListener('keydown', function(e) {
+      if ((e.ctrlKey || e.metaKey) && (e.key === '+' || e.key === '-' || e.key === '=')) {
+        e.preventDefault();
+      }
+    });
+  </script>
 </head>
 
 <body>
