@@ -2,12 +2,13 @@
 
 const canvas = document.getElementById('tetris');
 const context = canvas.getContext('2d');
-
 context.scale(20, 20);
 
 let gameOver = false;
 let finalScore = 0;
 let playerName = "YOU";
+
+const dancerGif = document.getElementById("dancerGif");
 
 function arenaSweep() {
     let rowCount = 1;
@@ -19,19 +20,16 @@ function arenaSweep() {
             rowCount *= 2;
             createParticles(canvas.width / 2 / 20, canvas.height / 2 / 20, '#FE11C5');
             playLineClearSound();
-            animateGif(); // <- mover el GIF cuando eliminas fila
+            animateDancer();
         }
     }
 }
 
-function animateGif() {
-    const gif = document.getElementById('dancerGif');
-    if (gif) {
-        gif.style.display = 'block';
-        gif.style.animation = 'shake 0.5s';
-        setTimeout(() => {
-            gif.style.animation = '';
-        }, 500);
+function animateDancer() {
+    if (dancerGif) {
+        dancerGif.style.animation = 'none';
+        dancerGif.offsetHeight; // trigger reflow
+        dancerGif.style.animation = 'pulse 0.5s ease';
     }
 }
 
@@ -39,7 +37,8 @@ function collide(arena, player) {
     const [m, o] = [player.matrix, player.pos];
     for (let y = 0; y < m.length; ++y) {
         for (let x = 0; x < m[y].length; ++x) {
-            if (m[y][x] !== 0 && (arena[y + o.y] && arena[y + o.y][x + o.x]) !== 0) {
+            if (m[y][x] !== 0 &&
+                (arena[y + o.y] && arena[y + o.y][x + o.x]) !== 0) {
                 return true;
             }
         }
@@ -70,7 +69,8 @@ function drawMatrix(matrix, offset) {
         row.forEach((value, x) => {
             if (value !== 0) {
                 const gradient = context.createLinearGradient(
-                    x + offset.x, y + offset.y, x + offset.x + 1, y + offset.y + 1
+                    x + offset.x, y + offset.y,
+                    x + offset.x + 1, y + offset.y + 1
                 );
                 gradient.addColorStop(0, colors[value]);
                 gradient.addColorStop(1, 'white');
@@ -199,9 +199,8 @@ function update(time = 0) {
 }
 
 function updateScore() {
-    const tbody = document.getElementById('scoreTable').querySelector('tbody');
-    tbody.innerHTML = gameOver
-        ? `<tr><td>${playerName}</td><td>${finalScore}</td></tr>`
+    document.getElementById('scoreTable').querySelector('tbody').innerHTML =
+        gameOver ? `<tr><td>${playerName}</td><td>${finalScore}</td></tr>`
         : `<tr><td>${playerName}</td><td>${player.score}</td></tr>`;
 }
 
@@ -216,7 +215,7 @@ function updateLeaderboard() {
     const leaderboard = JSON.parse(localStorage.getItem('topScores')) || [];
     const tbody = document.getElementById('scoreTable').querySelector('tbody');
     tbody.innerHTML = '';
-    leaderboard.sort((a, b) => b.score - a.score).slice(0, 5).forEach((entry, index) => {
+    leaderboard.slice(0, 5).forEach((entry, index) => {
         const row = tbody.insertRow();
         row.insertCell(0).textContent = `#${index + 1}`;
         row.insertCell(1).textContent = entry.name || 'Player';
@@ -231,6 +230,7 @@ function showGameOver() {
         canvas.style.display = 'block';
         context.clearRect(0, 0, canvas.width, canvas.height);
         context.drawImage(img, (canvas.width / 2) - 120, (canvas.height / 2) - 60, 240, 120);
+        setTimeout(() => showShareButton(finalScore), 500);
     };
 }
 
@@ -240,29 +240,56 @@ function showShareButton(score) {
     const shareButton = document.createElement('button');
     shareButton.id = 'shareButton';
     shareButton.innerText = 'Share on Twitter 🐦';
-    shareButton.style.backgroundColor = '#1DA1F2';
-    shareButton.style.color = 'white';
-    shareButton.style.border = 'none';
-    shareButton.style.padding = '10px 20px';
-    shareButton.style.fontSize = '1rem';
-    shareButton.style.borderRadius = '10px';
-    shareButton.style.cursor = 'pointer';
-    shareButton.style.position = 'fixed';
-    shareButton.style.bottom = '20px';
-    shareButton.style.left = '50%';
-    shareButton.style.transform = 'translateX(-50%)';
+    Object.assign(shareButton.style, {
+        backgroundColor: '#1DA1F2',
+        color: 'white',
+        border: 'none',
+        padding: '10px 20px',
+        fontSize: '1rem',
+        borderRadius: '10px',
+        cursor: 'pointer',
+        position: 'fixed',
+        bottom: '20px',
+        left: '50%',
+        transform: 'translateX(-50%)',
+        zIndex: '9999'
+    });
     shareButton.onclick = () => {
-        const tweet = `🎮 I scored ${score} points in Tetris Succinct zkProof! Created by @doctordr1on!`;
+        const tweet = `🎮 I scored ${score} points in Tetris Succinct zkProof! 🌸 Created by @doctordr1on. Try to beat me! https://tetris-succinct-zk.vercel.app`;
         window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(tweet)}`, '_blank');
     };
     document.body.appendChild(shareButton);
 }
 
-const colors = [null, '#FF00CC', '#FFE600', '#FF7B00', '#0099FF', '#00FF99', '#FF3366', '#9900FF'];
+document.addEventListener('keydown', event => {
+    const { key } = event;
+    if (['ArrowLeft', 'a'].includes(key)) playerMove(-1);
+    else if (['ArrowRight', 'd'].includes(key)) playerMove(1);
+    else if (['ArrowDown', 's'].includes(key)) playerDrop();
+    else if (['ArrowUp', 'w'].includes(key)) playerRotate(1);
+});
+
+function startGame() {
+    playerName = prompt("Enter your Twitter handle (without @):", "player") || "YOU";
+    canvas.style.display = 'block';
+    document.getElementById('startGame').disabled = true;
+    const existingShareButton = document.getElementById('shareButton');
+    if (existingShareButton) existingShareButton.remove();
+    gameOver = false;
+    arena.forEach(row => row.fill(0));
+    player.score = 0;
+    playMusic();
+    playerReset();
+    update();
+}
+
+const colors = [
+    null, '#FF00CC', '#FFE600', '#FF7B00', '#0099FF', '#00FF99', '#FF3366', '#9900FF'
+];
 const arena = createMatrix(12, 20);
 const player = { pos: {x:0, y:0}, matrix: null, score: 0 };
-
 canvas.style.display = 'none';
+
 
 
 
