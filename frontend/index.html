@@ -29,6 +29,30 @@
       max-width: 1200px;
     }
 
+    #fixed-buttons {
+      position: absolute;
+      bottom: 5%;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 20px;
+      z-index: 10;
+    }
+
+    #fixed-buttons button {
+      background-color: #FE11C5;
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      font-size: 1rem;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    #fixed-buttons button:hover {
+      background-color: #781961;
+    }
+
     .game-container {
       flex: 0 0 70%;
       display: flex;
@@ -114,17 +138,21 @@
         display: flex;
       }
     }
+    
   </style>
+
 </head>
 
 <body>
 
 <div class="container">
   <div class="game-container">
-    <h1>Tetris Succinct zkProof 🌸</h1>
-    <button id="submit">Submit Proof</button>
-    <button id="startGame">Start Game 🎮</button>
+  
     <canvas id="tetris" width="240" height="400"></canvas>
+    <div id="fixed-buttons">
+    <button id="startGame">Start Game 🎮</button>
+    <button id="submit">Submit Proof</button>
+    </div>
 
     <div class="mobile-controls">
       <button id="left">⬅️</button>
