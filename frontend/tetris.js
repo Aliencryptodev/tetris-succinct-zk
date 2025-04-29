@@ -1,21 +1,13 @@
 
+
 const canvas = document.getElementById('tetris');
 const context = canvas.getContext('2d');
+
 context.scale(20, 20);
 
 let gameOver = false;
 let finalScore = 0;
 let playerName = "YOU";
-
-// Colores de piezas
-const colors = [
-    null, '#FF00CC', '#FFE600', '#FF7B00', '#0099FF', '#00FF99', '#FF3366', '#9900FF'
-];
-
-// Arena y jugador
-const arena = createMatrix(12, 20);
-const player = { pos: {x:0, y:0}, matrix: null, score: 0 };
-canvas.style.display = 'none';
 
 function arenaSweep() {
     let rowCount = 1;
@@ -27,17 +19,20 @@ function arenaSweep() {
             rowCount *= 2;
             createParticles(canvas.width / 2 / 20, canvas.height / 2 / 20, '#FE11C5');
             playLineClearSound();
-            animateDuck();
+            animateGif(); // <- mover el GIF cuando eliminas fila
         }
     }
 }
 
-function animateDuck() {
-  const duck = document.getElementById('freakybird');
-  if (!duck) return;
-  duck.style.animation = 'none';
-  duck.offsetHeight; // reflow
-  duck.style.animation = 'dance 0.6s ease';
+function animateGif() {
+    const gif = document.getElementById('dancerGif');
+    if (gif) {
+        gif.style.display = 'block';
+        gif.style.animation = 'shake 0.5s';
+        setTimeout(() => {
+            gif.style.animation = '';
+        }, 500);
+    }
 }
 
 function collide(arena, player) {
@@ -54,7 +49,9 @@ function collide(arena, player) {
 
 function createMatrix(w, h) {
     const matrix = [];
-    while (h--) matrix.push(new Array(w).fill(0));
+    while (h--) {
+        matrix.push(new Array(w).fill(0));
+    }
     return matrix;
 }
 
@@ -73,8 +70,7 @@ function drawMatrix(matrix, offset) {
         row.forEach((value, x) => {
             if (value !== 0) {
                 const gradient = context.createLinearGradient(
-                    x + offset.x, y + offset.y, 
-                    x + offset.x + 1, y + offset.y + 1
+                    x + offset.x, y + offset.y, x + offset.x + 1, y + offset.y + 1
                 );
                 gradient.addColorStop(0, colors[value]);
                 gradient.addColorStop(1, 'white');
@@ -99,7 +95,9 @@ function draw() {
 function merge(arena, player) {
     player.matrix.forEach((row, y) => {
         row.forEach((value, x) => {
-            if (value !== 0) arena[y + player.pos.y][x + player.pos.x] = value;
+            if (value !== 0) {
+                arena[y + player.pos.y][x + player.pos.x] = value;
+            }
         });
     });
 }
@@ -154,7 +152,9 @@ function playerReset() {
 
 function playerMove(dir) {
     player.pos.x += dir;
-    if (collide(arena, player)) player.pos.x -= dir;
+    if (collide(arena, player)) {
+        player.pos.x -= dir;
+    }
 }
 
 function playerRotate(dir) {
@@ -191,31 +191,78 @@ function update(time = 0) {
     const deltaTime = time - lastTime;
     lastTime = time;
     dropCounter += deltaTime;
-    if (dropCounter > dropInterval) playerDrop();
+    if (dropCounter > dropInterval) {
+        playerDrop();
+    }
     draw();
     requestAnimationFrame(update);
 }
 
-document.addEventListener('keydown', event => {
-    if (event.key === 'ArrowLeft' || event.key === 'a') playerMove(-1);
-    else if (event.key === 'ArrowRight' || event.key === 'd') playerMove(1);
-    else if (event.key === 'ArrowDown' || event.key === 's') playerDrop();
-    else if (event.key === 'ArrowUp' || event.key === 'w') playerRotate(1);
-});
-
-function startGame() {
-    playerName = prompt("Enter your Twitter handle (without @):", "player") || "YOU";
-    canvas.style.display = 'block';
-    document.getElementById('startGame').disabled = true;
-    const existingShareButton = document.getElementById('shareButton');
-    if (existingShareButton) existingShareButton.remove();
-    gameOver = false;
-    arena.forEach(row => row.fill(0));
-    player.score = 0;
-    playMusic();
-    playerReset();
-    update();
+function updateScore() {
+    const tbody = document.getElementById('scoreTable').querySelector('tbody');
+    tbody.innerHTML = gameOver
+        ? `<tr><td>${playerName}</td><td>${finalScore}</td></tr>`
+        : `<tr><td>${playerName}</td><td>${player.score}</td></tr>`;
 }
+
+function saveScore() {
+    let scores = JSON.parse(localStorage.getItem('topScores')) || [];
+    scores.push({ name: playerName, score: player.score });
+    scores = scores.sort((a, b) => b.score - a.score).slice(0, 5);
+    localStorage.setItem('topScores', JSON.stringify(scores));
+}
+
+function updateLeaderboard() {
+    const leaderboard = JSON.parse(localStorage.getItem('topScores')) || [];
+    const tbody = document.getElementById('scoreTable').querySelector('tbody');
+    tbody.innerHTML = '';
+    leaderboard.sort((a, b) => b.score - a.score).slice(0, 5).forEach((entry, index) => {
+        const row = tbody.insertRow();
+        row.insertCell(0).textContent = `#${index + 1}`;
+        row.insertCell(1).textContent = entry.name || 'Player';
+        row.insertCell(2).textContent = entry.score;
+    });
+}
+
+function showGameOver() {
+    const img = new Image();
+    img.src = 'https://raw.githubusercontent.com/Aliencryptodev/tetris-succinct-zk/main/assets/gameover_resized.png';
+    img.onload = () => {
+        canvas.style.display = 'block';
+        context.clearRect(0, 0, canvas.width, canvas.height);
+        context.drawImage(img, (canvas.width / 2) - 120, (canvas.height / 2) - 60, 240, 120);
+    };
+}
+
+function showShareButton(score) {
+    const existingButton = document.getElementById('shareButton');
+    if (existingButton) existingButton.remove();
+    const shareButton = document.createElement('button');
+    shareButton.id = 'shareButton';
+    shareButton.innerText = 'Share on Twitter 🐦';
+    shareButton.style.backgroundColor = '#1DA1F2';
+    shareButton.style.color = 'white';
+    shareButton.style.border = 'none';
+    shareButton.style.padding = '10px 20px';
+    shareButton.style.fontSize = '1rem';
+    shareButton.style.borderRadius = '10px';
+    shareButton.style.cursor = 'pointer';
+    shareButton.style.position = 'fixed';
+    shareButton.style.bottom = '20px';
+    shareButton.style.left = '50%';
+    shareButton.style.transform = 'translateX(-50%)';
+    shareButton.onclick = () => {
+        const tweet = `🎮 I scored ${score} points in Tetris Succinct zkProof! Created by @doctordr1on!`;
+        window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(tweet)}`, '_blank');
+    };
+    document.body.appendChild(shareButton);
+}
+
+const colors = [null, '#FF00CC', '#FFE600', '#FF7B00', '#0099FF', '#00FF99', '#FF3366', '#9900FF'];
+const arena = createMatrix(12, 20);
+const player = { pos: {x:0, y:0}, matrix: null, score: 0 };
+
+canvas.style.display = 'none';
 
 
 
