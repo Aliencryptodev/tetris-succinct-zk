@@ -202,7 +202,7 @@ function updateLeaderboard() {
 
 function showGameOver() {
     const img = new Image();
-    img.src = 'https://raw.githubusercontent.com/Aliencryptodev/tetris-succinct-zk/main/assets/gameover-resized.png';
+    img.src = 'https://raw.githubusercontent.com/Aliencryptodev/tetris-succinct-zk/main/assets/gameover_resized.png';
     img.onload = () => {
         context.fillStyle = '#000'; 
         context.fillRect(0, 0, canvas.width, canvas.height);
