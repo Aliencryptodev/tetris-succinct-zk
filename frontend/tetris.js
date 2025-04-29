@@ -309,7 +309,18 @@ function startGame() {
     update();
 }
 
-const colors = [null, '#FE11C5', '#781961', '#FF66CC', '#CC00FF', '#FF99FF', '#FF33FF', '#FF00CC'];
+
+const colors = [
+    null,        // 0 - vacío
+    '#FF00CC',   // 1 - T
+    '#FFE600',   // 2 - O
+    '#FF7B00',   // 3 - L
+    '#0099FF',   // 4 - J
+    '#00FF99',   // 5 - I
+    '#FF3366',   // 6 - S
+    '#9900FF'    // 7 - Z
+];
+
 const arena = createMatrix(12, 20);
 const player = { pos: {x:0, y:0}, matrix: null, score: 0 };
 
