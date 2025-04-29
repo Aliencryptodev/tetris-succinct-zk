@@ -88,7 +88,6 @@ function playerDrop() {
     if (collide(arena, player)) {
         player.pos.y--;
         if (player.pos.y <= 0) {
-            // Si no puede bajar ni 1 paso, Game Over
             gameOver = true;
             finalScore = player.score;
             arena.forEach(row => row.fill(0));
@@ -102,7 +101,7 @@ function playerDrop() {
                 showGameOver();
                 showShareButton(finalScore);
             }, 100);
-            return; // importante salir
+            return;
         }
         merge(arena, player);
         playerReset();
@@ -121,19 +120,24 @@ function playerReset() {
     if (collide(arena, player)) {
         gameOver = true;
         finalScore = player.score;
-
         arena.forEach(row => row.fill(0));
         saveScore();
         updateLeaderboard();
         updateScore();
         pauseMusic();
-document.getElementById('startGame').disabled = false;
-        
+        document.getElementById('startGame').disabled = false;
 
         setTimeout(() => {
             showGameOver();
             showShareButton(finalScore);
         }, 100);
+    }
+}
+
+function playerMove(dir) {
+    player.pos.x += dir;
+    if (collide(arena, player)) {
+        player.pos.x -= dir;
     }
 }
 
@@ -203,11 +207,10 @@ function updateLeaderboard() {
     const leaderboardTable = document.getElementById('scoreTable').querySelector('tbody');
     leaderboardTable.innerHTML = '';
 
-    // Ordenar de mayor a menor
     const sorted = leaderboard
         .filter(entry => entry && entry.score !== undefined && entry.score !== null)
         .sort((a, b) => b.score - a.score)
-        .slice(0, 5); // Solo los 5 primeros
+        .slice(0, 5);
 
     sorted.forEach((entry) => {
         const row = leaderboardTable.insertRow();
@@ -220,7 +223,7 @@ function showGameOver() {
     const img = new Image();
     img.src = 'https://raw.githubusercontent.com/Aliencryptodev/tetris-succinct-zk/main/assets/gameover_resized.png';
     img.onload = () => {
-        context.clearRect(0, 0, canvas.width, canvas.height); // Limpia el canvas
+        context.clearRect(0, 0, canvas.width, canvas.height);
         context.drawImage(img, (canvas.width / 2) - 120, (canvas.height / 2) - 60, 240, 120);
 
         setTimeout(() => {
@@ -228,7 +231,6 @@ function showGameOver() {
         }, 500);
     };
 }
-
 
 function showShareButton(score) {
     const existingButton = document.getElementById('shareButton');
@@ -255,7 +257,6 @@ function showShareButton(score) {
         window.open(twitterURL, '_blank');
     };
 
-
     document.querySelector('.game-container').appendChild(shareButton);
 }
 
@@ -281,7 +282,6 @@ function startGame() {
     gameOver = false;
     arena.forEach(row => row.fill(0));
     player.score = 0;
-    updateLeaderboard(); // 👈 añadir esta línea
     playMusic();
     playerReset();
     update();
@@ -292,6 +292,7 @@ const arena = createMatrix(12, 20);
 const player = { pos: {x:0, y:0}, matrix: null, score: 0 };
 
 canvas.style.display = 'none';
+
 
 
 
