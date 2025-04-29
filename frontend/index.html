@@ -7,90 +7,88 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
   <style>
-    html, body {
-      margin: 0;
-      padding: 0;
-      height: 100vh;
-      width: 100vw;
-      overflow: hidden;
-      font-family: 'Poppins', sans-serif;
-      background: url('https://raw.githubusercontent.com/Aliencryptodev/tetris-succinct-zk/main/assets/background.png') no-repeat center center fixed;
-      background-size: cover;
-      position: relative;
-    }
+ html, body {
+  margin: 0;
+  padding: 0;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  font-family: 'Poppins', sans-serif;
+  background: url('https://raw.githubusercontent.com/Aliencryptodev/tetris-succinct-zk/main/assets/background.png') no-repeat center center fixed;
+  background-size: cover;
+  position: relative;
+}
 
-    html {
-      transform: scale(1);
-      transform-origin: top left;
-    }
+#tetris {
+  position: absolute;
+  top: 21.2%;
+  left: 9.9%;
+  width: 265px;
+  height: 470px;
+  background: black;
+  display: none;
+  z-index: 5;
+  border-radius: 6px;
+}
 
-    #tetris {
-      position: absolute;
-      top: 21.2vh;
-      left: 12.65vw;
-      width: 260px;
-      height: 520px;
-      background: black;
-      display: none;
-      z-index: 5;
-      border-radius: 4px;
-    }
+#leaderboard-container {
+  position: absolute;
+  top: 21.7%;
+  right: 10.3%;
+  width: 265px;
+  height: 470px;
+  background: rgba(255, 255, 255, 0.92);
+  border-radius: 10px;
+  padding: 15px;
+  box-shadow: 0px 4px 8px rgba(0,0,0,0.15);
+  z-index: 5;
+  overflow-y: auto;
+}
 
-    #leaderboard-container {
-      position: absolute;
-      top: 21.2vh;
-      left: 57.9vw;
-      width: 260px;
-      height: 520px;
-      background: rgba(255, 255, 255, 0.9);
-      border-radius: 10px;
-      padding: 20px;
-      box-shadow: 0px 4px 8px rgba(0,0,0,0.15);
-      z-index: 5;
-      overflow-y: auto;
-    }
+#leaderboard-container h2 {
+  color: #FE11C5;
+  text-align: center;
+  font-size: 1.1rem;
+  margin: 0;
+  padding-bottom: 10px;
+}
 
-    #leaderboard-container h2 {
-      color: #FE11C5;
-      text-align: center;
-    }
+#scoreTable {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
 
-    #scoreTable {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 10px;
-    }
+#scoreTable th, #scoreTable td {
+  padding: 8px;
+  text-align: center;
+  border-bottom: 1px solid #ccc;
+}
 
-    #scoreTable th, #scoreTable td {
-      padding: 10px;
-      text-align: center;
-      border-bottom: 1px solid #ddd;
-    }
+#fixed-buttons {
+  position: absolute;
+  bottom: 8%;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 20px;
+  z-index: 10;
+}
 
-    #fixed-buttons {
-      position: absolute;
-      bottom: 7.6vh;
-      left: 50%;
-      transform: translateX(-50%);
-      display: flex;
-      gap: 40px;
-      z-index: 10;
-    }
+#fixed-buttons button {
+  background-color: #FE11C5;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  font-size: 1rem;
+  border-radius: 8px;
+  cursor: pointer;
+}
 
-    #fixed-buttons button {
-      background-color: #FE11C5;
-      color: white;
-      border: none;
-      padding: 12px 24px;
-      font-size: 1rem;
-      border-radius: 8px;
-      cursor: pointer;
-      width: 110px;
-    }
+#fixed-buttons button:hover {
+  background-color: #781961;
+}
 
-    #fixed-buttons button:hover {
-      background-color: #781961;
-    }
 
     .mobile-controls {
       display: none;
