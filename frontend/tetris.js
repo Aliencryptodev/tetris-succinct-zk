@@ -239,9 +239,6 @@ function showShareButton(score) {
         window.open(twitterURL, '_blank');
     };
 
-    document.querySelector('.game-container').appendChild(shareButton);
-}
-
 
     document.querySelector('.game-container').appendChild(shareButton);
 }
