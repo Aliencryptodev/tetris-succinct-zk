@@ -83,16 +83,32 @@ function merge(arena, player) {
     });
 }
 
-function playerDrop() {
-    player.pos.y++;
-    if (collide(arena, player)) {
-        player.pos.y--;
-        merge(arena, player);
-        playerReset();
-        arenaSweep();
+player.pos.y++;
+if (collide(arena, player)) {
+    player.pos.y--;
+    if (player.pos.y <= 0) {
+        // Si no puede bajar ni 1 paso, Game Over
+        gameOver = true;
+        finalScore = player.score;
+        arena.forEach(row => row.fill(0));
+        saveScore();
+        updateLeaderboard();
         updateScore();
+        pauseMusic();
+        document.getElementById('startGame').disabled = false;
+
+        setTimeout(() => {
+            showGameOver();
+            showShareButton(finalScore);
+        }, 100);
+        return; // importante salir de la función
     }
-    dropCounter = 0;
+    merge(arena, player);
+    playerReset();
+    arenaSweep();
+    updateScore();
+}
+dropCounter = 0;
 }
 
 function playerMove(dir) {
