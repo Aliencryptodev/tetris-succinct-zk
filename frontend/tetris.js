@@ -57,8 +57,20 @@ function drawMatrix(matrix, offset) {
     matrix.forEach((row, y) => {
         row.forEach((value, x) => {
             if (value !== 0) {
-                context.fillStyle = colors[value];
+                const gradient = context.createLinearGradient(
+                    x + offset.x, y + offset.y, 
+                    x + offset.x + 1, y + offset.y + 1
+                );
+                gradient.addColorStop(0, colors[value]);
+                gradient.addColorStop(1, 'white');
+
+                context.fillStyle = gradient;
                 context.fillRect(x + offset.x, y + offset.y, 1, 1);
+
+                // Borde
+                context.strokeStyle = 'rgba(0,0,0,0.2)';
+                context.lineWidth = 0.05;
+                context.strokeRect(x + offset.x, y + offset.y, 1, 1);
             }
         });
     });
