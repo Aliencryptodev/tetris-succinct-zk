@@ -224,7 +224,7 @@ function showGameOver() {
     const img = new Image();
     img.src = 'https://raw.githubusercontent.com/Aliencryptodev/tetris-succinct-zk/main/assets/gameover_resized.png';
     img.onload = () => {
-        canvas.style.display = 'block'; // <-- AÑADE ESTA LÍNEA
+        canvas.style.display = 'block'
         context.clearRect(0, 0, canvas.width, canvas.height);
         context.drawImage(img, (canvas.width / 2) - 120, (canvas.height / 2) - 60, 240, 120);
 
