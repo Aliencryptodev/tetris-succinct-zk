@@ -5,7 +5,6 @@
   <meta charset="UTF-8">
   <title>Tetris Succinct zkProof</title>
 
-  <!-- Viewport para móviles -->
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
   <style>
@@ -89,7 +88,6 @@
       border-bottom: 1px solid #ddd;
     }
 
-    /* Controles móviles */
     .mobile-controls {
       display: none;
       margin-top: 20px;
@@ -128,7 +126,6 @@
     <button id="startGame">Start Game 🎮</button>
     <canvas id="tetris" width="240" height="400"></canvas>
 
-    <!-- Controles móviles -->
     <div class="mobile-controls">
       <button id="left">⬅️</button>
       <button id="rotate">🔄</button>
@@ -158,14 +155,11 @@
 document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('startGame').addEventListener('click', () => {
     canvas.style.display = 'block';
-    playMusic();
-    playerReset();
-    update();
+    startGame();
   });
 
   renderLeaderboard();
 
-  // Botones móviles simulan teclado
   const simulateKey = (key) => {
     const event = new KeyboardEvent('keydown', { key });
     document.dispatchEvent(event);
@@ -177,7 +171,6 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('down').addEventListener('click', () => simulateKey('ArrowDown'));
 });
 
-// Bloquear scroll flechas
 document.addEventListener('keydown', (event) => {
   if (["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"].includes(event.key)) {
     event.preventDefault();
@@ -187,11 +180,4 @@ document.addEventListener('keydown', (event) => {
 
 </body>
 </html>
-
-
-
-
-
-
-
 
