@@ -281,6 +281,7 @@ function startGame() {
     gameOver = false;
     arena.forEach(row => row.fill(0));
     player.score = 0;
+    updateLeaderboard(); // 👈 añadir esta línea
     playMusic();
     playerReset();
     update();
