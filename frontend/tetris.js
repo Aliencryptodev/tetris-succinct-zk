@@ -102,7 +102,7 @@ function playerDrop() {
                 showGameOver();
                 showShareButton(finalScore);
             }, 100);
-            return; // importante
+            return; // importante salir
         }
         merge(arena, player);
         playerReset();
@@ -110,9 +110,7 @@ function playerDrop() {
         updateScore();
     }
     dropCounter = 0;
-
 }
-
 
 function playerReset() {
     const pieces = 'TJLOSZI';
