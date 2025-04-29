@@ -251,6 +251,10 @@ function showShareButton(score) {
     shareButton.style.cursor = 'pointer';
     shareButton.style.marginTop = '20px';
     shareButton.style.display = 'block';
+    shareButton.style.marginLeft = 'auto';
+    shareButton.style.marginRight = 'auto';
+    shareButton.style.zIndex = '9999';
+    shareButton.style.position = 'relative';
 
     shareButton.onclick = () => {
         const tweet = `🎮 I scored ${score} points in Tetris Succinct zkProof! 🌸 Created by @doctordr1on. Try to beat me! https://tetris-succinct-zk.vercel.app`;
@@ -258,7 +262,7 @@ function showShareButton(score) {
         window.open(twitterURL, '_blank');
     };
 
-    document.querySelector('.game-container').appendChild(shareButton);
+    document.body.appendChild(shareButton);
 }
 
 document.addEventListener('keydown', event => {
