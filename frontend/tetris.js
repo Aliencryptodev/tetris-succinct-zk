@@ -117,6 +117,8 @@ function playerReset() {
         updateLeaderboard();
         updateScore();
         pauseMusic();
+document.getElementById('startGame').disabled = false;
+        
 
         setTimeout(() => {
             showGameOver();
