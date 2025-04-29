@@ -172,13 +172,12 @@ function update(time = 0) {
 function updateScore() {
     if (gameOver) {
         document.getElementById('scoreTable').querySelector('tbody').innerHTML =
-            `<tr><td>YOU</td><td>${finalScore}</td></tr>`;
+            `<tr><td>${playerName}</td><td>${finalScore}</td></tr>`;
     } else {
         document.getElementById('scoreTable').querySelector('tbody').innerHTML =
-            `<tr><td>YOU</td><td>${player.score}</td></tr>`;
+            `<tr><td>${playerName}</td><td>${player.score}</td></tr>`;
     }
 }
-
 
 function saveScore() {
     let scores = JSON.parse(localStorage.getItem('topScores')) || [];
