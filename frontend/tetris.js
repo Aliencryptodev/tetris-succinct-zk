@@ -254,7 +254,11 @@ function showShareButton(score) {
     shareButton.style.marginLeft = 'auto';
     shareButton.style.marginRight = 'auto';
     shareButton.style.zIndex = '9999';
-    shareButton.style.position = 'relative';
+    shareButton.style.position = 'fixed';
+    shareButton.style.bottom = '20px';
+    shareButton.style.left = '50%';
+    shareButton.style.transform = 'translateX(-50%)';
+
 
     shareButton.onclick = () => {
         const tweet = `🎮 I scored ${score} points in Tetris Succinct zkProof! 🌸 Created by @doctordr1on. Try to beat me! https://tetris-succinct-zk.vercel.app`;
