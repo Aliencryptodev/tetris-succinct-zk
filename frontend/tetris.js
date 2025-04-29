@@ -228,15 +228,15 @@ function showGameOver() {
     const img = new Image();
     img.src = 'https://raw.githubusercontent.com/Aliencryptodev/tetris-succinct-zk/main/assets/gameover_resized.png';
     img.onload = () => {
-        context.fillStyle = '#000'; 
-        context.fillRect(0, 0, canvas.width, canvas.height);
+        context.clearRect(0, 0, canvas.width, canvas.height); // Limpia el canvas
         context.drawImage(img, (canvas.width / 2) - 120, (canvas.height / 2) - 60, 240, 120);
 
         setTimeout(() => {
-            showShareButton(finalScore); // mostrar botón después
-        }, 500); 
+            showShareButton(finalScore);
+        }, 500);
     };
 }
+
 
 function showShareButton(score) {
     const existingButton = document.getElementById('shareButton');
