@@ -21,49 +21,44 @@
       overflow: hidden;
     }
 
-    /* Ventana flotante */
-    #game-window {
-      width: 300px;
-      height: 500px;
-      background: #222;
-      border-radius: 15px;
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      display: flex;
-      flex-direction: column;
-      overflow: hidden;
-      resize: both; /* Habilitar redimensionamiento */
-      border: 2px solid #444; /* Borde para redimensionar */
+    /* Contenedor principal escalable */
+    #scalable-container {
+      position: relative;
+      width: 400px; /* Ancho base */
+      height: 700px; /* Alto base */
+      transform-origin: top left;
     }
 
-    /* Cabecera de la ventana */
-    #header {
+    /* Imagen de la máquina */
+    #machine-frame {
+      position: absolute;
       width: 100%;
-      background: #333;
-      color: white;
-      text-align: center;
-      padding: 10px;
-      font-size: 1.2rem;
-      border-bottom: 2px solid #444;
-      cursor: move; /* Cambiar cursor para indicar movimiento */
+      height: 100%;
+      background: url('https://raw.githubusercontent.com/Aliencryptodev/tetris-succinct-zk/main/assets/machine.png') no-repeat center center;
+      background-size: contain;
+      z-index: 1;
     }
 
     /* Canvas del juego */
     #tetris {
-      flex: 1; /* Ocupa el espacio restante */
-      width: 100%;
+      position: absolute;
+      top: 27%; /* Ajustar posición dentro de la máquina */
+      left: 17%;
+      width: 65%;
+      height: 45%;
       background: black;
+      z-index: 2; /* Encima del marco */
     }
 
     /* Controles */
     #controls {
-      padding: 10px;
-      background: #333;
-      color: white;
+      position: absolute;
+      bottom: 5%;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 80%;
       text-align: center;
+      z-index: 3;
     }
 
     #controls button {
@@ -84,12 +79,14 @@
 </head>
 
 <body>
-  <!-- Ventana flotante -->
-  <div id="game-window">
-    <!-- Cabecera -->
-    <div id="header">Tetris Succinct zkProof</div>
+  <!-- Contenedor escalable -->
+  <div id="scalable-container">
+    <!-- Imagen de la máquina como marco -->
+    <div id="machine-frame"></div>
+
     <!-- Canvas del juego -->
     <canvas id="tetris" width="240" height="400"></canvas>
+
     <!-- Controles -->
     <div id="controls">
       <button id="playButton">Play</button>
@@ -98,34 +95,19 @@
   </div>
 
   <script>
-    // Lógica para mover la ventana
-    const gameWindow = document.getElementById('game-window');
-    const header = document.getElementById('header');
+    // Escalar contenedor principal al redimensionar
+    const scalableContainer = document.getElementById('scalable-container');
 
-    let isDragging = false;
-    let offsetX = 0;
-    let offsetY = 0;
+    function scaleContainer() {
+      const scaleX = window.innerWidth / 400; // Basado en el ancho base
+      const scaleY = window.innerHeight / 700; // Basado en el alto base
+      const scale = Math.min(scaleX, scaleY); // Escala uniforme
+      scalableContainer.style.transform = `scale(${scale})`;
+    }
 
-    header.addEventListener('mousedown', (e) => {
-      isDragging = true;
-      offsetX = e.clientX - gameWindow.offsetLeft;
-      offsetY = e.clientY - gameWindow.offsetTop;
-      document.body.style.cursor = 'grabbing';
-    });
-
-    document.addEventListener('mousemove', (e) => {
-      if (isDragging) {
-        const newX = e.clientX - offsetX;
-        const newY = e.clientY - offsetY;
-        gameWindow.style.left = `${newX}px`;
-        gameWindow.style.top = `${newY}px`;
-      }
-    });
-
-    document.addEventListener('mouseup', () => {
-      isDragging = false;
-      document.body.style.cursor = 'default';
-    });
+    // Escalar al cargar y al redimensionar la ventana
+    window.addEventListener('load', scaleContainer);
+    window.addEventListener('resize', scaleContainer);
 
     // Lógica para los botones
     document.getElementById('playButton').addEventListener('click', () => {
