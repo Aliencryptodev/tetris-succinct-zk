@@ -24,16 +24,17 @@
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
-      width: 1024px; /* Tamaño fijo para el área del juego */
-      height: 768px;
+      width: 80vw; /* Escalado responsivo: 80% del ancho del viewport */
+      height: 80vh; /* Escalado responsivo: 80% del alto del viewport */
       display: flex;
+      flex-direction: column;
       justify-content: center;
       align-items: center;
     }
 
     #tetris {
-      width: 350px;
-      height: 378px;
+      width: 40vw; /* Escalado basado en el ancho del viewport */
+      height: 40vh; /* Escalado basado en el alto del viewport */
       background: black;
       z-index: 5;
       border-radius: 6px;
@@ -41,10 +42,10 @@
 
     #leaderboard-container {
       position: fixed;
-      top: 20%;
+      top: 10%;
       right: 5%;
-      width: 355.3px;
-      height: 378.3px;
+      width: 20vw; /* Escalado responsivo */
+      height: 40vh; /* Escalado responsivo */
       background: rgba(255, 255, 255, 0.9);
       border-radius: 10px;
       padding: 20px;
@@ -72,7 +73,7 @@
 
     #fixed-buttons {
       position: fixed;
-      bottom: 10%;
+      bottom: 5%;
       left: 50%;
       transform: translateX(-50%);
       display: flex;
@@ -105,6 +106,20 @@
       margin: 5px;
       font-size: 1.5rem;
       padding: 10px 20px;
+    }
+
+    @media (max-width: 768px) {
+      #leaderboard-container {
+        width: 90vw;
+        top: 65vh;
+        left: 5vw;
+      }
+      #fixed-buttons {
+        bottom: 10vh;
+      }
+      .mobile-controls {
+        display: flex;
+      }
     }
   </style>
 
