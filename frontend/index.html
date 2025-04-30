@@ -22,18 +22,20 @@
 
     /* Contenedor principal */
     #game-container {
-      position: relative;
-      width: 1920px; /* Dimensiones base */
-      height: 1080px; /* Dimensiones base */
+      display: grid;
+      grid-template-rows: auto auto auto; /* Tres filas: canvas, leaderboard, botones */
+      grid-template-columns: 1fr; /* Una columna */
+      justify-items: center; /* Centrar horizontalmente los elementos */
+      align-items: center; /* Centrar verticalmente los elementos */
+      width: 1920px; /* Diseño base */
+      height: 1080px; /* Diseño base */
       transform-origin: top left; /* Escalar desde la esquina superior izquierda */
       transform: scale(1); /* Escala inicial */
+      position: relative;
     }
 
     /* Canvas del Tetris */
     #tetris {
-      position: absolute;
-      top: 387.5px;
-      left: 521.9px;
       width: 350px;
       height: 378px;
       background: black;
@@ -43,22 +45,18 @@
 
     /* Contenedor del leaderboard */
     #leaderboard-container {
-      position: absolute;
-      top: 387.5px;
-      left: 1023.9px;
       width: 355.3px;
       height: 378.3px;
       background: rgba(255, 255, 255, 0.9);
       border-radius: 10px;
       padding: 20px;
       box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.15);
-      z-index: 5;
       overflow-y: auto;
+      text-align: center;
     }
 
     #leaderboard-container h2 {
       color: #FE11C5;
-      text-align: center;
     }
 
     #scoreTable {
@@ -75,13 +73,9 @@
 
     /* Botones */
     #fixed-buttons {
-      position: absolute;
-      bottom: 70px;
-      left: 50%;
-      transform: translateX(-50%);
       display: flex;
       gap: 20px;
-      z-index: 10;
+      justify-content: center;
     }
 
     #fixed-buttons button {
