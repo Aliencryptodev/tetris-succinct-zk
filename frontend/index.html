@@ -24,12 +24,12 @@
     /* Contenedor principal escalable */
     #scalable-container {
       position: relative;
-      width: 400px; /* Ancho base */
-      height: 700px; /* Alto base */
-      transform-origin: top left;
+      width: 400px; /* Tamaño base */
+      height: 700px; /* Tamaño base */
+      transform-origin: top left; /* Punto de origen para escalado */
     }
 
-    /* Imagen de la máquina */
+    /* Imagen de la máquina (marco) */
     #machine-frame {
       position: absolute;
       width: 100%;
@@ -42,7 +42,7 @@
     /* Canvas del juego */
     #tetris {
       position: absolute;
-      top: 27%; /* Ajustar posición dentro de la máquina */
+      top: 27%; /* Ajustar posición dentro del marco */
       left: 17%;
       width: 65%;
       height: 45%;
@@ -50,14 +50,15 @@
       z-index: 2; /* Encima del marco */
     }
 
-    /* Controles */
+    /* Botones */
     #controls {
       position: absolute;
       bottom: 5%;
       left: 50%;
       transform: translateX(-50%);
-      width: 80%;
-      text-align: center;
+      display: flex;
+      flex-direction: row;
+      gap: 10px;
       z-index: 3;
     }
 
@@ -69,7 +70,6 @@
       border: none;
       border-radius: 5px;
       cursor: pointer;
-      margin: 5px;
     }
 
     #controls button:hover {
@@ -87,7 +87,7 @@
     <!-- Canvas del juego -->
     <canvas id="tetris" width="240" height="400"></canvas>
 
-    <!-- Controles -->
+    <!-- Botones -->
     <div id="controls">
       <button id="playButton">Play</button>
       <button id="leaderboardButton">Leaderboard</button>
