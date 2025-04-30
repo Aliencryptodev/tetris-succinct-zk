@@ -12,7 +12,7 @@
       padding: 0;
       width: 100vw;
       height: 100vh;
-      display: flex; /* Usar Flexbox para centrar */
+      display: flex;
       align-items: center; /* Centrar verticalmente */
       justify-content: center; /* Centrar horizontalmente */
       background: url('https://raw.githubusercontent.com/Aliencryptodev/tetris-succinct-zk/main/assets/background.png') no-repeat center center fixed;
@@ -21,20 +21,31 @@
     }
 
     /* Contenedor principal */
-    #game-container {
+    #game-wrapper {
       display: flex;
-      flex-direction: column; /* Alinear elementos en columna */
-      align-items: center; /* Centrar horizontalmente */
-      justify-content: space-between; /* Espacio uniforme entre elementos */
-      width: 90vw; /* Ajustar al 90% del ancho del viewport */
-      height: 90vh; /* Ajustar al 90% de la altura del viewport */
-      max-width: 1920px; /* Limitar a dimensiones base */
-      max-height: 1080px; /* Limitar a dimensiones base */
+      align-items: center;
+      justify-content: center;
+      width: 100%; /* Ocupa todo el ancho disponible */
+      height: 100%; /* Ocupa todo el alto disponible */
+      max-width: 1920px; /* Dimensiones base */
+      max-height: 1080px; /* Dimensiones base */
+      aspect-ratio: 16 / 9; /* Mantener proporción de 16:9 */
+      background: transparent;
+    }
+
+    #game-container {
+      position: relative;
+      width: 100%; /* Escalar según el wrapper */
+      height: 100%; /* Escalar según el wrapper */
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
     }
 
     /* Canvas del Tetris */
     #tetris {
-      width: 35%; /* Proporcional al contenedor principal */
+      width: 40%; /* Ancho proporcional al contenedor */
       height: auto; /* Mantener proporciones */
       background: black;
       z-index: 5;
@@ -43,8 +54,8 @@
 
     /* Contenedor del leaderboard */
     #leaderboard-container {
-      width: 36%; /* Proporcional al contenedor principal */
-      height: auto; /* Mantener proporciones */
+      width: 40%; /* Ancho proporcional */
+      height: auto; /* Ajustar dinámicamente */
       background: rgba(255, 255, 255, 0.9);
       border-radius: 10px;
       padding: 20px;
@@ -74,6 +85,7 @@
       display: flex;
       gap: 20px;
       justify-content: center;
+      margin-top: 20px;
     }
 
     #fixed-buttons button {
@@ -95,25 +107,27 @@
 
 <body>
   <!-- Contenedor principal -->
-  <div id="game-container">
-    <!-- Canvas del juego -->
-    <canvas id="tetris" width="240" height="400"></canvas>
+  <div id="game-wrapper">
+    <div id="game-container">
+      <!-- Canvas del juego -->
+      <canvas id="tetris" width="240" height="400"></canvas>
 
-    <!-- Contenedor del leaderboard -->
-    <div id="leaderboard-container">
-      <h2>🏆 Verified Players</h2>
-      <table id="scoreTable">
-        <thead>
-          <tr><th>Rank</th><th>Player</th><th>Score</th></tr>
-        </thead>
-        <tbody></tbody>
-      </table>
-    </div>
+      <!-- Contenedor del leaderboard -->
+      <div id="leaderboard-container">
+        <h2>🏆 Verified Players</h2>
+        <table id="scoreTable">
+          <thead>
+            <tr><th>Rank</th><th>Player</th><th>Score</th></tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
 
-    <!-- Botones -->
-    <div id="fixed-buttons">
-      <button id="startGame">Start Game 🎮</button>
-      <button id="submit">Submit Proof</button>
+      <!-- Botones -->
+      <div id="fixed-buttons">
+        <button id="startGame">Start Game 🎮</button>
+        <button id="submit">Submit Proof</button>
+      </div>
     </div>
   </div>
 
