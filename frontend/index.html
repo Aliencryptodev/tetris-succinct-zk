@@ -5,6 +5,15 @@
   <title>Tetris Succinct zkProof</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <script src="https://cdn.tailwindcss.com"></script> <!-- Cargar TailwindCSS -->
+  <style>
+    /* Estilo adicional para el leaderboard */
+    #leaderboard {
+      display: none; /* Oculto por defecto */
+    }
+    #leaderboard.active {
+      display: block; /* Mostrar cuando esté activo */
+    }
+  </style>
 </head>
 <body class="flex h-screen w-screen items-center justify-center bg-neutral-900">
   <!-- Contenedor principal de la máquina -->
@@ -15,16 +24,84 @@
     </div>
 
     <!-- Contenedor del canvas del juego -->
-    <div class="relative flex w-full flex-1 flex-col items-center justify-center">
+    <div id="game-container" class="relative flex w-full flex-1 flex-col items-center justify-center">
       <!-- Canvas del juego -->
       <canvas id="tetris" class="flex w-3/4 h-3/4 bg-black rounded-lg shadow-md"></canvas>
     </div>
 
+    <!-- Contenedor del leaderboard -->
+    <div id="leaderboard" class="absolute inset-0 z-20 flex flex-col items-center justify-center bg-black/70 backdrop-blur-sm">
+      <h2 class="text-white text-2xl mb-4">Leaderboard</h2>
+      <ul class="text-white">
+        <li>1. Player1 - 1000</li>
+        <li>2. Player2 - 800</li>
+        <li>3. Player3 - 600</li>
+        <li>4. Player4 - 400</li>
+        <li>5. Player5 - 200</li>
+      </ul>
+      <button id="closeLeaderboard" class="mt-4 px-4 py-2 bg-red-500 text-white rounded-lg shadow-md hover:bg-red-600">Close</button>
+    </div>
+
     <!-- Controles del juego -->
     <div class="absolute flex w-full bottom-4 justify-center items-center gap-4">
-      <button class="px-4 py-2 bg-red-500 text-white rounded-lg shadow-md hover:bg-red-600">Play</button>
-      <button class="px-4 py-2 bg-blue-500 text-white rounded-lg shadow-md hover:bg-blue-600">Leaderboard</button>
+      <button id="playButton" class="px-4 py-2 bg-red-500 text-white rounded-lg shadow-md hover:bg-red-600">Play</button>
+      <button id="leaderboardButton" class="px-4 py-2 bg-blue-500 text-white rounded-lg shadow-md hover:bg-blue-600">Leaderboard</button>
     </div>
   </div>
+
+  <script>
+    // Selección de elementos
+    const playButton = document.getElementById('playButton');
+    const leaderboardButton = document.getElementById('leaderboardButton');
+    const closeLeaderboard = document.getElementById('closeLeaderboard');
+    const leaderboard = document.getElementById('leaderboard');
+    const gameContainer = document.getElementById('game-container');
+    const canvas = document.getElementById('tetris');
+    const context = canvas.getContext('2d');
+
+    // Lógica para mostrar el leaderboard
+    leaderboardButton.addEventListener('click', () => {
+      leaderboard.classList.add('active');
+    });
+
+    // Lógica para cerrar el leaderboard
+    closeLeaderboard.addEventListener('click', () => {
+      leaderboard.classList.remove('active');
+    });
+
+    // Lógica para iniciar el juego
+    playButton.addEventListener('click', () => {
+      alert('Starting game!');
+      startGame();
+    });
+
+    // Función para iniciar un juego de Tetris básico
+    function startGame() {
+      const rows = 20;
+      const cols = 10;
+      const blockSize = canvas.width / cols;
+
+      // Dibujar tablero vacío
+      context.fillStyle = 'black';
+      context.fillRect(0, 0, canvas.width, canvas.height);
+
+      // Dibujar líneas de la cuadrícula
+      context.strokeStyle = 'white';
+      for (let r = 0; r <= rows; r++) {
+        context.beginPath();
+        context.moveTo(0, r * blockSize);
+        context.lineTo(canvas.width, r * blockSize);
+        context.stroke();
+      }
+      for (let c = 0; c <= cols; c++) {
+        context.beginPath();
+        context.moveTo(c * blockSize, 0);
+        context.lineTo(c * blockSize, canvas.height);
+        context.stroke();
+      }
+
+      // Aquí puedes agregar lógica para piezas y movimiento
+    }
+  </script>
 </body>
 </html>
