@@ -253,6 +253,55 @@ const player = { pos: {x:0, y:0}, matrix: null, score: 0 };
 
 canvas.style.display = 'none';
 
+function showGameOver() {
+    const img = new Image();
+    img.src = 'https://raw.githubusercontent.com/Aliencryptodev/tetris-succinct-zk/main/assets/gameover_resized.png';
+    img.onload = () => {
+        canvas.style.display = 'block';
+        context.clearRect(0, 0, canvas.width, canvas.height);
+        context.drawImage(img, (canvas.width / 2) - 120, (canvas.height / 2) - 60, 240, 120);
+
+        setTimeout(() => {
+            showShareButton(finalScore);
+        }, 500);
+    };
+}
+
+function showShareButton(score) {
+    const existingButton = document.getElementById('shareButton');
+    if (existingButton) {
+        existingButton.remove();
+    }
+
+    const shareButton = document.createElement('button');
+    shareButton.id = 'shareButton';
+    shareButton.innerText = 'Share on Twitter 🐦';
+    shareButton.style.backgroundColor = '#1DA1F2';
+    shareButton.style.color = 'white';
+    shareButton.style.border = 'none';
+    shareButton.style.padding = '10px 20px';
+    shareButton.style.fontSize = '1rem';
+    shareButton.style.borderRadius = '10px';
+    shareButton.style.cursor = 'pointer';
+    shareButton.style.marginTop = '20px';
+    shareButton.style.display = 'block';
+    shareButton.style.marginLeft = 'auto';
+    shareButton.style.marginRight = 'auto';
+    shareButton.style.zIndex = '9999';
+    shareButton.style.position = 'fixed';
+    shareButton.style.bottom = '20px';
+    shareButton.style.left = '50%';
+    shareButton.style.transform = 'translateX(-50%)';
+
+    shareButton.onclick = () => {
+        const tweet = `🎮 I scored ${score} points in Tetris Succinct zkProof! 🌸 Created by @doctordr1on. Try to beat me! https://tetris-succinct-zk.vercel.app`;
+        const twitterURL = `https://twitter.com/intent/tweet?text=${encodeURIComponent(tweet)}`;
+        window.open(twitterURL, '_blank');
+    };
+
+    document.body.appendChild(shareButton);
+}
+
 document.addEventListener('keydown', event => {
     if (event.key === 'ArrowLeft' || event.key === 'a') {
         playerMove(-1);
