@@ -24,12 +24,12 @@
     /* Contenedor principal escalable */
     #scalable-container {
       position: relative;
-      width: 400px; /* Tamaño base */
-      height: 700px; /* Tamaño base */
-      transform-origin: top left; /* Punto de origen para escalado */
+      width: 400px; /* Ancho base */
+      height: 700px; /* Alto base */
+      transform-origin: top left;
     }
 
-    /* Imagen de la máquina (marco) */
+    /* Imagen de la máquina como marco */
     #machine-frame {
       position: absolute;
       width: 100%;
@@ -42,8 +42,8 @@
     /* Canvas del juego */
     #tetris {
       position: absolute;
-      top: 27%; /* Ajustar posición dentro del marco */
-      left: 17%;
+      top: 23.5%; /* Ajustar posición dentro del marco */
+      left: 17.5%;
       width: 65%;
       height: 45%;
       background: black;
@@ -53,7 +53,7 @@
     /* Botones */
     #controls {
       position: absolute;
-      bottom: 5%;
+      bottom: 3%; /* Colocarlos justo debajo del marco */
       left: 50%;
       transform: translateX(-50%);
       display: flex;
