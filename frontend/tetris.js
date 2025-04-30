@@ -260,19 +260,16 @@ function showGameOver() {
 
     img.onload = () => {
         canvas.style.display = 'block';
+        context.setTransform(1, 0, 0, 1, 0, 0); // Elimina el escalado anterior
         context.clearRect(0, 0, canvas.width, canvas.height);
-
-        // Aumentamos tamaño del cartel en bloques escalados
-        const widthUnits = 10;
-        const heightUnits = 5;
-        const x = (12 - widthUnits) / 2;
-        const y = (20 - heightUnits) / 2;
-
-        context.drawImage(img, x, y, widthUnits, heightUnits);
+        context.drawImage(img, 0, 0, canvas.width, canvas.height); // Imagen a pantalla completa
 
         setTimeout(() => {
             showShareButton(finalScore);
         }, 500);
+
+        // Vuelve a aplicar la escala para el resto del juego
+        context.scale(canvas.width / 12, canvas.height / 20);
     };
 
     img.onerror = () => {
