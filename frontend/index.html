@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -22,16 +23,15 @@
 
     /* Contenedor principal */
     #game-container {
-      display: grid;
-      grid-template-rows: auto auto auto; /* Tres filas: canvas, leaderboard, botones */
-      grid-template-columns: 1fr; /* Una columna */
-      justify-items: center; /* Centrar horizontalmente los elementos */
-      align-items: center; /* Centrar verticalmente los elementos */
-      width: 1920px; /* Diseño base */
-      height: 1080px; /* Diseño base */
+      position: relative;
+      display: flex;
+      flex-direction: column; /* Alinear contenido en columna */
+      align-items: center; /* Centrar contenido horizontalmente */
+      justify-content: space-between; /* Espacio uniforme entre elementos */
+      width: 1920px; /* Dimensiones base */
+      height: 1080px; /* Dimensiones base */
       transform-origin: top left; /* Escalar desde la esquina superior izquierda */
       transform: scale(1); /* Escala inicial */
-      position: relative;
     }
 
     /* Canvas del Tetris */
@@ -45,6 +45,7 @@
 
     /* Contenedor del leaderboard */
     #leaderboard-container {
+      margin-top: 20px; /* Separación del canvas */
       width: 355.3px;
       height: 378.3px;
       background: rgba(255, 255, 255, 0.9);
@@ -76,6 +77,7 @@
       display: flex;
       gap: 20px;
       justify-content: center;
+      margin-top: 20px;
     }
 
     #fixed-buttons button {
@@ -102,7 +104,7 @@
       const scale = Math.min(scaleWidth, scaleHeight); // Usar el menor de los dos para mantener proporciones
       container.style.transform = `scale(${scale})`; // Aplicar escala al contenedor
 
-      // Centrar el contenedor en la ventana
+      // Centrar el contenedor absoluto
       const offsetX = (window.innerWidth - 1920 * scale) / 2;
       const offsetY = (window.innerHeight - 1080 * scale) / 2;
       container.style.left = `${offsetX}px`;
@@ -159,4 +161,3 @@
   </script>
 </body>
 </html>
-
