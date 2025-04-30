@@ -3,62 +3,54 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Tetris Succinct zkProof</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
   <style>
-    html, body {
+    body, html {
       margin: 0;
       padding: 0;
-      height: 100%;
-      width: 100%;
+      width: 100vw;
+      height: 100vh;
       overflow: hidden;
-      background-color: black;
+      background: url('https://raw.githubusercontent.com/Aliencryptodev/tetris-succinct-zk/main/assets/background.png') no-repeat center center fixed;
+      background-size: cover;
       font-family: 'Poppins', sans-serif;
+      color: #781961;
     }
 
-    .arcade-wrapper {
-      position: absolute;
+    #game-container {
+      position: fixed;
       top: 50%;
       left: 50%;
-      transform: translate(-50%, -50%) scale(1);
-      transform-origin: top left;
-      width: 1920px;
-      height: 1080px;
-    }
-
-    .arcade-background {
-      position: absolute;
-      width: 100%;
-      height: 100%;
-      background: url('https://raw.githubusercontent.com/Aliencryptodev/tetris-succinct-zk/main/assets/background.png') no-repeat center center;
-      background-size: cover;
-      z-index: 1;
+      transform: translate(-50%, -50%);
+      width: 40vw; /* Escalado basado en el viewport */
+      height: 40vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 5;
     }
 
     #tetris {
-      position: absolute;
-      top: 355px;
-      left: 522px;
-      width: 350px;
-      height: 378px;
+      width: 100%;
+      height: 100%;
       background: black;
-      display: none;
-      z-index: 5;
       border-radius: 6px;
     }
 
     #leaderboard-container {
-      position: absolute;
-      top: 387.5px;
-      left: 1023.9px;
-      width: 355.3px;
-      height: 378.3px;
+      position: fixed; /* Fijo al viewport */
+      top: 10%; /* 10% desde la parte superior del viewport */
+      right: 5%; /* 5% desde el borde derecho */
+      width: 20vw; /* Escalado responsivo */
+      height: 40vh; /* Escalado responsivo */
       background: rgba(255, 255, 255, 0.9);
       border-radius: 10px;
       padding: 20px;
-      box-shadow: 0px 4px 8px rgba(0,0,0,0.15);
-      z-index: 5;
+      box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.15);
       overflow-y: auto;
+      z-index: 10;
     }
 
     #leaderboard-container h2 {
@@ -78,16 +70,11 @@
       border-bottom: 1px solid #ddd;
     }
 
-    #leaderboard-gif {
-      width: 100%;
-      margin-top: 10px;
-      border-radius: 8px;
-    }
-
     #fixed-buttons {
-      position: absolute;
-      top: 982px;
-      left: 987px;
+      position: fixed; /* Fijo al viewport */
+      bottom: 5%; /* 5% desde la parte inferior del viewport */
+      left: 50%; /* Centrado horizontalmente */
+      transform: translateX(-50%);
       display: flex;
       gap: 20px;
       z-index: 10;
@@ -107,27 +94,11 @@
       background-color: #781961;
     }
 
-    #share {
-      position: absolute;
-      bottom: 20px;
-      left: 50%;
-      transform: translateX(-50%);
-      background: #00BFFF;
-      color: white;
-      border: none;
-      padding: 10px 20px;
-      border-radius: 10px;
-      font-size: 16px;
-      z-index: 20;
-    }
-
     .mobile-controls {
       display: none;
-      position: absolute;
-      bottom: 100px;
-      left: 50%;
-      transform: translateX(-50%);
-      z-index: 15;
+      margin-top: 20px;
+      flex-wrap: wrap;
+      justify-content: center;
     }
 
     .mobile-controls button {
@@ -137,60 +108,70 @@
     }
 
     @media (max-width: 768px) {
+      #leaderboard-container {
+        width: 90vw; /* Ajusta el ancho en móviles */
+        height: auto; /* Ajusta la altura automáticamente */
+        top: 65vh; /* Baja el leaderboard en pantallas pequeñas */
+        left: 5vw;
+        right: 5vw;
+      }
+
+      #fixed-buttons {
+        bottom: 10vh; /* Ajusta los botones más arriba en móviles */
+      }
+
       .mobile-controls {
         display: flex;
       }
     }
   </style>
-</head>
-<body>
-  <div class="arcade-wrapper" id="arcade-wrapper">
-    <div class="arcade-background"></div>
-
-    <canvas id="tetris" width="240" height="400"></canvas>
-
-    <div id="leaderboard-container">
-      <h2>🏆 Verified Players</h2>
-      <table id="scoreTable">
-        <thead>
-          <tr><th>Rank</th><th>Player</th><th>Score</th></tr>
-        </thead>
-        <tbody></tbody>
-      </table>
-      <img id="leaderboard-gif" src="https://media.giphy.com/media/xTiTnHXbRoaZ1B1Mo8/giphy.gif" alt="Animated GIF">
-    </div>
-
-    <div id="fixed-buttons">
-      <button id="startGame">Start Game 🎮</button>
-      <button id="submit">Submit Proof</button>
-    </div>
-  </div>
-
-  <button id="share">Share on Twitter 🧶</button>
-
-  <div class="mobile-controls">
-    <button id="left">⬅️</button>
-    <button id="rotate">🔄</button>
-    <button id="right">➡️</button>
-    <button id="down">⬇️</button>
-  </div>
 
   <script>
-    function scaleArcade() {
-      const baseWidth = 1920;
-      const baseHeight = 1080;
-      const scale = Math.min(
-        window.innerWidth / baseWidth,
-        window.innerHeight / baseHeight
-      );
-      document.getElementById("arcade-wrapper").style.transform = `translate(-50%, -50%) scale(${scale})`;
-    }
+    window.addEventListener('wheel', function(e) {
+      if (e.ctrlKey) {
+        e.preventDefault();
+      }
+    }, { passive: false });
 
-    window.addEventListener("resize", scaleArcade);
-    window.addEventListener("DOMContentLoaded", () => {
-      scaleArcade();
-      document.getElementById("startGame").addEventListener("click", () => {
-        document.getElementById("tetris").style.display = 'block';
+    window.addEventListener('keydown', function(e) {
+      if ((e.ctrlKey || e.metaKey) && (e.key === '+' || e.key === '-' || e.key === '=')) {
+        e.preventDefault();
+      }
+    });
+  </script>
+</head>
+
+<body>
+  <div id="game-container">
+    <canvas id="tetris" width="240" height="400"></canvas>
+  </div>
+
+  <div id="leaderboard-container">
+    <h2>🏆 Verified Players</h2>
+    <table id="scoreTable">
+      <thead>
+        <tr><th>Rank</th><th>Player</th><th>Score</th></tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </div>
+
+  <div id="fixed-buttons">
+    <button id="startGame">Start Game 🎮</button>
+    <button id="submit">Submit Proof</button>
+  </div>
+
+  <script src="app.js" type="module"></script>
+  <script src="tetris.js"></script>
+  <script src="sound.js"></script>
+  <script src="particles.js"></script>
+  <script src="leaderboard.js"></script>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      document.getElementById('startGame').addEventListener('click', () => {
+        const canvas = document.getElementById('tetris');
+        canvas.style.display = 'block';
         startGame();
       });
 
@@ -207,22 +188,11 @@
       document.getElementById('down')?.addEventListener('click', () => simulateKey('ArrowDown'));
     });
 
-    window.addEventListener('wheel', function(e) {
-      if (e.ctrlKey) e.preventDefault();
-    }, { passive: false });
-
-    window.addEventListener('keydown', function(e) {
-      if ((e.ctrlKey || e.metaKey) && ['+', '-', '='].includes(e.key)) {
-        e.preventDefault();
+    document.addEventListener('keydown', (event) => {
+      if (["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"].includes(event.key)) {
+        event.preventDefault();
       }
     });
   </script>
-
-  <script src="app.js" type="module"></script>
-  <script src="tetris.js"></script>
-  <script src="sound.js"></script>
-  <script src="particles.js"></script>
-  <script src="leaderboard.js"></script>
 </body>
 </html>
-
