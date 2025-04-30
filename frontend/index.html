@@ -17,25 +17,21 @@
       background-size: cover;
       font-family: 'Poppins', sans-serif;
       color: #781961;
+    }
+
+    #game-container {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 1024px; /* Tamaño fijo para el área del juego */
+      height: 768px;
       display: flex;
       justify-content: center;
       align-items: center;
     }
 
-    #game-container {
-      width: 100%;
-      height: 100%;
-      position: relative;
-      display: grid;
-      grid-template-columns: 1fr auto 1fr;
-      grid-template-rows: auto 1fr auto;
-      justify-items: center;
-      align-items: center;
-    }
-
     #tetris {
-      grid-column: 2;
-      grid-row: 2;
       width: 350px;
       height: 378px;
       background: black;
@@ -44,8 +40,9 @@
     }
 
     #leaderboard-container {
-      grid-column: 3;
-      grid-row: 2;
+      position: fixed;
+      top: 20%;
+      right: 5%;
       width: 355.3px;
       height: 378.3px;
       background: rgba(255, 255, 255, 0.9);
@@ -74,8 +71,10 @@
     }
 
     #fixed-buttons {
-      grid-column: 2;
-      grid-row: 3;
+      position: fixed;
+      bottom: 10%;
+      left: 50%;
+      transform: translateX(-50%);
       display: flex;
       gap: 20px;
       z-index: 10;
@@ -107,21 +106,6 @@
       font-size: 1.5rem;
       padding: 10px 20px;
     }
-
-    @media (max-width: 768px) {
-      #leaderboard-container {
-        width: 90%;
-        left: 5%;
-        right: 5%;
-        top: 65vh;
-      }
-      #fixed-buttons {
-        bottom: 10vh;
-      }
-      .mobile-controls {
-        display: flex;
-      }
-    }
   </style>
 
   <script>
@@ -142,28 +126,21 @@
 <body>
   <div id="game-container">
     <canvas id="tetris" width="240" height="400"></canvas>
+  </div>
 
-    <div id="leaderboard-container">
-      <h2>🏆 Verified Players</h2>
-      <table id="scoreTable">
-        <thead>
-          <tr><th>Rank</th><th>Player</th><th>Score</th></tr>
-        </thead>
-        <tbody></tbody>
-      </table>
-    </div>
+  <div id="leaderboard-container">
+    <h2>🏆 Verified Players</h2>
+    <table id="scoreTable">
+      <thead>
+        <tr><th>Rank</th><th>Player</th><th>Score</th></tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </div>
 
-    <div id="fixed-buttons">
-      <button id="startGame">Start Game 🎮</button>
-      <button id="submit">Submit Proof</button>
-    </div>
-
-    <div class="mobile-controls">
-      <button id="left">⬅️</button>
-      <button id="rotate">🔄</button>
-      <button id="right">➡️</button>
-      <button id="down">⬇️</button>
-    </div>
+  <div id="fixed-buttons">
+    <button id="startGame">Start Game 🎮</button>
+    <button id="submit">Submit Proof</button>
   </div>
 
   <script src="app.js" type="module"></script>
