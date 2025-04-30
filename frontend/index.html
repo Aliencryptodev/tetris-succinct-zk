@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -67,42 +66,38 @@
       z-index: 0;
     }
 
-    
-#gameCanvas {
-    position: absolute;
-    top: 334.2px;
-    left: 512.7px;
-    width: 380px;
-    height: 395.1px;
-    background: black;
-    z-index: 2;
-}
+    #gameCanvas {
+      position: absolute;
+      top: 334.2px;
+      left: 512.7px;
+      width: 380px;
+      height: 395.1px;
+      background: black;
+      z-index: 2;
+    }
 
-
-    
-#leaderboard {
-    position: absolute;
-    top: 334.2px;
-    left: 987.9px;
-    width: 394.3px;
-    height: 395.1px;
-    background: rgba(255, 255, 255, 0.95);
-    border-radius: 12px;
-    padding: 20px;
-    box-sizing: border-box;
-    z-index: 2;
-    overflow-y: auto;
-}
-
+    #leaderboard {
+      position: absolute;
+      top: 334.2px;
+      left: 987.9px;
+      width: 394.3px;
+      height: 395.1px;
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 12px;
+      padding: 20px;
+      box-sizing: border-box;
+      z-index: 2;
+      overflow-y: auto;
+    }
 
     #controls {
-    position: absolute;
-    bottom: 70px;
-    left: 758.7px;
-    display: flex;
-    gap: 16px;
-    z-index: 3;
-}
+      position: absolute;
+      bottom: 70px;
+      left: 758.7px;
+      display: flex;
+      gap: 16px;
+      z-index: 3;
+    }
 
     .btn {
       background: #ff00aa;
@@ -133,7 +128,7 @@
       <canvas id="gameCanvas" width="380" height="395"></canvas>
       <div id="leaderboard">
         <h2 style="text-align:center; color:#ff00aa;">🏆 Verified Players</h2>
-        <table style="width:100%; text-align:center;">
+        <table id="scoreTable" style="width:100%; text-align:center;">
           <thead>
             <tr>
               <th>Rank</th>
@@ -148,7 +143,7 @@
       </div>
       <div id="controls">
         <button id="startGame" class="btn">Start Game 🎮</button>
-        <button class="btn">Submit Proof</button>
+        <button class="btn" id="submit">Submit Proof</button>
       </div>
     </div>
   </div>
@@ -160,9 +155,8 @@
   <script src="particles.js"></script>
   <script src="sound.js"></script>
 
-
-<script>
-document.getElementById('startGame').addEventListener('click', startGame);
-</script>
+  <script>
+    document.getElementById('startGame').addEventListener('click', startGame);
+  </script>
 </body>
 </html>
