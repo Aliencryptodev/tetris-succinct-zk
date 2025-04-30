@@ -255,17 +255,20 @@ canvas.style.display = 'none';
 
 function showGameOver() {
     const img = new Image();
-    img.crossOrigin = 'anonymous'; // ← Esto es importante si la imagen está en GitHub
+    img.crossOrigin = 'anonymous';
     img.src = 'https://raw.githubusercontent.com/Aliencryptodev/tetris-succinct-zk/main/assets/gameover_resized.png';
-    
+
     img.onload = () => {
         canvas.style.display = 'block';
         context.clearRect(0, 0, canvas.width, canvas.height);
-        
-        // Asegura que se dibuje ocupando todo el canvas
-        context.drawImage(img, 0, 0, canvas.width, canvas.height);
 
-        // Mostrar el botón de Twitter luego
+        const drawWidth = 240;
+        const drawHeight = 120;
+        const x = (canvas.width / (canvas.width / 12)) / 2 - (drawWidth / 2);
+        const y = (canvas.height / (canvas.height / 20)) / 2 - (drawHeight / 2);
+
+        context.drawImage(img, x, y, drawWidth, drawHeight);
+
         setTimeout(() => {
             showShareButton(finalScore);
         }, 500);
@@ -275,7 +278,6 @@ function showGameOver() {
         console.error("No se pudo cargar la imagen de Game Over.");
     };
 }
-
 
 function showShareButton(score) {
     const existingButton = document.getElementById('shareButton');
