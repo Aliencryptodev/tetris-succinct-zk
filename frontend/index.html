@@ -24,42 +24,49 @@
     /* Contenedor principal escalable */
     #scalable-container {
       position: relative;
-      width: 400px; /* Ancho base */
-      height: 700px; /* Alto base */
+      width: 400px; /* Tamaño base */
+      height: 700px; /* Tamaño base */
       transform-origin: top left;
     }
 
-    /* Imagen de la máquina como marco */
+    /* Imagen de la máquina */
     #machine-frame {
       position: absolute;
       width: 100%;
       height: 100%;
-      background: url('https://raw.githubusercontent.com/Aliencryptodev/tetris-succinct-zk/main/assets/machine.png') no-repeat center center;
+      background: url('https://raw.githubusercontent.com/Aliencryptodev/tetris-succinct-zk/main/assets/machine.png') no-repeat center;
       background-size: contain;
       z-index: 1;
     }
 
+    /* Superposición negra con desenfoque */
+    #overlay {
+      position: absolute;
+      inset: 0;
+      z-index: 20;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: rgba(0, 0, 0, 0.7); /* Fondo negro semi-transparente */
+      backdrop-filter: blur(5px); /* Desenfoque */
+      cursor: pointer;
+    }
+
     /* Canvas del juego */
     #tetris {
-      position: absolute;
-      top: 23.5%; /* Ajustar posición dentro del marco */
-      left: 17.5%;
-      width: 65%;
-      height: 45%;
+      width: 65%; /* Proporción ajustada */
+      height: 45%; /* Proporción ajustada */
       background: black;
-      z-index: 2; /* Encima del marco */
+      border: 2px solid white;
+      border-radius: 5px;
     }
 
     /* Botones */
     #controls {
-      position: absolute;
-      bottom: 3%; /* Colocarlos justo debajo del marco */
-      left: 50%;
-      transform: translateX(-50%);
+      margin-top: 20px;
       display: flex;
-      flex-direction: row;
       gap: 10px;
-      z-index: 3;
     }
 
     #controls button {
@@ -84,13 +91,16 @@
     <!-- Imagen de la máquina como marco -->
     <div id="machine-frame"></div>
 
-    <!-- Canvas del juego -->
-    <canvas id="tetris" width="240" height="400"></canvas>
+    <!-- Superposición con estilo -->
+    <div id="overlay">
+      <!-- Canvas del juego -->
+      <canvas id="tetris" width="240" height="400"></canvas>
 
-    <!-- Botones -->
-    <div id="controls">
-      <button id="playButton">Play</button>
-      <button id="leaderboardButton">Leaderboard</button>
+      <!-- Botones -->
+      <div id="controls">
+        <button id="playButton">Play</button>
+        <button id="leaderboardButton">Leaderboard</button>
+      </div>
     </div>
   </div>
 
