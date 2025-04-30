@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -23,21 +22,20 @@
 
     /* Contenedor principal */
     #game-container {
-      position: relative;
       display: flex;
-      flex-direction: column; /* Alinear contenido en columna */
-      align-items: center; /* Centrar contenido horizontalmente */
+      flex-direction: column; /* Alinear elementos en columna */
+      align-items: center; /* Centrar horizontalmente */
       justify-content: space-between; /* Espacio uniforme entre elementos */
-      width: 1920px; /* Dimensiones base */
-      height: 1080px; /* Dimensiones base */
-      transform-origin: top left; /* Escalar desde la esquina superior izquierda */
-      transform: scale(1); /* Escala inicial */
+      width: 90vw; /* Ajustar al 90% del ancho del viewport */
+      height: 90vh; /* Ajustar al 90% de la altura del viewport */
+      max-width: 1920px; /* Limitar a dimensiones base */
+      max-height: 1080px; /* Limitar a dimensiones base */
     }
 
     /* Canvas del Tetris */
     #tetris {
-      width: 350px;
-      height: 378px;
+      width: 35%; /* Proporcional al contenedor principal */
+      height: auto; /* Mantener proporciones */
       background: black;
       z-index: 5;
       border-radius: 6px;
@@ -45,9 +43,8 @@
 
     /* Contenedor del leaderboard */
     #leaderboard-container {
-      margin-top: 20px; /* Separación del canvas */
-      width: 355.3px;
-      height: 378.3px;
+      width: 36%; /* Proporcional al contenedor principal */
+      height: auto; /* Mantener proporciones */
       background: rgba(255, 255, 255, 0.9);
       border-radius: 10px;
       padding: 20px;
@@ -77,7 +74,6 @@
       display: flex;
       gap: 20px;
       justify-content: center;
-      margin-top: 20px;
     }
 
     #fixed-buttons button {
@@ -95,26 +91,6 @@
     }
   </style>
 
-  <script>
-    // Ajustar la escala del contenedor principal
-    function adjustScale() {
-      const container = document.getElementById('game-container');
-      const scaleWidth = window.innerWidth / 1920; // Escala proporcional al ancho del viewport
-      const scaleHeight = window.innerHeight / 1080; // Escala proporcional al alto del viewport
-      const scale = Math.min(scaleWidth, scaleHeight); // Usar el menor de los dos para mantener proporciones
-      container.style.transform = `scale(${scale})`; // Aplicar escala al contenedor
-
-      // Centrar el contenedor absoluto
-      const offsetX = (window.innerWidth - 1920 * scale) / 2;
-      const offsetY = (window.innerHeight - 1080 * scale) / 2;
-      container.style.left = `${offsetX}px`;
-      container.style.top = `${offsetY}px`;
-    }
-
-    // Ajustar escala en eventos de redimensionamiento y carga inicial
-    window.addEventListener('resize', adjustScale);
-    window.addEventListener('DOMContentLoaded', adjustScale);
-  </script>
 </head>
 
 <body>
