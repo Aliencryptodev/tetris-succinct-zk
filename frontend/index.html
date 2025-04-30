@@ -24,26 +24,25 @@
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
-      width: 80vw; /* Escalado responsivo */
-      height: 80vh; /* Escalado responsivo */
+      width: 40vw; /* Escalado basado en el viewport */
+      height: 40vh;
       display: flex;
-      flex-direction: column;
       justify-content: center;
       align-items: center;
+      z-index: 5;
     }
 
     #tetris {
-      width: 40vw; /* Escalado basado en el ancho del viewport */
-      height: 40vh; /* Escalado basado en el alto del viewport */
+      width: 100%;
+      height: 100%;
       background: black;
-      z-index: 5;
       border-radius: 6px;
     }
 
     #leaderboard-container {
-      position: fixed;
-      top: 10%;
-      right: 5%;
+      position: fixed; /* Fijo al viewport */
+      top: 10%; /* 10% desde la parte superior del viewport */
+      right: 5%; /* 5% desde el borde derecho */
       width: 20vw; /* Escalado responsivo */
       height: 40vh; /* Escalado responsivo */
       background: rgba(255, 255, 255, 0.9);
@@ -51,7 +50,7 @@
       padding: 20px;
       box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.15);
       overflow-y: auto;
-      z-index: 5;
+      z-index: 10;
     }
 
     #leaderboard-container h2 {
@@ -72,9 +71,9 @@
     }
 
     #fixed-buttons {
-      position: fixed; /* Fija los botones */
-      bottom: 5%;
-      left: 50%;
+      position: fixed; /* Fijo al viewport */
+      bottom: 5%; /* 5% desde la parte inferior del viewport */
+      left: 50%; /* Centrado horizontalmente */
       transform: translateX(-50%);
       display: flex;
       gap: 20px;
@@ -110,13 +109,15 @@
 
     @media (max-width: 768px) {
       #leaderboard-container {
-        width: 90vw; /* Ajusta el tamaño para móviles */
-        top: 65vh;
+        width: 90vw; /* Ajusta el ancho en móviles */
+        height: auto; /* Ajusta la altura automáticamente */
+        top: 65vh; /* Baja el leaderboard en pantallas pequeñas */
         left: 5vw;
+        right: 5vw;
       }
 
       #fixed-buttons {
-        bottom: 10vh;
+        bottom: 10vh; /* Ajusta los botones más arriba en móviles */
       }
 
       .mobile-controls {
