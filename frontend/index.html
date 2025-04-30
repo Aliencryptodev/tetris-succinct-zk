@@ -74,7 +74,7 @@
     left: 512.7px;
     width: 380px;
     height: 395.1px;
-    background: white;
+    background: black;
     z-index: 2;
 }
 
@@ -147,7 +147,7 @@
         </table>
       </div>
       <div id="controls">
-        <button class="btn">Start Game 🎮</button>
+        <button id="startGame" class="btn">Start Game 🎮</button>
         <button class="btn">Submit Proof</button>
       </div>
     </div>
@@ -158,5 +158,9 @@
   <script src="leaderboard.js"></script>
   <script src="particles.js"></script>
   <script src="sound.js"></script>
+
+<script>
+document.getElementById('startGame').addEventListener('click', startGame);
+</script>
 </body>
 </html>
