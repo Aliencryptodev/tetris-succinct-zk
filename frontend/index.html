@@ -2,60 +2,50 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Tetris Succinct zkProof</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
     html, body {
       margin: 0;
       padding: 0;
-      width: 100vw;
-      height: 100vh;
+      height: 100%;
+      width: 100%;
       overflow: hidden;
-      font-family: 'Poppins', sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background-color: black;
     }
 
     .arcade-wrapper {
       position: relative;
-      width: 100%;
-      height: 100%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: black;
-    }
-
-    .arcade {
       width: 1920px;
       height: 1080px;
       background: url('https://raw.githubusercontent.com/Aliencryptodev/tetris-succinct-zk/main/assets/background.png') no-repeat center center;
-      background-size: cover;
+      background-size: contain;
       transform-origin: top left;
-    }
-
-    .scaled {
-      transform: scale(var(--scale));
     }
 
     #tetris {
       position: absolute;
-      top: 387.5px;
-      left: 521.9px;
+      top: 388px;
+      left: 522px;
       width: 350px;
       height: 378px;
       background: black;
       display: none;
-      z-index: 5;
       border-radius: 6px;
+      z-index: 5;
     }
 
     #leaderboard-container {
       position: absolute;
-      top: 387.5px;
-      left: 1023.9px;
-      width: 355.3px;
-      height: 378.3px;
-      background: rgba(255, 255, 255, 0.9);
+      top: 388px;
+      left: 1024px;
+      width: 355px;
+      height: 378px;
+      background: rgba(255, 255, 255, 0.95);
       border-radius: 10px;
       padding: 20px;
       box-shadow: 0px 4px 8px rgba(0,0,0,0.15);
@@ -82,9 +72,8 @@
 
     #fixed-buttons {
       position: absolute;
-      bottom: 60px;
-      left: 50%;
-      transform: translateX(-50%);
+      top: 982px;
+      left: 987px;
       display: flex;
       gap: 20px;
       z-index: 10;
@@ -125,59 +114,47 @@
         top: 65vh;
       }
       #fixed-buttons {
+        top: unset;
         bottom: 10vh;
+        left: 50%;
+        transform: translateX(-50%);
       }
       .mobile-controls {
         display: flex;
       }
     }
   </style>
-  <script>
-    function updateScale() {
-      const scale = Math.min(window.innerWidth / 1920, window.innerHeight / 1080);
-      document.documentElement.style.setProperty('--scale', scale);
-    }
-    window.addEventListener('resize', updateScale);
-    window.addEventListener('load', updateScale);
-  </script>
 </head>
 <body>
   <div class="arcade-wrapper">
-    <div class="arcade scaled">
-      <canvas id="tetris" width="240" height="400"></canvas>
+    <canvas id="tetris" width="240" height="400"></canvas>
 
-      <div id="leaderboard-container">
-        <h2>🏆 Verified Players</h2>
-        <table id="scoreTable">
-          <thead>
-            <tr><th>Rank</th><th>Player</th><th>Score</th></tr>
-          </thead>
-          <tbody></tbody>
-        </table>
-      </div>
+    <div id="leaderboard-container">
+      <h2>🏆 Verified Players</h2>
+      <table id="scoreTable">
+        <thead>
+          <tr><th>Rank</th><th>Player</th><th>Score</th></tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
 
-      <div id="fixed-buttons">
-        <button id="startGame">Start Game 🎮</button>
-        <button id="submit">Submit Proof</button>
-      </div>
+    <div id="fixed-buttons">
+      <button id="startGame">Start Game 🎮</button>
+      <button id="submit">Submit Proof</button>
+    </div>
 
-      <div class="mobile-controls">
-        <button id="left">⬅️</button>
-        <button id="rotate">🔄</button>
-        <button id="right">➡️</button>
-        <button id="down">⬇️</button>
-      </div>
+    <div class="mobile-controls">
+      <button id="left">⬅️</button>
+      <button id="rotate">🔄</button>
+      <button id="right">➡️</button>
+      <button id="down">⬇️</button>
     </div>
   </div>
 
-  <script src="app.js" type="module"></script>
-  <script src="tetris.js"></script>
-  <script src="sound.js"></script>
-  <script src="particles.js"></script>
-  <script src="leaderboard.js"></script>
-
-  <script>
+  <script type="module">
     document.addEventListener('DOMContentLoaded', () => {
+      const canvas = document.getElementById('tetris');
       document.getElementById('startGame').addEventListener('click', () => {
         canvas.style.display = 'block';
         startGame();
@@ -201,7 +178,24 @@
         event.preventDefault();
       }
     });
+
+    const scaleToFit = () => {
+      const wrapper = document.querySelector('.arcade-wrapper');
+      const scaleX = window.innerWidth / 1920;
+      const scaleY = window.innerHeight / 1080;
+      const scale = Math.min(scaleX, scaleY);
+      wrapper.style.transform = `scale(${scale})`;
+    };
+
+    window.addEventListener('resize', scaleToFit);
+    window.addEventListener('load', scaleToFit);
   </script>
+
+  <script src="app.js" type="module"></script>
+  <script src="tetris.js"></script>
+  <script src="sound.js"></script>
+  <script src="particles.js"></script>
+  <script src="leaderboard.js"></script>
 </body>
 </html>
 
