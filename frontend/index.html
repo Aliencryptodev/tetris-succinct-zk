@@ -103,7 +103,9 @@
     // Ajustar la escala del contenedor principal
     function adjustScale() {
       const frame = document.getElementById('frame');
-      const scale = Math.min(window.innerWidth / 1920, window.innerHeight / 1080); // Escala proporcional
+      const scaleWidth = window.innerWidth / 1920; // Escala proporcional al ancho del viewport
+      const scaleHeight = window.innerHeight / 1080; // Escala proporcional al alto del viewport
+      const scale = Math.min(scaleWidth, scaleHeight); // Usar el menor de los dos para mantener proporciones
       frame.style.transform = `scale(${scale})`; // Aplicar escala al contenedor
     }
 
