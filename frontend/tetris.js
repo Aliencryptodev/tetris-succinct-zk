@@ -262,9 +262,9 @@ function showGameOver() {
         canvas.style.display = 'block';
         context.clearRect(0, 0, canvas.width, canvas.height);
 
-        // Coordinadas en "unidades escaladas" (como si fuera una grilla de 12x20)
-        const widthUnits = 6;   // ancho de 6 bloques
-        const heightUnits = 3;  // alto de 3 bloques
+        // Aumentamos tamaño del cartel en bloques escalados
+        const widthUnits = 10;
+        const heightUnits = 5;
         const x = (12 - widthUnits) / 2;
         const y = (20 - heightUnits) / 2;
 
