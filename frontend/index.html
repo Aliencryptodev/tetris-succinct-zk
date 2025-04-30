@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -90,6 +91,13 @@
       overflow-y: auto;
     }
 
+    #leaderboard h2,
+    #leaderboard table th {
+      color: #ff00aa;
+      font-weight: bold;
+      font-size: 18px;
+    }
+
     #controls {
       position: absolute;
       bottom: 70px;
@@ -113,6 +121,40 @@
     .btn:hover {
       background: #e60096;
     }
+
+    #dancer {
+      position: absolute;
+      top: 290px;
+      left: 1445px;
+      width: 90px;
+      display: none;
+      z-index: 4;
+    }
+
+    @keyframes bounce {
+      0% { transform: translateY(0); }
+      30% { transform: translateY(-10px); }
+      60% { transform: translateY(0); }
+    }
+
+    #dancer.bounce {
+      animation: bounce 0.4s ease;
+    }
+
+    #shareButton {
+      position: absolute;
+      top: 750px;
+      left: 790px;
+      background-color: #1DA1F2;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      font-size: 1rem;
+      border-radius: 10px;
+      cursor: pointer;
+      z-index: 5;
+      display: none;
+    }
   </style>
 </head>
 <body>
@@ -125,9 +167,11 @@
     </div>
     <div class="browser-content">
       <img class="machine-img" src="https://raw.githubusercontent.com/Aliencryptodev/tetris-succinct-zk/main/assets/final.png" alt="machine">
+
       <canvas id="gameCanvas" width="380" height="395"></canvas>
+
       <div id="leaderboard">
-        <h2 style="text-align:center; color:#ff00aa;">🏆 Verified Players</h2>
+        <h2 style="text-align:center;">🏆 Verified Players</h2>
         <table id="scoreTable" style="width:100%; text-align:center;">
           <thead>
             <tr>
@@ -141,20 +185,25 @@
           </tbody>
         </table>
       </div>
+
       <div id="controls">
         <button id="startGame" class="btn">Start Game 🎮</button>
         <button class="btn" id="submit">Submit Proof</button>
       </div>
+
+      <!-- 🎉 Gif del pato -->
+      <img id="dancer" src="assets/dancer.gif" alt="dancer gif">
+      
+      <!-- 🐦 Botón Twitter -->
+      <button id="shareButton">Share on Twitter 🐦</button>
     </div>
   </div>
 
   <script src="tetris.js"></script>
-  <!-- <script type="module" src="app.js"></script> -->
   <script type="module" src="app.js"></script>
   <script src="leaderboard.js"></script>
   <script src="particles.js"></script>
   <script src="sound.js"></script>
-
   <script>
     document.getElementById('startGame').addEventListener('click', startGame);
   </script>
