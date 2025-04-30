@@ -7,24 +7,25 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
   <style>
-    /* Configuración de la página */
+    /* Configuración básica */
     body, html {
       margin: 0;
       padding: 0;
       width: 100vw;
       height: 100vh;
       overflow: hidden;
+      display: flex;
+      justify-content: center; /* Centrar horizontalmente */
+      align-items: center;    /* Centrar verticalmente */
       background: url('https://raw.githubusercontent.com/Aliencryptodev/tetris-succinct-zk/main/assets/background.png') no-repeat center center fixed;
       background-size: cover;
     }
 
-    /* Contenedor principal */
-    #main-container {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 1920px; /* Dimensiones base */
-      height: 1080px;
+    /* Contenedor principal que une todo */
+    #main-frame {
+      position: relative;
+      width: 1920px; /* Resolución base */
+      height: 1080px; /* Resolución base */
       transform-origin: top left; /* Escalar desde la esquina superior izquierda */
       transform: scale(1); /* Escala inicial */
     }
@@ -101,22 +102,22 @@
   </style>
 
   <script>
-    // Función para ajustar la escala del contenedor principal
+    // Ajustar la escala del contenedor principal
     function adjustScale() {
-      const container = document.getElementById('main-container');
+      const frame = document.getElementById('main-frame');
       const scale = Math.min(window.innerWidth / 1920, window.innerHeight / 1080); // Escala proporcional
-      container.style.transform = `scale(${scale})`; // Aplicar escala
+      frame.style.transform = `scale(${scale})`; // Aplicar escala
     }
 
-    // Ajustar escala en eventos de redimensionamiento y carga inicial
+    // Ajustar escala en eventos de redimensionamiento y carga
     window.addEventListener('resize', adjustScale);
     window.addEventListener('DOMContentLoaded', adjustScale);
   </script>
 </head>
 
 <body>
-  <!-- Contenedor principal -->
-  <div id="main-container">
+  <!-- Contenedor principal que une todo -->
+  <div id="main-frame">
     <!-- Canvas del juego -->
     <canvas id="tetris" width="240" height="400"></canvas>
 
