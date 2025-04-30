@@ -4,131 +4,27 @@
   <meta charset="UTF-8">
   <title>Tetris Succinct zkProof</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-
-  <style>
-    /* Configuración básica */
-    body, html {
-      margin: 0;
-      padding: 0;
-      width: 100vw;
-      height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      background: url('https://raw.githubusercontent.com/Aliencryptodev/tetris-succinct-zk/main/assets/background.png') no-repeat center center fixed;
-      background-size: cover;
-      font-family: Arial, sans-serif;
-      overflow: hidden;
-    }
-
-    /* Contenedor principal escalable */
-    #scalable-container {
-      position: relative;
-      width: 400px; /* Tamaño base */
-      height: 700px; /* Tamaño base */
-      transform-origin: top left;
-    }
-
-    /* Imagen de la máquina */
-    #machine-frame {
-      position: absolute;
-      width: 100%;
-      height: 100%;
-      background: url('https://raw.githubusercontent.com/Aliencryptodev/tetris-succinct-zk/main/assets/machine.png') no-repeat center;
-      background-size: contain;
-      z-index: 1;
-    }
-
-    /* Superposición negra con desenfoque */
-    #overlay {
-      position: absolute;
-      inset: 0;
-      z-index: 20;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      background: rgba(0, 0, 0, 0.7); /* Fondo negro semi-transparente */
-      backdrop-filter: blur(5px); /* Desenfoque */
-      cursor: pointer;
-    }
-
-    /* Canvas del juego */
-    #tetris {
-      width: 65%; /* Proporción ajustada */
-      height: 45%; /* Proporción ajustada */
-      background: black;
-      border: 2px solid white;
-      border-radius: 5px;
-    }
-
-    /* Botones */
-    #controls {
-      margin-top: 20px;
-      display: flex;
-      gap: 10px;
-    }
-
-    #controls button {
-      background: #ff4444;
-      color: white;
-      padding: 10px 20px;
-      font-size: 1rem;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-    }
-
-    #controls button:hover {
-      background: #cc0000;
-    }
-  </style>
+  <script src="https://cdn.tailwindcss.com"></script> <!-- Cargar TailwindCSS -->
 </head>
+<body class="flex h-screen w-screen items-center justify-center bg-neutral-900">
+  <!-- Contenedor principal de la máquina -->
+  <div class="flex h-full w-full max-h-[800px] max-w-2xl flex-col rounded-t-lg shadow-[0_5px_10px_4px_rgba(0,0,0,0.4)] bg-neutral-800 pointer-events-auto relative">
+    <!-- Encabezado de la máquina -->
+    <div class="relative z-20 flex min-h-6 flex-col rounded-t-lg bg-gradient-to-b from-gray-700 via-gray-600 to-gray-500 px-2 shadow-[0_1px_2px_rgba(0,0,0,0.2)]">
+      <h1 class="text-white text-center">Tetris Succinct zkProof</h1>
+    </div>
 
-<body>
-  <!-- Contenedor escalable -->
-  <div id="scalable-container">
-    <!-- Imagen de la máquina como marco -->
-    <div id="machine-frame"></div>
-
-    <!-- Superposición con estilo -->
-    <div id="overlay">
+    <!-- Contenedor del canvas del juego -->
+    <div class="relative flex w-full flex-1 flex-col items-center justify-center">
       <!-- Canvas del juego -->
-      <canvas id="tetris" width="240" height="400"></canvas>
+      <canvas id="tetris" class="flex w-3/4 h-3/4 bg-black rounded-lg shadow-md"></canvas>
+    </div>
 
-      <!-- Botones -->
-      <div id="controls">
-        <button id="playButton">Play</button>
-        <button id="leaderboardButton">Leaderboard</button>
-      </div>
+    <!-- Controles del juego -->
+    <div class="absolute flex w-full bottom-4 justify-center items-center gap-4">
+      <button class="px-4 py-2 bg-red-500 text-white rounded-lg shadow-md hover:bg-red-600">Play</button>
+      <button class="px-4 py-2 bg-blue-500 text-white rounded-lg shadow-md hover:bg-blue-600">Leaderboard</button>
     </div>
   </div>
-
-  <script>
-    // Escalar contenedor principal al redimensionar
-    const scalableContainer = document.getElementById('scalable-container');
-
-    function scaleContainer() {
-      const scaleX = window.innerWidth / 400; // Basado en el ancho base
-      const scaleY = window.innerHeight / 700; // Basado en el alto base
-      const scale = Math.min(scaleX, scaleY); // Escala uniforme
-      scalableContainer.style.transform = `scale(${scale})`;
-    }
-
-    // Escalar al cargar y al redimensionar la ventana
-    window.addEventListener('load', scaleContainer);
-    window.addEventListener('resize', scaleContainer);
-
-    // Lógica para los botones
-    document.getElementById('playButton').addEventListener('click', () => {
-      alert('Starting game!');
-      // Aquí puedes añadir lógica para iniciar el juego
-    });
-
-    document.getElementById('leaderboardButton').addEventListener('click', () => {
-      alert('Opening leaderboard!');
-      // Aquí puedes añadir lógica para mostrar el leaderboard
-    });
-  </script>
 </body>
 </html>
