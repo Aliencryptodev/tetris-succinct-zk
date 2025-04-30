@@ -4,33 +4,41 @@
 <head>
   <meta charset="UTF-8">
   <title>Tetris Succinct zkProof</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <style>
     html, body {
       margin: 0;
       padding: 0;
-      height: 100%;
       width: 100%;
+      height: 100%;
       overflow: hidden;
       background: black;
     }
 
     #arcade-wrapper {
+      width: 1920px;
+      height: 1080px;
       position: absolute;
       top: 50%;
       left: 50%;
-      width: 1920px;
-      height: 1080px;
-      transform: translate(-50%, -50%) scale(calc(100vw / 1920));
       transform-origin: top left;
+      translate: -50% -50%;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      color: #781961;
+    }
+
+    #arcade-wrapper {
       background: url('https://raw.githubusercontent.com/Aliencryptodev/tetris-succinct-zk/main/assets/background.png') no-repeat center center;
       background-size: cover;
     }
 
     #tetris {
       position: absolute;
-      top: 387.5px;
-      left: 521.9px;
+      top: 35.7vh;
+      left: 27.2vw;
       width: 350px;
       height: 378px;
       background: black;
@@ -41,8 +49,8 @@
 
     #leaderboard-container {
       position: absolute;
-      top: 387.5px;
-      left: 1023.9px;
+      top: 35.7vh;
+      left: 53.33vw;
       width: 355.3px;
       height: 378.3px;
       background: rgba(255, 255, 255, 0.9);
@@ -72,8 +80,9 @@
 
     #fixed-buttons {
       position: absolute;
-      top: 982px;
-      left: 987px;
+      top: 91vh;
+      left: 50%;
+      transform: translateX(-50%);
       display: flex;
       gap: 20px;
       z-index: 10;
@@ -105,67 +114,97 @@
       font-size: 1.5rem;
       padding: 10px 20px;
     }
+
+    @media (max-width: 768px) {
+      #leaderboard-container {
+        width: 90%;
+        left: 5%;
+        right: 5%;
+        top: 65vh;
+      }
+      #fixed-buttons {
+        bottom: 10vh;
+      }
+      .mobile-controls {
+        display: flex;
+      }
+    }
   </style>
 </head>
+
 <body>
-  <div id="arcade-wrapper">
-    <canvas id="tetris" width="240" height="400"></canvas>
+<div id="arcade-wrapper">
+  <canvas id="tetris" width="240" height="400"></canvas>
 
-    <div id="leaderboard-container">
-      <h2>🏆 Verified Players</h2>
-      <table id="scoreTable">
-        <thead>
-          <tr><th>Rank</th><th>Player</th><th>Score</th></tr>
-        </thead>
-        <tbody></tbody>
-      </table>
-    </div>
-
-    <div id="fixed-buttons">
-      <button id="startGame">Start Game 🎮</button>
-      <button id="submit">Submit Proof</button>
-    </div>
-
-    <div class="mobile-controls">
-      <button id="left">⬅️</button>
-      <button id="rotate">🔄</button>
-      <button id="right">➡️</button>
-      <button id="down">⬇️</button>
-    </div>
+  <div id="leaderboard-container">
+    <h2>🏆 Verified Players</h2>
+    <table id="scoreTable">
+      <thead>
+        <tr><th>Rank</th><th>Player</th><th>Score</th></tr>
+      </thead>
+      <tbody></tbody>
+    </table>
   </div>
 
-  <script src="app.js" type="module"></script>
-  <script src="tetris.js"></script>
-  <script src="sound.js"></script>
-  <script src="particles.js"></script>
-  <script src="leaderboard.js"></script>
+  <div id="fixed-buttons">
+    <button id="startGame">Start Game 🎮</button>
+    <button id="submit">Submit Proof</button>
+  </div>
 
-  <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      document.getElementById('startGame').addEventListener('click', () => {
-        document.getElementById('tetris').style.display = 'block';
-        startGame();
-      });
+  <div class="mobile-controls">
+    <button id="left">⬅️</button>
+    <button id="rotate">🔄</button>
+    <button id="right">➡️</button>
+    <button id="down">⬇️</button>
+  </div>
+</div>
 
-      updateLeaderboard();
+<script src="app.js" type="module"></script>
+<script src="tetris.js"></script>
+<script src="sound.js"></script>
+<script src="particles.js"></script>
+<script src="leaderboard.js"></script>
 
-      const simulateKey = (key) => {
-        const event = new KeyboardEvent('keydown', { key });
-        document.dispatchEvent(event);
-      };
+<script>
+  function resizeArcade() {
+    const baseWidth = 1920;
+    const baseHeight = 1080;
+    const scale = Math.min(
+      window.innerWidth / baseWidth,
+      window.innerHeight / baseHeight
+    );
+    const wrapper = document.getElementById('arcade-wrapper');
+    wrapper.style.transform = `scale(${scale})`;
+  }
 
-      document.getElementById('left')?.addEventListener('click', () => simulateKey('ArrowLeft'));
-      document.getElementById('right')?.addEventListener('click', () => simulateKey('ArrowRight'));
-      document.getElementById('rotate')?.addEventListener('click', () => simulateKey('ArrowUp'));
-      document.getElementById('down')?.addEventListener('click', () => simulateKey('ArrowDown'));
+  window.addEventListener('resize', resizeArcade);
+  window.addEventListener('load', resizeArcade);
+
+  document.addEventListener('DOMContentLoaded', () => {
+    document.getElementById('startGame').addEventListener('click', () => {
+      document.getElementById('tetris').style.display = 'block';
+      startGame();
     });
 
-    document.addEventListener('keydown', (event) => {
-      if (["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"].includes(event.key)) {
-        event.preventDefault();
-      }
-    });
-  </script>
+    updateLeaderboard();
+
+    const simulateKey = (key) => {
+      const event = new KeyboardEvent('keydown', { key });
+      document.dispatchEvent(event);
+    };
+
+    document.getElementById('left')?.addEventListener('click', () => simulateKey('ArrowLeft'));
+    document.getElementById('right')?.addEventListener('click', () => simulateKey('ArrowRight'));
+    document.getElementById('rotate')?.addEventListener('click', () => simulateKey('ArrowUp'));
+    document.getElementById('down')?.addEventListener('click', () => simulateKey('ArrowDown'));
+  });
+
+  document.addEventListener('keydown', (event) => {
+    if (["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"].includes(event.key)) {
+      event.preventDefault();
+    }
+  });
+</script>
 </body>
 </html>
 
