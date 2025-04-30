@@ -2,7 +2,8 @@
 const canvas = document.getElementById('gameCanvas');
 const context = canvas.getContext('2d');
 
-context.scale(20, 20);
+// Ajuste de escala dinámico
+context.scale(canvas.width / 12, canvas.height / 20);
 
 let gameOver = false;
 let finalScore = 0;
@@ -16,7 +17,7 @@ function arenaSweep() {
             arena.unshift(new Array(12).fill(0));
             player.score += 100 * rowCount;
             rowCount *= 2;
-            createParticles(canvas.width / 2 / 20, canvas.height / 2 / 20, '#FE11C5');
+            createParticles(canvas.width / 2 / (canvas.width / 12), canvas.height / 2 / (canvas.height / 20), '#FE11C5');
             playLineClearSound();
         }
     }
@@ -67,7 +68,6 @@ function drawMatrix(matrix, offset) {
                 context.fillStyle = gradient;
                 context.fillRect(x + offset.x, y + offset.y, 1, 1);
 
-                // Borde
                 context.strokeStyle = 'rgba(0,0,0,0.2)';
                 context.lineWidth = 0.05;
                 context.strokeRect(x + offset.x, y + offset.y, 1, 1);
@@ -184,7 +184,6 @@ let lastTime = 0;
 
 function update(time = 0) {
     if (gameOver) return;
-
     const deltaTime = time - lastTime;
     lastTime = time;
     dropCounter += deltaTime;
@@ -198,12 +197,12 @@ function update(time = 0) {
 }
 
 function updateScore() {
+    const tbody = document.getElementById('scoreTable')?.querySelector('tbody');
+    if (!tbody) return;
     if (gameOver) {
-        document.getElementById('scoreTable').querySelector('tbody').innerHTML =
-            `<tr><td>${playerName}</td><td>${finalScore}</td></tr>`;
+        tbody.innerHTML = `<tr><td>${playerName}</td><td>${finalScore}</td></tr>`;
     } else {
-        document.getElementById('scoreTable').querySelector('tbody').innerHTML =
-            `<tr><td>${playerName}</td><td>${player.score}</td></tr>`;
+        tbody.innerHTML = `<tr><td>${playerName}</td><td>${player.score}</td></tr>`;
     }
 }
 
@@ -216,7 +215,8 @@ function saveScore() {
 
 function updateLeaderboard() {
     const leaderboard = JSON.parse(localStorage.getItem('topScores')) || [];
-    const leaderboardTable = document.getElementById('scoreTable').querySelector('tbody');
+    const leaderboardTable = document.getElementById('scoreTable')?.querySelector('tbody');
+    if (!leaderboardTable) return;
     leaderboardTable.innerHTML = '';
 
     const sorted = leaderboard
@@ -231,68 +231,6 @@ function updateLeaderboard() {
         row.insertCell(2).textContent = entry.score;
     });
 }
-
-function showGameOver() {
-    const img = new Image();
-    img.src = 'https://raw.githubusercontent.com/Aliencryptodev/tetris-succinct-zk/main/assets/gameover_resized.png';
-    img.onload = () => {
-        canvas.style.display = 'block'
-        context.clearRect(0, 0, canvas.width, canvas.height);
-        context.drawImage(img, (canvas.width / 2) - 120, (canvas.height / 2) - 60, 240, 120);
-
-        setTimeout(() => {
-            showShareButton(finalScore);
-        }, 500);
-    };
-}
-
-function showShareButton(score) {
-    const existingButton = document.getElementById('shareButton');
-    if (existingButton) {
-        existingButton.remove();
-    }
-
-    const shareButton = document.createElement('button');
-    shareButton.id = 'shareButton';
-    shareButton.innerText = 'Share on Twitter 🐦';
-    shareButton.style.backgroundColor = '#1DA1F2';
-    shareButton.style.color = 'white';
-    shareButton.style.border = 'none';
-    shareButton.style.padding = '10px 20px';
-    shareButton.style.fontSize = '1rem';
-    shareButton.style.borderRadius = '10px';
-    shareButton.style.cursor = 'pointer';
-    shareButton.style.marginTop = '20px';
-    shareButton.style.display = 'block';
-    shareButton.style.marginLeft = 'auto';
-    shareButton.style.marginRight = 'auto';
-    shareButton.style.zIndex = '9999';
-    shareButton.style.position = 'fixed';
-    shareButton.style.bottom = '20px';
-    shareButton.style.left = '50%';
-    shareButton.style.transform = 'translateX(-50%)';
-
-
-    shareButton.onclick = () => {
-        const tweet = `🎮 I scored ${score} points in Tetris Succinct zkProof! 🌸 Created by @doctordr1on. Try to beat me! https://tetris-succinct-zk.vercel.app`;
-        const twitterURL = `https://twitter.com/intent/tweet?text=${encodeURIComponent(tweet)}`;
-        window.open(twitterURL, '_blank');
-    };
-
-    document.body.appendChild(shareButton);
-}
-
-document.addEventListener('keydown', event => {
-    if (event.key === 'ArrowLeft' || event.key === 'a') {
-        playerMove(-1);
-    } else if (event.key === 'ArrowRight' || event.key === 'd') {
-        playerMove(1);
-    } else if (event.key === 'ArrowDown' || event.key === 's') {
-        playerDrop();
-    } else if (event.key === 'ArrowUp' || event.key === 'w') {
-        playerRotate(1);
-    }
-});
 
 function startGame() {
     playerName = prompt("Enter your Twitter handle (without @):", "player") || "YOU";
@@ -309,28 +247,20 @@ function startGame() {
     update();
 }
 
-
-const colors = [
-    null,        // 0 - vacío
-    '#FF00CC',   // 1 - T
-    '#FFE600',   // 2 - O
-    '#FF7B00',   // 3 - L
-    '#0099FF',   // 4 - J
-    '#00FF99',   // 5 - I
-    '#FF3366',   // 6 - S
-    '#9900FF'    // 7 - Z
-];
-
+const colors = [null,'#FF00CC','#FFE600','#FF7B00','#0099FF','#00FF99','#FF3366','#9900FF'];
 const arena = createMatrix(12, 20);
 const player = { pos: {x:0, y:0}, matrix: null, score: 0 };
 
 canvas.style.display = 'none';
 
-
-
-
-
-
-
-
-
+document.addEventListener('keydown', event => {
+    if (event.key === 'ArrowLeft' || event.key === 'a') {
+        playerMove(-1);
+    } else if (event.key === 'ArrowRight' || event.key === 'd') {
+        playerMove(1);
+    } else if (event.key === 'ArrowDown' || event.key === 's') {
+        playerDrop();
+    } else if (event.key === 'ArrowUp' || event.key === 'w') {
+        playerRotate(1);
+    }
+});
