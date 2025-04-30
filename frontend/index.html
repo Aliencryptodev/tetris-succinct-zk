@@ -23,20 +23,18 @@
     /* Ventana de juego */
     #game-window {
       width: 90%;
-      max-width: 600px;
+      max-width: 400px;
       aspect-ratio: 9 / 16; /* Proporción de ventana */
-      background: #000; /* Fondo negro para el juego */
-      border-radius: 12px;
-      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.6);
+      background: #222; /* Fondo oscuro para el juego */
+      border-radius: 15px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
       display: flex;
       flex-direction: column;
-      justify-content: space-between;
-      align-items: center;
       overflow: hidden;
       position: relative;
     }
 
-    /* Encabezado */
+    /* Cabecera superior */
     #header {
       width: 100%;
       background: #333;
@@ -44,6 +42,7 @@
       text-align: center;
       padding: 10px;
       font-size: 1.2rem;
+      border-bottom: 2px solid #444;
     }
 
     /* Canvas del juego */
@@ -56,13 +55,18 @@
     /* Controles y mensajes */
     #controls {
       width: 100%;
-      padding: 10px;
-      background: #222;
+      padding: 15px;
+      background: #333;
       color: white;
+      text-align: center;
       display: flex;
       flex-direction: column;
-      align-items: center;
       gap: 10px;
+    }
+
+    #controls p {
+      margin: 0;
+      font-size: 0.9rem;
     }
 
     #controls button {
@@ -78,18 +82,13 @@
     #controls button:hover {
       background: #cc0000;
     }
-
-    #controls p {
-      margin: 0;
-      font-size: 1rem;
-    }
   </style>
 </head>
 
 <body>
   <!-- Ventana de juego -->
   <div id="game-window">
-    <!-- Encabezado -->
+    <!-- Cabecera -->
     <div id="header">Tetris Succinct zkProof</div>
     <!-- Canvas del juego -->
     <canvas id="tetris" width="240" height="400"></canvas>
