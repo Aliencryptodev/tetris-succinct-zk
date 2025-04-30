@@ -255,17 +255,27 @@ canvas.style.display = 'none';
 
 function showGameOver() {
     const img = new Image();
+    img.crossOrigin = 'anonymous'; // ← Esto es importante si la imagen está en GitHub
     img.src = 'https://raw.githubusercontent.com/Aliencryptodev/tetris-succinct-zk/main/assets/gameover_resized.png';
+    
     img.onload = () => {
         canvas.style.display = 'block';
         context.clearRect(0, 0, canvas.width, canvas.height);
-        context.drawImage(img, (canvas.width / 2) - 120, (canvas.height / 2) - 60, 240, 120);
+        
+        // Asegura que se dibuje ocupando todo el canvas
+        context.drawImage(img, 0, 0, canvas.width, canvas.height);
 
+        // Mostrar el botón de Twitter luego
         setTimeout(() => {
             showShareButton(finalScore);
         }, 500);
     };
+
+    img.onerror = () => {
+        console.error("No se pudo cargar la imagen de Game Over.");
+    };
 }
+
 
 function showShareButton(score) {
     const existingButton = document.getElementById('shareButton');
@@ -288,10 +298,10 @@ function showShareButton(score) {
     shareButton.style.marginLeft = 'auto';
     shareButton.style.marginRight = 'auto';
     shareButton.style.zIndex = '9999';
-    shareButton.style.position = 'fixed';
-    shareButton.style.bottom = '20px';
-    shareButton.style.left = '50%';
-    shareButton.style.transform = 'translateX(-50%)';
+    shareButton.style.position = 'absolute';
+    shareButton.style.bottom = '40px';
+    shareButton.style.left = 'calc(50% - 80px)';
+    shareButton.style.transform = 'none';
 
     shareButton.onclick = () => {
         const tweet = `🎮 I scored ${score} points in Tetris Succinct zkProof! 🌸 Created by @doctordr1on. Try to beat me! https://tetris-succinct-zk.vercel.app`;
@@ -299,7 +309,7 @@ function showShareButton(score) {
         window.open(twitterURL, '_blank');
     };
 
-    document.body.appendChild(shareButton);
+    document.querySelector('.browser-content').appendChild(shareButton);
 }
 
 document.addEventListener('keydown', event => {
