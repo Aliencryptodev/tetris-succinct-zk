@@ -11,33 +11,30 @@
     body, html {
       margin: 0;
       padding: 0;
-      display: flex; /* Usar Flexbox para centrar */
-      align-items: center; /* Alinear verticalmente */
-      justify-content: center; /* Alinear horizontalmente */
       width: 100vw;
       height: 100vh;
+      overflow: hidden;
+      display: flex;
+      align-items: center; /* Centrar verticalmente */
+      justify-content: center; /* Centrar horizontalmente */
       background: url('https://raw.githubusercontent.com/Aliencryptodev/tetris-succinct-zk/main/assets/background.png') no-repeat center center fixed;
       background-size: cover;
-      overflow: hidden;
     }
 
     /* Contenedor principal */
     #game-container {
       position: relative;
-      width: 1920px; /* Dimensiones base */
-      height: 1080px; /* Dimensiones base */
-      transform-origin: center center; /* Escalar desde el centro */
+      width: 1920px; /* Diseño base */
+      height: 1080px; /* Diseño base */
+      transform-origin: top left; /* Escalar desde la esquina superior izquierda */
       transform: scale(1); /* Escala inicial */
-      display: flex;
-      justify-content: center; /* Centrar contenido horizontalmente */
-      align-items: center; /* Centrar contenido verticalmente */
     }
 
     /* Canvas del Tetris */
     #tetris {
       position: absolute;
-      top: 387.5px; /* Coordenada fija */
-      left: 521.9px; /* Coordenada fija */
+      top: 387.5px;
+      left: 521.9px;
       width: 350px;
       height: 378px;
       background: black;
@@ -48,8 +45,8 @@
     /* Contenedor del leaderboard */
     #leaderboard-container {
       position: absolute;
-      top: 387.5px; /* Coordenada fija */
-      left: 1023.9px; /* Coordenada fija */
+      top: 387.5px;
+      left: 1023.9px;
       width: 355.3px;
       height: 378.3px;
       background: rgba(255, 255, 255, 0.9);
@@ -80,8 +77,8 @@
     /* Botones */
     #fixed-buttons {
       position: absolute;
-      bottom: 70px; /* Coordenada fija */
-      left: 912px; /* Coordenada fija */
+      bottom: 70px;
+      left: 912px;
       transform: translateX(-50%);
       display: flex;
       gap: 20px;
@@ -106,21 +103,21 @@
   <script>
     // Ajustar la escala del contenedor principal
     function adjustScale() {
-      const gameContainer = document.getElementById('game-container');
+      const container = document.getElementById('game-container');
       const scaleWidth = window.innerWidth / 1920; // Escala proporcional al ancho del viewport
       const scaleHeight = window.innerHeight / 1080; // Escala proporcional al alto del viewport
       const scale = Math.min(scaleWidth, scaleHeight); // Usar el menor de los dos para mantener proporciones
-      gameContainer.style.transform = `scale(${scale})`; // Aplicar escala al contenedor
+      container.style.transform = `scale(${scale})`; // Aplicar escala al contenedor
     }
 
-    // Ajustar la escala en eventos de redimensionamiento y carga inicial
+    // Ajustar escala en eventos de redimensionamiento y carga inicial
     window.addEventListener('resize', adjustScale);
     window.addEventListener('DOMContentLoaded', adjustScale);
   </script>
 </head>
 
 <body>
-  <!-- Contenedor principal que une todo -->
+  <!-- Contenedor principal -->
   <div id="game-container">
     <!-- Canvas del juego -->
     <canvas id="tetris" width="240" height="400"></canvas>
