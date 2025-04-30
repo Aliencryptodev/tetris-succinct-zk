@@ -9,6 +9,8 @@ let gameOver = false;
 let finalScore = 0;
 let playerName = "YOU";
 
+const dancer = document.getElementById('dancer');
+
 function arenaSweep() {
     let rowCount = 1;
     outer: for (let y = arena.length - 1; y >= 0; --y) {
@@ -19,16 +21,22 @@ function arenaSweep() {
             rowCount *= 2;
             createParticles(canvas.width / 2 / (canvas.width / 12), canvas.height / 2 / (canvas.height / 20), '#FE11C5');
             playLineClearSound();
+            animateDancer();
         }
     }
+}
+
+function animateDancer() {
+    if (!dancer) return;
+    dancer.classList.add('bounce');
+    setTimeout(() => dancer.classList.remove('bounce'), 400);
 }
 
 function collide(arena, player) {
     const [m, o] = [player.matrix, player.pos];
     for (let y = 0; y < m.length; ++y) {
         for (let x = 0; x < m[y].length; ++x) {
-            if (m[y][x] !== 0 &&
-                (arena[y + o.y] && arena[y + o.y][x + o.x]) !== 0) {
+            if (m[y][x] !== 0 && (arena[y + o.y] && arena[y + o.y][x + o.x]) !== 0) {
                 return true;
             }
         }
@@ -58,16 +66,11 @@ function drawMatrix(matrix, offset) {
     matrix.forEach((row, y) => {
         row.forEach((value, x) => {
             if (value !== 0) {
-                const gradient = context.createLinearGradient(
-                    x + offset.x, y + offset.y, 
-                    x + offset.x + 1, y + offset.y + 1
-                );
+                const gradient = context.createLinearGradient(x + offset.x, y + offset.y, x + offset.x + 1, y + offset.y + 1);
                 gradient.addColorStop(0, colors[value]);
                 gradient.addColorStop(1, 'white');
-
                 context.fillStyle = gradient;
                 context.fillRect(x + offset.x, y + offset.y, 1, 1);
-
                 context.strokeStyle = 'rgba(0,0,0,0.2)';
                 context.lineWidth = 0.05;
                 context.strokeRect(x + offset.x, y + offset.y, 1, 1);
@@ -79,7 +82,6 @@ function drawMatrix(matrix, offset) {
 function draw() {
     context.fillStyle = '#000';
     context.fillRect(0, 0, canvas.width, canvas.height);
-
     drawMatrix(arena, {x:0, y:0});
     drawMatrix(player.matrix, player.pos);
     updateParticles(context);
@@ -107,8 +109,9 @@ function playerDrop() {
             updateLeaderboard();
             updateScore();
             pauseMusic();
+            playGameOverSound();
             document.getElementById('startGame').disabled = false;
-
+            if (dancer) dancer.style.display = 'none';
             setTimeout(() => {
                 showGameOver();
                 showShareButton(finalScore);
@@ -137,8 +140,9 @@ function playerReset() {
         updateLeaderboard();
         updateScore();
         pauseMusic();
+        playGameOverSound();
         document.getElementById('startGame').disabled = false;
-
+        if (dancer) dancer.style.display = 'none';
         setTimeout(() => {
             showGameOver();
             showShareButton(finalScore);
@@ -187,11 +191,9 @@ function update(time = 0) {
     const deltaTime = time - lastTime;
     lastTime = time;
     dropCounter += deltaTime;
-
     if (dropCounter > dropInterval) {
         playerDrop();
     }
-
     draw();
     requestAnimationFrame(update);
 }
@@ -218,12 +220,7 @@ function updateLeaderboard() {
     const leaderboardTable = document.getElementById('scoreTable')?.querySelector('tbody');
     if (!leaderboardTable) return;
     leaderboardTable.innerHTML = '';
-
-    const sorted = leaderboard
-        .filter(entry => entry && entry.score !== undefined && entry.score !== null)
-        .sort((a, b) => b.score - a.score)
-        .slice(0, 5);
-
+    const sorted = leaderboard.filter(entry => entry && entry.score !== undefined && entry.score !== null).sort((a, b) => b.score - a.score).slice(0, 5);
     sorted.forEach((entry, index) => {
         const row = leaderboardTable.insertRow();
         row.insertCell(0).textContent = `#${index + 1}`;
@@ -236,9 +233,9 @@ function startGame() {
     playerName = prompt("Enter your Twitter handle (without @):", "player") || "YOU";
     canvas.style.display = 'block';
     document.getElementById('startGame').disabled = true;
+    if (dancer) dancer.style.display = 'block';
     const existingShareButton = document.getElementById('shareButton');
     if (existingShareButton) existingShareButton.remove();
-
     gameOver = false;
     arena.forEach(row => row.fill(0));
     player.score = 0;
@@ -253,73 +250,10 @@ const player = { pos: {x:0, y:0}, matrix: null, score: 0 };
 
 canvas.style.display = 'none';
 
-function showGameOver() {
-    const img = new Image();
-    img.crossOrigin = 'anonymous';
-    img.src = 'https://raw.githubusercontent.com/Aliencryptodev/tetris-succinct-zk/main/assets/gameover_resized.png';
-
-    img.onload = () => {
-        canvas.style.display = 'block';
-        context.setTransform(1, 0, 0, 1, 0, 0); // Elimina el escalado anterior
-        context.clearRect(0, 0, canvas.width, canvas.height);
-        context.drawImage(img, 0, 0, canvas.width, canvas.height); // Imagen a pantalla completa
-
-        setTimeout(() => {
-            showShareButton(finalScore);
-        }, 500);
-
-        // Vuelve a aplicar la escala para el resto del juego
-        context.scale(canvas.width / 12, canvas.height / 20);
-    };
-
-    img.onerror = () => {
-        console.error("Error al cargar la imagen de Game Over");
-    };
-}
-
-function showShareButton(score) {
-    const existingButton = document.getElementById('shareButton');
-    if (existingButton) {
-        existingButton.remove();
-    }
-
-    const shareButton = document.createElement('button');
-    shareButton.id = 'shareButton';
-    shareButton.innerText = 'Share on Twitter 🐦';
-    shareButton.style.backgroundColor = '#1DA1F2';
-    shareButton.style.color = 'white';
-    shareButton.style.border = 'none';
-    shareButton.style.padding = '10px 20px';
-    shareButton.style.fontSize = '1rem';
-    shareButton.style.borderRadius = '10px';
-    shareButton.style.cursor = 'pointer';
-    shareButton.style.marginTop = '20px';
-    shareButton.style.display = 'block';
-    shareButton.style.marginLeft = 'auto';
-    shareButton.style.marginRight = 'auto';
-    shareButton.style.zIndex = '9999';
-    shareButton.style.position = 'absolute';
-    shareButton.style.bottom = '40px';
-    shareButton.style.left = 'calc(50% - 80px)';
-    shareButton.style.transform = 'none';
-
-    shareButton.onclick = () => {
-        const tweet = `🎮 I scored ${score} points in Tetris Succinct zkProof! 🌸 Created by @doctordr1on. Try to beat me! https://tetris-succinct-zk.vercel.app`;
-        const twitterURL = `https://twitter.com/intent/tweet?text=${encodeURIComponent(tweet)}`;
-        window.open(twitterURL, '_blank');
-    };
-
-    document.querySelector('.browser-content').appendChild(shareButton);
-}
-
 document.addEventListener('keydown', event => {
-    if (event.key === 'ArrowLeft' || event.key === 'a') {
-        playerMove(-1);
-    } else if (event.key === 'ArrowRight' || event.key === 'd') {
-        playerMove(1);
-    } else if (event.key === 'ArrowDown' || event.key === 's') {
-        playerDrop();
-    } else if (event.key === 'ArrowUp' || event.key === 'w') {
-        playerRotate(1);
-    }
+    if (event.key === 'ArrowLeft' || event.key === 'a') playerMove(-1);
+    else if (event.key === 'ArrowRight' || event.key === 'd') playerMove(1);
+    else if (event.key === 'ArrowDown' || event.key === 's') playerDrop();
+    else if (event.key === 'ArrowUp' || event.key === 'w') playerRotate(1);
 });
+
