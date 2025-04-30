@@ -262,12 +262,13 @@ function showGameOver() {
         canvas.style.display = 'block';
         context.clearRect(0, 0, canvas.width, canvas.height);
 
-        const drawWidth = 240;
-        const drawHeight = 120;
-        const x = (canvas.width / (canvas.width / 12)) / 2 - (drawWidth / 2);
-        const y = (canvas.height / (canvas.height / 20)) / 2 - (drawHeight / 2);
+        // Coordinadas en "unidades escaladas" (como si fuera una grilla de 12x20)
+        const widthUnits = 6;   // ancho de 6 bloques
+        const heightUnits = 3;  // alto de 3 bloques
+        const x = (12 - widthUnits) / 2;
+        const y = (20 - heightUnits) / 2;
 
-        context.drawImage(img, x, y, drawWidth, drawHeight);
+        context.drawImage(img, x, y, widthUnits, heightUnits);
 
         setTimeout(() => {
             showShareButton(finalScore);
@@ -275,7 +276,7 @@ function showGameOver() {
     };
 
     img.onerror = () => {
-        console.error("No se pudo cargar la imagen de Game Over.");
+        console.error("Error al cargar la imagen de Game Over");
     };
 }
 
