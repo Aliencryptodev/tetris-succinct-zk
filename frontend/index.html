@@ -2,8 +2,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Tetris Succinct zkProof</title>
   <style>
     html, body {
@@ -12,40 +12,48 @@
       height: 100%;
       width: 100%;
       overflow: hidden;
-      display: flex;
-      justify-content: center;
-      align-items: center;
       background-color: black;
+      font-family: 'Poppins', sans-serif;
     }
 
     .arcade-wrapper {
-      position: relative;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) scale(1);
+      transform-origin: top left;
       width: 1920px;
       height: 1080px;
+    }
+
+    .arcade-background {
+      position: absolute;
+      width: 100%;
+      height: 100%;
       background: url('https://raw.githubusercontent.com/Aliencryptodev/tetris-succinct-zk/main/assets/background.png') no-repeat center center;
-      background-size: contain;
-      transform-origin: top left;
+      background-size: cover;
+      z-index: 1;
     }
 
     #tetris {
       position: absolute;
-      top: 388px;
+      top: 355px;
       left: 522px;
       width: 350px;
       height: 378px;
       background: black;
       display: none;
-      border-radius: 6px;
       z-index: 5;
+      border-radius: 6px;
     }
 
     #leaderboard-container {
       position: absolute;
-      top: 388px;
-      left: 1024px;
-      width: 355px;
-      height: 378px;
-      background: rgba(255, 255, 255, 0.95);
+      top: 387.5px;
+      left: 1023.9px;
+      width: 355.3px;
+      height: 378.3px;
+      background: rgba(255, 255, 255, 0.9);
       border-radius: 10px;
       padding: 20px;
       box-shadow: 0px 4px 8px rgba(0,0,0,0.15);
@@ -68,6 +76,12 @@
       padding: 10px;
       text-align: center;
       border-bottom: 1px solid #ddd;
+    }
+
+    #leaderboard-gif {
+      width: 100%;
+      margin-top: 10px;
+      border-radius: 8px;
     }
 
     #fixed-buttons {
@@ -93,11 +107,27 @@
       background-color: #781961;
     }
 
+    #share {
+      position: absolute;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #00BFFF;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 10px;
+      font-size: 16px;
+      z-index: 20;
+    }
+
     .mobile-controls {
       display: none;
-      margin-top: 20px;
-      flex-wrap: wrap;
-      justify-content: center;
+      position: absolute;
+      bottom: 100px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 15;
     }
 
     .mobile-controls button {
@@ -107,18 +137,6 @@
     }
 
     @media (max-width: 768px) {
-      #leaderboard-container {
-        width: 90%;
-        left: 5%;
-        right: 5%;
-        top: 65vh;
-      }
-      #fixed-buttons {
-        top: unset;
-        bottom: 10vh;
-        left: 50%;
-        transform: translateX(-50%);
-      }
       .mobile-controls {
         display: flex;
       }
@@ -126,7 +144,9 @@
   </style>
 </head>
 <body>
-  <div class="arcade-wrapper">
+  <div class="arcade-wrapper" id="arcade-wrapper">
+    <div class="arcade-background"></div>
+
     <canvas id="tetris" width="240" height="400"></canvas>
 
     <div id="leaderboard-container">
@@ -137,26 +157,40 @@
         </thead>
         <tbody></tbody>
       </table>
+      <img id="leaderboard-gif" src="https://media.giphy.com/media/xTiTnHXbRoaZ1B1Mo8/giphy.gif" alt="Animated GIF">
     </div>
 
     <div id="fixed-buttons">
       <button id="startGame">Start Game 🎮</button>
       <button id="submit">Submit Proof</button>
     </div>
-
-    <div class="mobile-controls">
-      <button id="left">⬅️</button>
-      <button id="rotate">🔄</button>
-      <button id="right">➡️</button>
-      <button id="down">⬇️</button>
-    </div>
   </div>
 
-  <script type="module">
-    document.addEventListener('DOMContentLoaded', () => {
-      const canvas = document.getElementById('tetris');
-      document.getElementById('startGame').addEventListener('click', () => {
-        canvas.style.display = 'block';
+  <button id="share">Share on Twitter 🧶</button>
+
+  <div class="mobile-controls">
+    <button id="left">⬅️</button>
+    <button id="rotate">🔄</button>
+    <button id="right">➡️</button>
+    <button id="down">⬇️</button>
+  </div>
+
+  <script>
+    function scaleArcade() {
+      const baseWidth = 1920;
+      const baseHeight = 1080;
+      const scale = Math.min(
+        window.innerWidth / baseWidth,
+        window.innerHeight / baseHeight
+      );
+      document.getElementById("arcade-wrapper").style.transform = `translate(-50%, -50%) scale(${scale})`;
+    }
+
+    window.addEventListener("resize", scaleArcade);
+    window.addEventListener("DOMContentLoaded", () => {
+      scaleArcade();
+      document.getElementById("startGame").addEventListener("click", () => {
+        document.getElementById("tetris").style.display = 'block';
         startGame();
       });
 
@@ -173,22 +207,15 @@
       document.getElementById('down')?.addEventListener('click', () => simulateKey('ArrowDown'));
     });
 
-    document.addEventListener('keydown', (event) => {
-      if (["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"].includes(event.key)) {
-        event.preventDefault();
+    window.addEventListener('wheel', function(e) {
+      if (e.ctrlKey) e.preventDefault();
+    }, { passive: false });
+
+    window.addEventListener('keydown', function(e) {
+      if ((e.ctrlKey || e.metaKey) && ['+', '-', '='].includes(e.key)) {
+        e.preventDefault();
       }
     });
-
-    const scaleToFit = () => {
-      const wrapper = document.querySelector('.arcade-wrapper');
-      const scaleX = window.innerWidth / 1920;
-      const scaleY = window.innerHeight / 1080;
-      const scale = Math.min(scaleX, scaleY);
-      wrapper.style.transform = `scale(${scale})`;
-    };
-
-    window.addEventListener('resize', scaleToFit);
-    window.addEventListener('load', scaleToFit);
   </script>
 
   <script src="app.js" type="module"></script>
@@ -198,6 +225,7 @@
   <script src="leaderboard.js"></script>
 </body>
 </html>
+
 
 
 
