@@ -136,15 +136,30 @@
     <div class="browser-content">
       <img class="machine-img" src="https://raw.githubusercontent.com/Aliencryptodev/tetris-succinct-zk/main/assets/final.png" alt="machine">
       <canvas id="gameCanvas" width="380" height="395"></canvas>
-      <div id="leaderboard">
-        <h2 style="text-align:center; color:#ff00aa;">🏆 Verified Players</h2>
-        
-       <div id="next-container" style="text-align:center; margin-top: 10px;">
-       <h3 style="color:#ff00aa;">🔮 Next</h3>
-       <canvas id="nextCanvas" width="100" height="100" style="background: rgba(0, 0, 0, 0.7); border-radius: 8px;"></canvas>
-       <br>
-       <img id="dancerGif" src="assets/dancer.gif" alt="Dancer" style="width: 80px; margin-top: 10px;">
-       </div>
+    <div id="leaderboard">
+  <h2 style="text-align:center; color:#ff00aa;">🏆 Verified Players</h2>
+
+  <div id="next-container" style="text-align:center; margin-top: 10px;">
+    <h3 style="color:#ff00aa;">🔮 Next</h3>
+    <canvas id="nextCanvas" width="100" height="100" style="background: rgba(0, 0, 0, 0.7); border-radius: 8px;"></canvas>
+    <br>
+    <img id="dancerGif" src="https://raw.githubusercontent.com/Aliencryptodev/tetris-succinct-zk/main/assets/dancer.gif" alt="Dancer" style="width: 80px; margin-top: 10px;">
+  </div>
+
+  <table id="scoreTable" style="width:100%; text-align:center;">
+    <thead>
+      <tr>
+        <th>Rank</th>
+        <th>Player</th>
+        <th>Score</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>1</td><td>player</td><td>0</td></tr>
+    </tbody>
+  </table>
+</div>
+
 
   <table id="scoreTable" style="width:100%; text-align:center;">
     <thead>
