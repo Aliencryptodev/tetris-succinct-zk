@@ -44,6 +44,11 @@ function createMatrix(w, h) {
     return matrix;
 }
 
+function randomPiece() {
+    const pieces = 'TJLOSZI';
+    return pieces[Math.floor(Math.random() * pieces.length)];
+}
+
 function createPiece(type) {
     if (type === 'T') return [[0,0,0],[1,1,1],[0,1,0]];
     if (type === 'O') return [[2,2],[2,2]];
@@ -124,11 +129,25 @@ function playerDrop() {
 }
 
 function playerReset() {
-    const pieces = 'TJLOSZI';
-    player.matrix = createPiece(pieces[Math.floor(Math.random() * pieces.length)]);
+    // Si no existe una siguiente pieza (inicio del juego), se genera una
+    if (!player.next) {
+        player.next = createPiece(randomPiece());
+    }
+
+    // Usamos la ficha siguiente como la actual
+    player.matrix = player.next;
+
+    // Generamos una nueva ficha para la próxima vez
+    player.next = createPiece(randomPiece());
+
+    // Dibujamos la siguiente ficha en el canvas pequeño
+    drawNextPiece();
+
+    // Centramos la ficha en la parte superior del tablero
     player.pos.y = 0;
     player.pos.x = (arena[0].length / 2 | 0) - (player.matrix[0].length / 2 | 0);
 
+    // Verificamos si al colocar esta ficha ya hay colisión => game over
     if (collide(arena, player)) {
         gameOver = true;
         finalScore = player.score;
@@ -145,6 +164,7 @@ function playerReset() {
         }, 100);
     }
 }
+
 
 function playerMove(dir) {
     player.pos.x += dir;
