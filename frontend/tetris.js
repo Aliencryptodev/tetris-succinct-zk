@@ -54,23 +54,21 @@ function createPiece(type) {
     if (type === 'Z') return [[7,7,0],[0,7,7],[0,0,0]];
 }
 
-function drawMatrix(matrix, offset) {
+function drawMatrix(matrix, offset, ctx = context) {
     matrix.forEach((row, y) => {
         row.forEach((value, x) => {
             if (value !== 0) {
-                const gradient = context.createLinearGradient(
+                const gradient = ctx.createLinearGradient(
                     x + offset.x, y + offset.y, 
                     x + offset.x + 1, y + offset.y + 1
                 );
                 gradient.addColorStop(0, colors[value]);
                 gradient.addColorStop(1, 'white');
-
-                context.fillStyle = gradient;
-                context.fillRect(x + offset.x, y + offset.y, 1, 1);
-
-                context.strokeStyle = 'rgba(0,0,0,0.2)';
-                context.lineWidth = 0.05;
-                context.strokeRect(x + offset.x, y + offset.y, 1, 1);
+                ctx.fillStyle = gradient;
+                ctx.fillRect(x + offset.x, y + offset.y, 1, 1);
+                ctx.strokeStyle = 'rgba(0,0,0,0.2)';
+                ctx.lineWidth = 0.05;
+                ctx.strokeRect(x + offset.x, y + offset.y, 1, 1);
             }
         });
     });
@@ -318,5 +316,34 @@ document.addEventListener('keydown', event => {
         playerRotate(1);
     }
 });
+
+const nextCanvas = document.getElementById('nextCanvas');
+const nextCtx = nextCanvas.getContext('2d');
+nextCtx.scale(nextCanvas.width / 4, nextCanvas.height / 4);
+
+function drawNextPiece() {
+    nextCtx.clearRect(0, 0, nextCanvas.width, nextCanvas.height);
+    drawMatrix(player.next, {x: 1, y: 1}, nextCtx);
+}
+
+function drawMatrix(matrix, offset, ctx = context) {
+    matrix.forEach((row, y) => {
+        row.forEach((value, x) => {
+            if (value !== 0) {
+                const gradient = ctx.createLinearGradient(
+                    x + offset.x, y + offset.y, 
+                    x + offset.x + 1, y + offset.y + 1
+                );
+                gradient.addColorStop(0, colors[value]);
+                gradient.addColorStop(1, 'white');
+                ctx.fillStyle = gradient;
+                ctx.fillRect(x + offset.x, y + offset.y, 1, 1);
+                ctx.strokeStyle = 'rgba(0,0,0,0.2)';
+                ctx.lineWidth = 0.05;
+                ctx.strokeRect(x + offset.x, y + offset.y, 1, 1);
+            }
+        });
+    });
+}
 
  window.startGame = startGame;
