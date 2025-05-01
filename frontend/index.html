@@ -77,19 +77,20 @@
       z-index: 2;
     }
 
-   #leaderboard {
+#leaderboard {
     position: absolute;
     top: 334.2px;
     left: 987.9px;
     width: 394.3px;
     height: 395.1px;
-    background: rgba(255, 255, 255, 0.95);
+    background: rgba(255, 255, 255, 0.2); /* más transparente */
+    backdrop-filter: blur(8px); /* difumina el fondo detrás */
     border-radius: 12px;
     padding: 20px;
     box-sizing: border-box;
     z-index: 2;
     overflow-y: auto;
-    color: #ff00aa; 
+    border: 2px solid #ff00aa; /* opcional: borde rosa */
 }
 
 #leaderboard th,
