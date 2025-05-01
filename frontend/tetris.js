@@ -115,9 +115,9 @@ function playerDrop() {
             return;
         }
         merge(arena, player);
+        arenaSweep();    
         playerReset();
-        arenaSweep();
-        updateScore();
+        updateScore();    
     }
     dropCounter = 0;
 }
