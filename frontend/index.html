@@ -83,15 +83,20 @@
     left: 987.9px;
     width: 394.3px;
     height: 395.1px;
-    background: rgba(255, 255, 255, 0.2); /* más transparente */
-    backdrop-filter: blur(8px); /* difumina el fondo detrás */
+    background: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(8px);
     border-radius: 12px;
     padding: 20px;
     box-sizing: border-box;
     z-index: 2;
     overflow-y: auto;
-    border: 2px solid #ff00aa; /* opcional: borde rosa */
+    border: 2px solid #ff00aa;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start; /* 👈 Esto alinea el contenido arriba */
 }
+
 
 #leaderboard th,
 #leaderboard td {
