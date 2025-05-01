@@ -30,3 +30,16 @@ function playMusic() {
 function pauseMusic() {
     music.pause();
 }
+// Reproducir sonido al romper una fila
+function playLineClearSound() {
+    const clearSound = new Audio('assets/rompefila.mp3');
+    clearSound.volume = 0.7;
+    clearSound.play().catch(err => console.warn('No se pudo reproducir rompefila:', err));
+}
+
+// Reproducir sonido en Game Over
+function playGameOverSound() {
+    const gameOverSound = new Audio('assets/Gameover.mp3');
+    gameOverSound.volume = 0.8;
+    gameOverSound.play().catch(err => console.warn('No se pudo reproducir gameover:', err));
+}
