@@ -98,9 +98,14 @@ function playerDrop() {
     player.pos.y++;
     if (collide(arena, player)) {
         player.pos.y--;
+
         if (player.pos.y <= 0) {
             gameOver = true;
             finalScore = player.score;
+
+            // ⚠️ Llamar primero al sonido antes de limpiar o pausar
+            playGameOverSound();
+
             arena.forEach(row => row.fill(0));
             saveScore();
             updateLeaderboard();
@@ -108,19 +113,19 @@ function playerDrop() {
             pauseMusic();
             document.getElementById('startGame').disabled = false;
 
-            playGameOverSound();  // ✅ Llamar inmediatamente al sonido
+            // Mostrar luego de un pequeño delay
             setTimeout(() => {
-            showGameOver();
-            showShareButton(finalScore);
-            }, 100);
+                showGameOver();
+                showShareButton(finalScore);
+            }, 300); // 🔁 300ms le da tiempo al sonido para empezar
 
-            return;  // ✅ Detener ejecución aquí si el jugador ha perdido
+            return; // Detener ejecución si Game Over
         }
 
         merge(arena, player);
-        arenaSweep();    
+        arenaSweep();
         playerReset();
-        updateScore();    
+        updateScore();
     }
     dropCounter = 0;
 }
