@@ -195,6 +195,7 @@
   </div>
 
   <!-- Scripts del juego -->
+   <!-- Scripts del juego -->
   <script src="tetris.js"></script>
   <script type="module" src="app.js"></script>
   <script src="leaderboard.js"></script>
@@ -204,17 +205,19 @@
   <script>
     document.getElementById('startGame').addEventListener('click', startGame);
   </script>
-  <script>
-  function scaleArcade() {
-    const browser = document.querySelector('.fake-browser');
-    const scaleX = window.innerWidth / 1920;
-    const scaleY = window.innerHeight / 1080;
-    const scale = Math.min(scaleX, scaleY);
-    browser.style.transform = `translate(-50%, -50%) scale(${scale})`;
-  }
 
-  window.addEventListener('resize', scaleArcade);
-  window.addEventListener('load', scaleArcade);
-</script>
+  <script>
+    function scaleArcade() {
+      const browser = document.querySelector('.fake-browser');
+      const scaleX = window.innerWidth / 1920;
+      const scaleY = window.innerHeight / 1080;
+      const scale = Math.min(scaleX, scaleY);
+      browser.style.transform = `translate(-50%, -50%) scale(${scale})`;
+    }
+
+    window.addEventListener('resize', scaleArcade);
+    window.addEventListener('load', scaleArcade);
+  </script>
 </body>
 </html>
+
