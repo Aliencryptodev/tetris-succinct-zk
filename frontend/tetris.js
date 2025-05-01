@@ -109,11 +109,14 @@ function playerDrop() {
             document.getElementById('startGame').disabled = false;
 
             setTimeout(() => {
+                playGameOverSound();  // ✅ Reproducir sonido game over
                 showGameOver();
                 showShareButton(finalScore);
             }, 100);
-            return;
+
+            return;  // ✅ Detener ejecución aquí si el jugador ha perdido
         }
+
         merge(arena, player);
         arenaSweep();    
         playerReset();
