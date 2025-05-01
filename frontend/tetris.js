@@ -275,12 +275,7 @@ function showShareButton(score) {
     const existingButton = document.getElementById('shareButton');
     if (existingButton) {
         existingButton.remove();
-    }
-
-function showShareButton(score) {
-    const existingButton = document.getElementById('shareButton');
-    if (existingButton) {
-        existingButton.remove();
+ 
     }
 
     const shareButton = document.createElement('button');
@@ -321,3 +316,4 @@ document.addEventListener('keydown', event => {
     }
 });
 
+ window.startGame = startGame;
