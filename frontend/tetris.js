@@ -108,10 +108,10 @@ function playerDrop() {
             pauseMusic();
             document.getElementById('startGame').disabled = false;
 
+            playGameOverSound();  // ✅ Llamar inmediatamente al sonido
             setTimeout(() => {
-                playGameOverSound();  // ✅ Reproducir sonido game over
-                showGameOver();
-                showShareButton(finalScore);
+            showGameOver();
+            showShareButton(finalScore);
             }, 100);
 
             return;  // ✅ Detener ejecución aquí si el jugador ha perdido
