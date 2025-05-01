@@ -32,14 +32,14 @@ function pauseMusic() {
 }
 // Reproducir sonido al romper una fila
 function playLineClearSound() {
-    const clearSound = new Audio('assets/rompefila.mp3');
+    const clearSound = new Audio('https://raw.githubusercontent.com/Aliencryptodev/tetris-succinct-zk/main/assets/rompefila.mp3');
     clearSound.volume = 0.7;
     clearSound.play().catch(err => console.warn('No se pudo reproducir rompefila:', err));
 }
 
 // Reproducir sonido en Game Over
 function playGameOverSound() {
-    const gameOverSound = new Audio('assets/Gameover.mp3');
+    const gameOverSound = new Audio('https://raw.githubusercontent.com/Aliencryptodev/tetris-succinct-zk/main/assets/Gameover.mp3');
     gameOverSound.volume = 0.8;
     gameOverSound.play().catch(err => console.warn('No se pudo reproducir gameover:', err));
 }
