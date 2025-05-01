@@ -79,7 +79,6 @@ function drawMatrix(matrix, offset) {
 function draw() {
     context.fillStyle = '#000';
     context.fillRect(0, 0, canvas.width, canvas.height);
-
     drawMatrix(arena, {x:0, y:0});
     drawMatrix(player.matrix, player.pos);
     updateParticles(context);
@@ -187,11 +186,9 @@ function update(time = 0) {
     const deltaTime = time - lastTime;
     lastTime = time;
     dropCounter += deltaTime;
-
     if (dropCounter > dropInterval) {
         playerDrop();
     }
-
     draw();
     requestAnimationFrame(update);
 }
@@ -218,12 +215,10 @@ function updateLeaderboard() {
     const leaderboardTable = document.getElementById('scoreTable')?.querySelector('tbody');
     if (!leaderboardTable) return;
     leaderboardTable.innerHTML = '';
-
     const sorted = leaderboard
         .filter(entry => entry && entry.score !== undefined && entry.score !== null)
         .sort((a, b) => b.score - a.score)
         .slice(0, 5);
-
     sorted.forEach((entry, index) => {
         const row = leaderboardTable.insertRow();
         row.insertCell(0).textContent = `#${index + 1}`;
@@ -253,6 +248,64 @@ const player = { pos: {x:0, y:0}, matrix: null, score: 0 };
 
 canvas.style.display = 'none';
 
+function showGameOver() {
+    const img = new Image();
+    img.crossOrigin = 'anonymous';
+    img.src = 'https://raw.githubusercontent.com/Aliencryptodev/tetris-succinct-zk/main/assets/gameover_resized.png';
+
+    img.onload = () => {
+        canvas.style.display = 'block';
+        context.setTransform(1, 0, 0, 1, 0, 0);
+        context.clearRect(0, 0, canvas.width, canvas.height);
+        context.drawImage(img, 0, 0, canvas.width, canvas.height);
+
+        setTimeout(() => {
+            showShareButton(finalScore);
+        }, 500);
+
+        context.scale(canvas.width / 12, canvas.height / 20);
+    };
+
+    img.onerror = () => {
+        console.error("Error al cargar la imagen de Game Over");
+    };
+}
+
+function showShareButton(score) {
+    const existingButton = document.getElementById('shareButton');
+    if (existingButton) {
+        existingButton.remove();
+    }
+
+    const shareButton = document.createElement('button');
+    shareButton.id = 'shareButton';
+    shareButton.innerText = 'Share on Twitter 🐦';
+    shareButton.style.backgroundColor = '#1DA1F2';
+    shareButton.style.color = 'white';
+    shareButton.style.border = 'none';
+    shareButton.style.padding = '10px 20px';
+    shareButton.style.fontSize = '1rem';
+    shareButton.style.borderRadius = '10px';
+    shareButton.style.cursor = 'pointer';
+    shareButton.style.marginTop = '20px';
+    shareButton.style.display = 'block';
+    shareButton.style.marginLeft = 'auto';
+    shareButton.style.marginRight = 'auto';
+    shareButton.style.zIndex = '9999';
+    shareButton.style.position = 'absolute';
+    shareButton.style.bottom = '40px';
+    shareButton.style.left = 'calc(50% - 80px)';
+    shareButton.style.transform = 'none';
+
+    shareButton.onclick = () => {
+        const tweet = `🎮 I scored ${score} points in Tetris Succinct zkProof! 🌸 Created by @doctordr1on. Try to beat me! https://tetris-succinct-zk.vercel.app`;
+        const twitterURL = `https://twitter.com/intent/tweet?text=${encodeURIComponent(tweet)}`;
+        window.open(twitterURL, '_blank');
+    };
+
+    document.querySelector('.browser-content').appendChild(shareButton);
+}
+
 document.addEventListener('keydown', event => {
     if (event.key === 'ArrowLeft' || event.key === 'a') {
         playerMove(-1);
@@ -264,3 +317,4 @@ document.addEventListener('keydown', event => {
         playerRotate(1);
     }
 });
+
