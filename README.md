@@ -8,6 +8,10 @@
 
 Bienvenido al primer Tetris Succinct zk-Verified del mundo.
 
-...
+🎮 Controls for Tetris Succinct zkProof:
 
+⬅️ ← or A → Move Left
+➡️ → or D → Move Right
+⬇️ ↓ or S → Move Down (Soft Drop)
+🔄 ↑ or W → Rotate Piece
 
