@@ -1,15 +1,14 @@
 
-const canvas = document.getElementById('gameCanvas');
-const context = canvas.getContext('2d');
 
-// Ajuste de escala dinámico
-context.scale(canvas.width / 12, canvas.height / 20);
+const canvas = document.getElementById('tetris');
+const context = canvas.getContext('2d');
+context.scale(20, 20);
 
 let gameOver = false;
 let finalScore = 0;
 let playerName = "YOU";
 
-const dancer = document.getElementById('dancer');
+const dancerGif = document.getElementById("dancerGif");
 
 function arenaSweep() {
     let rowCount = 1;
@@ -19,7 +18,7 @@ function arenaSweep() {
             arena.unshift(new Array(12).fill(0));
             player.score += 100 * rowCount;
             rowCount *= 2;
-            createParticles(canvas.width / 2 / (canvas.width / 12), canvas.height / 2 / (canvas.height / 20), '#FE11C5');
+            createParticles(canvas.width / 2 / 20, canvas.height / 2 / 20, '#FE11C5');
             playLineClearSound();
             animateDancer();
         }
@@ -27,16 +26,19 @@ function arenaSweep() {
 }
 
 function animateDancer() {
-    if (!dancer) return;
-    dancer.classList.add('bounce');
-    setTimeout(() => dancer.classList.remove('bounce'), 400);
+    if (dancerGif) {
+        dancerGif.style.animation = 'none';
+        dancerGif.offsetHeight; // trigger reflow
+        dancerGif.style.animation = 'pulse 0.5s ease';
+    }
 }
 
 function collide(arena, player) {
     const [m, o] = [player.matrix, player.pos];
     for (let y = 0; y < m.length; ++y) {
         for (let x = 0; x < m[y].length; ++x) {
-            if (m[y][x] !== 0 && (arena[y + o.y] && arena[y + o.y][x + o.x]) !== 0) {
+            if (m[y][x] !== 0 &&
+                (arena[y + o.y] && arena[y + o.y][x + o.x]) !== 0) {
                 return true;
             }
         }
@@ -66,7 +68,10 @@ function drawMatrix(matrix, offset) {
     matrix.forEach((row, y) => {
         row.forEach((value, x) => {
             if (value !== 0) {
-                const gradient = context.createLinearGradient(x + offset.x, y + offset.y, x + offset.x + 1, y + offset.y + 1);
+                const gradient = context.createLinearGradient(
+                    x + offset.x, y + offset.y,
+                    x + offset.x + 1, y + offset.y + 1
+                );
                 gradient.addColorStop(0, colors[value]);
                 gradient.addColorStop(1, 'white');
                 context.fillStyle = gradient;
@@ -109,9 +114,7 @@ function playerDrop() {
             updateLeaderboard();
             updateScore();
             pauseMusic();
-            playGameOverSound();
             document.getElementById('startGame').disabled = false;
-            if (dancer) dancer.style.display = 'none';
             setTimeout(() => {
                 showGameOver();
                 showShareButton(finalScore);
@@ -131,7 +134,6 @@ function playerReset() {
     player.matrix = createPiece(pieces[Math.floor(Math.random() * pieces.length)]);
     player.pos.y = 0;
     player.pos.x = (arena[0].length / 2 | 0) - (player.matrix[0].length / 2 | 0);
-
     if (collide(arena, player)) {
         gameOver = true;
         finalScore = player.score;
@@ -140,9 +142,7 @@ function playerReset() {
         updateLeaderboard();
         updateScore();
         pauseMusic();
-        playGameOverSound();
         document.getElementById('startGame').disabled = false;
-        if (dancer) dancer.style.display = 'none';
         setTimeout(() => {
             showGameOver();
             showShareButton(finalScore);
@@ -199,13 +199,9 @@ function update(time = 0) {
 }
 
 function updateScore() {
-    const tbody = document.getElementById('scoreTable')?.querySelector('tbody');
-    if (!tbody) return;
-    if (gameOver) {
-        tbody.innerHTML = `<tr><td>${playerName}</td><td>${finalScore}</td></tr>`;
-    } else {
-        tbody.innerHTML = `<tr><td>${playerName}</td><td>${player.score}</td></tr>`;
-    }
+    document.getElementById('scoreTable').querySelector('tbody').innerHTML =
+        gameOver ? `<tr><td>${playerName}</td><td>${finalScore}</td></tr>`
+        : `<tr><td>${playerName}</td><td>${player.score}</td></tr>`;
 }
 
 function saveScore() {
@@ -217,23 +213,66 @@ function saveScore() {
 
 function updateLeaderboard() {
     const leaderboard = JSON.parse(localStorage.getItem('topScores')) || [];
-    const leaderboardTable = document.getElementById('scoreTable')?.querySelector('tbody');
-    if (!leaderboardTable) return;
-    leaderboardTable.innerHTML = '';
-    const sorted = leaderboard.filter(entry => entry && entry.score !== undefined && entry.score !== null).sort((a, b) => b.score - a.score).slice(0, 5);
-    sorted.forEach((entry, index) => {
-        const row = leaderboardTable.insertRow();
+    const tbody = document.getElementById('scoreTable').querySelector('tbody');
+    tbody.innerHTML = '';
+    leaderboard.slice(0, 5).forEach((entry, index) => {
+        const row = tbody.insertRow();
         row.insertCell(0).textContent = `#${index + 1}`;
-        row.insertCell(1).textContent = entry.name || "Player";
+        row.insertCell(1).textContent = entry.name || 'Player';
         row.insertCell(2).textContent = entry.score;
     });
 }
+
+function showGameOver() {
+    const img = new Image();
+    img.src = 'https://raw.githubusercontent.com/Aliencryptodev/tetris-succinct-zk/main/assets/gameover_resized.png';
+    img.onload = () => {
+        canvas.style.display = 'block';
+        context.clearRect(0, 0, canvas.width, canvas.height);
+        context.drawImage(img, (canvas.width / 2) - 120, (canvas.height / 2) - 60, 240, 120);
+        setTimeout(() => showShareButton(finalScore), 500);
+    };
+}
+
+function showShareButton(score) {
+    const existingButton = document.getElementById('shareButton');
+    if (existingButton) existingButton.remove();
+    const shareButton = document.createElement('button');
+    shareButton.id = 'shareButton';
+    shareButton.innerText = 'Share on Twitter 🐦';
+    Object.assign(shareButton.style, {
+        backgroundColor: '#1DA1F2',
+        color: 'white',
+        border: 'none',
+        padding: '10px 20px',
+        fontSize: '1rem',
+        borderRadius: '10px',
+        cursor: 'pointer',
+        position: 'fixed',
+        bottom: '20px',
+        left: '50%',
+        transform: 'translateX(-50%)',
+        zIndex: '9999'
+    });
+    shareButton.onclick = () => {
+        const tweet = `🎮 I scored ${score} points in Tetris Succinct zkProof! 🌸 Created by @doctordr1on. Try to beat me! https://tetris-succinct-zk.vercel.app`;
+        window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(tweet)}`, '_blank');
+    };
+    document.body.appendChild(shareButton);
+}
+
+document.addEventListener('keydown', event => {
+    const { key } = event;
+    if (['ArrowLeft', 'a'].includes(key)) playerMove(-1);
+    else if (['ArrowRight', 'd'].includes(key)) playerMove(1);
+    else if (['ArrowDown', 's'].includes(key)) playerDrop();
+    else if (['ArrowUp', 'w'].includes(key)) playerRotate(1);
+});
 
 function startGame() {
     playerName = prompt("Enter your Twitter handle (without @):", "player") || "YOU";
     canvas.style.display = 'block';
     document.getElementById('startGame').disabled = true;
-    if (dancer) dancer.style.display = 'block';
     const existingShareButton = document.getElementById('shareButton');
     if (existingShareButton) existingShareButton.remove();
     gameOver = false;
@@ -244,16 +283,18 @@ function startGame() {
     update();
 }
 
-const colors = [null,'#FF00CC','#FFE600','#FF7B00','#0099FF','#00FF99','#FF3366','#9900FF'];
+const colors = [
+    null, '#FF00CC', '#FFE600', '#FF7B00', '#0099FF', '#00FF99', '#FF3366', '#9900FF'
+];
 const arena = createMatrix(12, 20);
 const player = { pos: {x:0, y:0}, matrix: null, score: 0 };
-
 canvas.style.display = 'none';
 
-document.addEventListener('keydown', event => {
-    if (event.key === 'ArrowLeft' || event.key === 'a') playerMove(-1);
-    else if (event.key === 'ArrowRight' || event.key === 'd') playerMove(1);
-    else if (event.key === 'ArrowDown' || event.key === 's') playerDrop();
-    else if (event.key === 'ArrowUp' || event.key === 'w') playerRotate(1);
-});
+
+
+
+
+
+
+
 

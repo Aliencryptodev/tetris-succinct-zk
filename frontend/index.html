@@ -5,207 +5,192 @@
   <meta charset="UTF-8">
   <title>Tetris Succinct zkProof</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
   <style>
+    * {
+      box-sizing: border-box;
+    }
+
     html, body {
       margin: 0;
       padding: 0;
-      background: url('https://raw.githubusercontent.com/Aliencryptodev/tetris-succinct-zk/main/assets/background.png') no-repeat center center fixed;
-      background-size: cover;
       width: 100vw;
       height: 100vh;
       overflow: hidden;
-      font-family: 'Segoe UI', sans-serif;
+      font-family: 'Poppins', sans-serif;
     }
 
-    .fake-browser {
-      position: absolute;
-      width: 1920px;
-      height: 1080px;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      background: transparent;
-      overflow: hidden;
-    }
-
-    .browser-bar {
-      height: 36px;
-      background: #2c2c2e;
-      display: flex;
-      align-items: center;
-      padding: 0 12px;
-      color: #fff;
-      font-size: 14px;
-      z-index: 3;
+    body {
+      background: url("https://raw.githubusercontent.com/Aliencryptodev/tetris-succinct-zk/main/assets/background.png") no-repeat center center fixed;
+      background-size: cover;
       position: relative;
     }
 
-    .browser-bar .dot {
-      width: 12px;
-      height: 12px;
-      border-radius: 50%;
-      margin-right: 8px;
-    }
-
-    .dot.red { background: #ff5f56; }
-    .dot.yellow { background: #ffbd2e; }
-    .dot.green { background: #27c93f; }
-
-    .browser-content {
-      position: relative;
-      width: 100%;
-      height: calc(100% - 36px);
-    }
-
-    .machine-img {
-      width: 100%;
-      height: 100%;
-      object-fit: contain;
+    #tetris {
       position: absolute;
-      top: 0;
-      left: 0;
-      z-index: 0;
+      top: 19.7%;
+      left: 12.9%;
+      width: 300px;
+      height: 600px;
+      background-color: black;
+      display: none;
+      z-index: 5;
+      border-radius: 10px;
     }
 
-    #gameCanvas {
+    #leaderboard-container {
       position: absolute;
-      top: 334.2px;
-      left: 512.7px;
-      width: 380px;
-      height: 395.1px;
-      background: black;
-      z-index: 2;
-    }
-
-    #leaderboard {
-      position: absolute;
-      top: 334.2px;
-      left: 987.9px;
-      width: 394.3px;
-      height: 395.1px;
-      background: rgba(255, 255, 255, 0.95);
-      border-radius: 12px;
-      padding: 20px;
-      box-sizing: border-box;
-      z-index: 2;
+      top: 20.5%;
+      right: 8.2%;
+      width: 300px;
+      height: 500px;
+      background: rgba(255, 255, 255, 0.92);
+      border-radius: 10px;
+      padding: 10px;
       overflow-y: auto;
+      z-index: 5;
     }
 
-    #leaderboard h2,
-    #leaderboard table th {
-      color: #ff00aa;
-      font-weight: bold;
-      font-size: 18px;
+    #leaderboard-container h2 {
+      text-align: center;
+      color: #FE11C5;
+      margin: 0 0 10px;
+    }
+
+    #scoreTable {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.9rem;
+    }
+
+    #scoreTable th, #scoreTable td {
+      text-align: center;
+      padding: 8px;
+      border-bottom: 1px solid #ccc;
     }
 
     #controls {
       position: absolute;
-      bottom: 70px;
-      left: 758.7px;
+      top: 75%;
+      left: 13.5%;
       display: flex;
-      gap: 16px;
-      z-index: 3;
+      gap: 10px;
+      z-index: 6;
     }
 
-    .btn {
-      background: #ff00aa;
-      color: white;
+    #controls button {
+      background-color: #FE11C5;
       border: none;
-      border-radius: 8px;
-      padding: 12px 20px;
-      font-size: 16px;
-      cursor: pointer;
-      transition: 0.3s;
-    }
-
-    .btn:hover {
-      background: #e60096;
-    }
-
-    #dancer {
-      position: absolute;
-      top: 290px;
-      left: 1445px;
-      width: 90px;
-      display: none;
-      z-index: 4;
-    }
-
-    @keyframes bounce {
-      0% { transform: translateY(0); }
-      30% { transform: translateY(-10px); }
-      60% { transform: translateY(0); }
-    }
-
-    #dancer.bounce {
-      animation: bounce 0.4s ease;
-    }
-
-    #shareButton {
-      position: absolute;
-      top: 750px;
-      left: 790px;
-      background-color: #1DA1F2;
       color: white;
-      border: none;
+      font-size: 1.2rem;
       padding: 10px 20px;
-      font-size: 1rem;
-      border-radius: 10px;
+      border-radius: 8px;
       cursor: pointer;
-      z-index: 5;
+    }
+
+    #dancerGif {
+      position: absolute;
+      top: 66.2%;
+      right: 11.8%;
+      width: 120px;
+      height: auto;
       display: none;
+      z-index: 6;
+    }
+
+    .mobile-controls {
+      position: absolute;
+      bottom: 5%;
+      left: 13%;
+      display: none;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 8px;
+      z-index: 6;
+    }
+
+    .mobile-controls button {
+      background-color: #FE11C5;
+      border: none;
+      color: white;
+      font-size: 1.5rem;
+      padding: 10px 20px;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    @media (max-width: 768px) {
+      .mobile-controls {
+        display: flex;
+      }
     }
   </style>
 </head>
+
 <body>
-  <div class="fake-browser">
-    <div class="browser-bar">
-      <span class="dot red"></span>
-      <span class="dot yellow"></span>
-      <span class="dot green"></span>
-      <span style="margin-left: 12px;">Tetris Succinct zkProof</span>
-    </div>
-    <div class="browser-content">
-      <img class="machine-img" src="https://raw.githubusercontent.com/Aliencryptodev/tetris-succinct-zk/main/assets/final.png" alt="machine">
 
-      <canvas id="gameCanvas" width="380" height="395"></canvas>
+<canvas id="tetris" width="240" height="400"></canvas>
 
-      <div id="leaderboard">
-        <h2 style="text-align:center;">🏆 Verified Players</h2>
-        <table id="scoreTable" style="width:100%; text-align:center;">
-          <thead>
-            <tr>
-              <th>Rank</th>
-              <th>Player</th>
-              <th>Score</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr><td>1</td><td>player</td><td>0</td></tr>
-          </tbody>
-        </table>
-      </div>
+<div id="leaderboard-container">
+  <h2>🏆 Verified Players</h2>
+  <table id="scoreTable">
+    <thead>
+      <tr><th>Rank</th><th>Player</th><th>Score</th></tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+</div>
 
-      <div id="controls">
-        <button id="startGame" class="btn">Start Game 🎮</button>
-        <button class="btn" id="submit">Submit Proof</button>
-      </div>
+<div id="controls">
+  <button id="submit">Submit Proof</button>
+  <button id="startGame">Start Game 🎮</button>
+</div>
 
-      <!-- 🎉 Gif del pato -->
-      <img id="dancer" src="https://raw.githubusercontent.com/Aliencryptodev/tetris-succinct-zk/main/assets/dancer.gif" alt="dancer gif">
-      
-      <!-- 🐦 Botón Twitter -->
-      <button id="shareButton">Share on Twitter 🐦</button>
-    </div>
-  </div>
+<img src="https://raw.githubusercontent.com/Aliencryptodev/tetris-succinct-zk/main/assets/freakybird.gif" id="dancerGif" alt="dancer">
 
-  <script src="tetris.js"></script>
-  <script type="module" src="app.js"></script>
-  <script src="leaderboard.js"></script>
-  <script src="particles.js"></script>
-  <script src="sound.js"></script>
-  <script>
-    document.getElementById('startGame').addEventListener('click', startGame);
-  </script>
+<div class="mobile-controls">
+  <button id="left">⬅️</button>
+  <button id="rotate">🔄</button>
+  <button id="right">➡️</button>
+  <button id="down">⬇️</button>
+</div>
+
+<script src="app.js" type="module"></script>
+<script src="tetris.js"></script>
+<script src="sound.js"></script>
+<script src="particles.js"></script>
+<script src="leaderboard.js"></script>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    document.getElementById('startGame').addEventListener('click', () => {
+      canvas.style.display = 'block';
+      document.getElementById('dancerGif').style.display = 'block';
+      startGame();
+    });
+
+    updateLeaderboard();
+
+    const simulateKey = (key) => {
+      const event = new KeyboardEvent('keydown', { key });
+      document.dispatchEvent(event);
+    };
+
+    document.getElementById('left').addEventListener('click', () => simulateKey('ArrowLeft'));
+    document.getElementById('right').addEventListener('click', () => simulateKey('ArrowRight'));
+    document.getElementById('rotate').addEventListener('click', () => simulateKey('ArrowUp'));
+    document.getElementById('down').addEventListener('click', () => simulateKey('ArrowDown'));
+  });
+
+  document.addEventListener('keydown', (event) => {
+    if (["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"].includes(event.key)) {
+      event.preventDefault();
+    }
+  });
+</script>
+
 </body>
 </html>
+
+
+
