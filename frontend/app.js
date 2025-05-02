@@ -7,35 +7,48 @@ const abi = [
     "function getGame(address player) view returns (tuple(address player, uint256 score, bytes proof))",
 ];
 
-// Configuración de tu wallet
-const privateKey = '6bbab89e4cec36a1745d3c46f797b4c8ab16e2c0606beb4fb9f6ae4d58fec384'; // Reemplaza con tu clave privada
-const provider = new ethers.JsonRpcProvider("https://eth-sepolia.g.alchemy.com/v2/Ax0xmhH5RUlAwzTv3wbpWFgf5T2v5Knz");
-const signer = new ethers.Wallet(privateKey, provider);
-const contract = new ethers.Contract(contractAddress, abi, signer);
+let contract, provider, signer;
 
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
     const submitButton = document.getElementById('submit');
+
+    if (window.ethereum) {
+        provider = new ethers.BrowserProvider(window.ethereum);
+        signer = await provider.getSigner();
+        contract = new ethers.Contract(contractAddress, abi, signer);
+    } else {
+        alert('Por favor instala MetaMask.');
+        return;
+    }
+
     if (submitButton) {
         submitButton.onclick = async () => {
-            const dummyProof = '0x00'; // Cambia por un proof real
-            const dummyPublicInputs = '0x00'; // Cambia por inputs reales
-            const dummyScore = 100; // Usa un score válido
-
             try {
-                console.log("Enviando transacción...");
-                const tx = await contract.submitGame(dummyProof, dummyPublicInputs, dummyScore, {
-                    gasLimit: 3000000 // Ajusta según sea necesario
+                // 1. Datos del juego (reemplaza por valores reales del juego)
+                const score = window.finalScore || 100;
+                const name = window.playerName || 'YOU';
+                const duration = window.gameDuration || 42;
+
+                // 2. Solicita al backend que genere la prueba con SP1
+                const response = await fetch('https://TU_VPS/generate-proof', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ name, score, duration })
+                });
+
+                const { proof, publicInputs } = await response.json();
+
+                // 3. Enviar transacción a la blockchain
+                const tx = await contract.submitGame(proof, publicInputs, score, {
+                    gasLimit: 3000000
                 });
                 await tx.wait();
-                alert('Proof Submitted and Verified! 🚀');
+
+                alert('✅ Proof submitted and verified!');
                 loadScores();
             } catch (err) {
-                console.error("Error al estimar el gas o enviar la transacción:", err);
-                if (err.code === 'CALL_EXCEPTION') {
-                    alert('Error: La transacción fue rechazada por el contrato.');
-                } else {
-                    alert('Error al enviar la transacción.');
-                }
+                console.error("Error:", err);
+                alert('❌ Error al enviar la transacción.');
             }
         };
     } else {
@@ -53,3 +66,4 @@ async function loadScores() {
         console.error("Error al cargar las puntuaciones:", err);
     }
 }
+
