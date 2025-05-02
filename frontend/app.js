@@ -1,7 +1,7 @@
 
 import { ethers } from 'https://cdn.jsdelivr.net/npm/ethers@6.7.0/+esm';
 
-const contractAddress = 'TU_CONTRATO_AQUI'; // Lo cambiamos luego
+const contractAddress = '0x0782D0d995C13D3000F797aA25b5E0399AE7f051'; // Lo cambiamos luego
 const abi = [ 
     "function submitGame(bytes proof, bytes publicInputs, uint256 score) external",
     "function getGame(address player) view returns (tuple(address player, uint256 score, bytes proof))",
