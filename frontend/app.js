@@ -24,46 +24,37 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (submitButton) {
         submitButton.onclick = async () => {
             try {
-                // 1. Datos del juego (reemplaza por valores reales del juego)
-                const score = window.finalScore || 100;
+                // ✅ Recolectar datos del juego
                 const name = window.playerName || 'YOU';
-                const duration = window.gameDuration || 42;
+                const score = window.finalScore || 0;
+                const duration = window.gameDuration || 0;
 
-                // 2. Solicita al backend que genere la prueba con SP1
-                const response = await fetch('https://TU_VPS/generate-proof', {
+                console.log('🎮 Enviando al backend SP1:', { name, score, duration });
+
+                // ✅ Llamada al backend SP1 en tu VPS
+                const response = await fetch('http://217.65.144.64:3000/generate-proof', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ name, score, duration })
                 });
 
-                const { proof, publicInputs } = await response.json();
+                if (!response.ok) {
+                    throw new Error('❌ Error del backend SP1');
+                }
 
-                // 3. Enviar transacción a la blockchain
+                const { proof, publicInputs } = await response.json();
+                console.log('✅ Prueba recibida del backend:', proof, publicInputs);
+
+                // ✅ Enviar transacción a la blockchain
                 const tx = await contract.submitGame(proof, publicInputs, score, {
                     gasLimit: 3000000
                 });
                 await tx.wait();
 
-                alert('✅ Proof submitted and verified!');
+                alert('✅ Proof enviada y verificada en la blockchain!');
                 loadScores();
-            } catch (err) {
-                console.error("Error:", err);
-                alert('❌ Error al enviar la transacción.');
-            }
-        };
-    } else {
-        console.error('El botón Submit no se encontró en el DOM.');
-    }
-});
 
-async function loadScores() {
-    try {
-        const player = await signer.getAddress();
-        const game = await contract.getGame(player);
-        const table = document.getElementById('scoreTable').querySelector('tbody');
-        table.innerHTML = `<tr><td>${game.player}</td><td>${game.score}</td></tr>`;
-    } catch (err) {
-        console.error("Error al cargar las puntuaciones:", err);
-    }
-}
+            } catch (err) {
+                console.error("❌ Error durante el envío:",
+
 
