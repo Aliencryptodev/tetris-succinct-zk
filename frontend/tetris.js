@@ -8,6 +8,7 @@ context.scale(canvas.width / 12, canvas.height / 20);
 let gameOver = false;
 let finalScore = 0;
 let playerName = "YOU";
+let gameStartTime = null; // ⏱️ Inicio del temporizador
 
 function arenaSweep() {
     let rowCount = 1;
@@ -104,6 +105,14 @@ function playerDrop() {
         if (player.pos.y <= 0) {
             gameOver = true;
             finalScore = player.score;
+           window.finalScore = player.score;
+
+          if (gameStartTime) {
+        const elapsed = Math.floor((Date.now() - gameStartTime) / 1000);
+       window.gameDuration = elapsed;
+      }  else {
+      window.gameDuration = 0;
+   }
             arena.forEach(row => row.fill(0));
             saveScore();
             updateLeaderboard();
@@ -151,6 +160,15 @@ function playerReset() {
     if (collide(arena, player)) {
         gameOver = true;
         finalScore = player.score;
+        window.finalScore = player.score;
+
+if (gameStartTime) {
+    const elapsed = Math.floor((Date.now() - gameStartTime) / 1000);
+    window.gameDuration = elapsed;
+} else {
+    window.gameDuration = 0;
+}
+
         arena.forEach(row => row.fill(0));
         saveScore();
         updateLeaderboard();
@@ -250,8 +268,13 @@ function updateLeaderboard() {
 
 function startGame() {
     playerName = prompt("Enter your Twitter handle (without @):", "player") || "YOU";
+
+    // Guardar el nombre globalmente para SP1
+    window.playerName = playerName;
+
     canvas.style.display = 'block';
     document.getElementById('startGame').disabled = true;
+
     const existingShareButton = document.getElementById('shareButton');
     if (existingShareButton) existingShareButton.remove();
 
@@ -261,6 +284,9 @@ function startGame() {
     playMusic();
     playerReset();
     update();
+
+    // ⏱️ Marcar el inicio del juego
+    gameStartTime = Date.now();
 }
 
 const colors = [null,'#FF00CC','#FFE600','#FF7B00','#0099FF','#00FF99','#FF3366','#9900FF'];
