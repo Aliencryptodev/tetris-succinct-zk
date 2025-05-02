@@ -8,8 +8,8 @@ const abi = [
 ];
 
 // Configuración de tu wallet
-const privateKey = 'TU_PRIVATE_KEY'; // Reemplaza con tu clave privada
-const provider = new ethers.JsonRpcProvider("https://mainnet.infura.io/v3/TU_INFURA_PROJECT_ID");
+const privateKey = '6bbab89e4cec36a1745d3c46f797b4c8ab16e2c0606beb4fb9f6ae4d58fec384'; // Reemplaza con tu clave privada
+const provider = new ethers.JsonRpcProvider("https://eth-sepolia.g.alchemy.com/v2/Ax0xmhH5RUlAwzTv3wbpWFgf5T2v5Knz");
 const signer = new ethers.Wallet(privateKey, provider);
 const contract = new ethers.Contract(contractAddress, abi, signer);
 
