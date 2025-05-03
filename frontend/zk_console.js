@@ -2,7 +2,7 @@
 // zk_console.js
 import init, { verify_proof } from './verifier.js';
 
-export async function launchZKConsole() {
+
   const logs = document.getElementById('zkLogs');
   const result = document.getElementById('zkResult');
   const shareBtn = document.getElementById('zkShareButton');
