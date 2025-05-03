@@ -1,4 +1,5 @@
-// zk_console.js
+
+
 import init, { verify_proof } from './verifier.js';
 
 export async function launchZKConsole() {
@@ -8,20 +9,21 @@ export async function launchZKConsole() {
   const consoleBox = document.getElementById('zkConsole');
 
   consoleBox.style.display = 'block';
-  logs.textContent = '[🧠] Initializing SP1 Verifier...';
+  logs.innerHTML = '<span style="color:#ff00aa">[🧠] Initializing SP1 Verifier...</span>';
 
   try {
     await init();
-    logs.textContent += '\n[📥] Loading proof_output.json...';
+    logs.innerHTML += '<br><span style="color:#ff00aa">[📥] Loading proof_output.json...</span>';
 
     const res = await fetch('proof_output.json');
     const data = await res.json();
 
-    logs.textContent += '\n[🔍] Verifying proof...';
+    logs.innerHTML += '<br><span style="color:#ff00aa">[🔍] Verifying proof...</span>';
+
     const isValid = verify_proof(data.proof, data.public_inputs, data.vkey_hash);
 
     if (isValid) {
-      logs.textContent += '\n✅ Proof verification SUCCESS';
+      logs.innerHTML += '<br><span style="color:#00ffcc">✅ Proof verification SUCCESS</span>';
       result.innerHTML = `
         <p><strong>VK:</strong> ${data.vkey_hash}</p>
         <p><strong>Inputs:</strong> ${data.public_inputs.substring(0, 64)}...</p>
@@ -33,13 +35,13 @@ export async function launchZKConsole() {
         window.open(url, '_blank');
       };
     } else {
-      logs.textContent += '\n❌ Proof INVALID';
+      logs.innerHTML += '<br><span style="color:red">❌ Proof INVALID</span>';
       result.innerHTML = `<span style="color:red">Proof is not valid.</span>`;
     }
+
   } catch (e) {
-    logs.textContent += `\n❌ Error: ${e.message}`;
+    logs.innerHTML += `<br><span style="color:red">❌ Error: ${e.message}</span>`;
     result.innerHTML = `<span style="color:red">Error loading or verifying proof.</span>`;
   }
 }
-
 
