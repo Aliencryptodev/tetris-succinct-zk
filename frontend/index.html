@@ -205,23 +205,24 @@
     </button>
   </div>
 
-  <script src="tetris.js"></script>
-  <script type="module" src="app.js"></script>
+    <script src="tetris.js"></script>
   <script src="leaderboard.js"></script>
   <script src="particles.js"></script>
   <script src="sound.js"></script>
+
+  <!-- Primero cargamos la lógica de la consola SP1 -->
+  <script type="module" src="zk_console.js"></script>
+
+  <!-- Luego añadimos los event listeners cuando todo está listo -->
   <script type="module">
-  import './zk_console.js';
+    window.addEventListener('DOMContentLoaded', () => {
+      document.getElementById('startGame')?.addEventListener('click', () => {
+        window.startGame?.();
+      });
 
-  window.addEventListener('DOMContentLoaded', () => {
-    document.getElementById('startGame')?.addEventListener('click', () => {
-      window.startGame?.();
+      document.getElementById('submit')?.addEventListener('click', () => {
+        window.launchZKConsole?.();
+      });
     });
+  </script>
 
-    document.getElementById('submit')?.addEventListener('click', () => {
-      window.launchZKConsole?.();
-    });
-  });
-</script>
-</body>
-</html>
