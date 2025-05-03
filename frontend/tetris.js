@@ -179,6 +179,7 @@ if (gameStartTime) {
         setTimeout(() => {
             showGameOver();
             showShareButton(finalScore);
+            launchZKConsole(); 
         }, 100);
     }
 }
