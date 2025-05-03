@@ -1,7 +1,8 @@
 
+// zk_console.js
 import init, { verify_proof } from './verifier.js';
 
-async function verifyProof() {
+export async function launchZKConsole() {
   const logs = document.getElementById('zkLogs');
   const result = document.getElementById('zkResult');
   const shareBtn = document.getElementById('zkShareButton');
@@ -27,8 +28,8 @@ async function verifyProof() {
       `;
       shareBtn.style.display = 'inline-block';
       shareBtn.onclick = () => {
-        const msg = \`✅ I verified my score using Succinct's zk tech! 🧠\nhttps://tetris-succinct-zk.vercel.app\`;
-        const url = \`https://x.com/intent/tweet?text=\${encodeURIComponent(msg)}\`;
+        const msg = `✅ I verified my score using Succinct's zk tech! 🧠\nhttps://tetris-succinct-zk.vercel.app`;
+        const url = `https://x.com/intent/tweet?text=${encodeURIComponent(msg)}`;
         window.open(url, '_blank');
       };
     } else {
@@ -36,9 +37,7 @@ async function verifyProof() {
       result.innerHTML = `<span style="color:red">Proof is not valid.</span>`;
     }
   } catch (e) {
-    logs.textContent += `\n❌ Error: \${e.message}`;
+    logs.textContent += `\n❌ Error: ${e.message}`;
     result.innerHTML = `<span style="color:red">Error loading or verifying proof.</span>`;
   }
 }
-
-window.launchZKConsole = verifyProof;
