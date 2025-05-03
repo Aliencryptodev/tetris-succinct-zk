@@ -211,17 +211,17 @@
   <script src="particles.js"></script>
   <script src="sound.js"></script>
   <script type="module">
-    import './zk_console.js';
+  import './zk_console.js';
 
-    window.addEventListener('DOMContentLoaded', () => {
-      document.getElementById('startGame')?.addEventListener('click', () => {
-        window.startGame?.();
-      });
-
-      document.getElementById('submit')?.addEventListener('click', () => {
-        window.launchZKConsole?.();
-      });
+  window.addEventListener('DOMContentLoaded', () => {
+    document.getElementById('startGame')?.addEventListener('click', () => {
+      window.startGame?.();
     });
-  </script>
+
+    document.getElementById('submit')?.addEventListener('click', () => {
+      window.launchZKConsole?.();
+    });
+  });
+</script>
 </body>
 </html>
