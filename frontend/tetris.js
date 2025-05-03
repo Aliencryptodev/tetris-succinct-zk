@@ -121,10 +121,13 @@ function playerDrop() {
             document.getElementById('startGame').disabled = false;
 
             setTimeout(() => {
-                playGameOverSound();  // ✅ Reproducir sonido game over
-                showGameOver();
-                showShareButton(finalScore);
-            }, 100);
+            showGameOver();
+            showShareButton(finalScore);
+            if (typeof window.launchZKConsole === 'function') {
+            window.launchZKConsole();
+            }
+        }, 100);
+
 
             return;  // ✅ Detener ejecución aquí si el jugador ha perdido
         }
