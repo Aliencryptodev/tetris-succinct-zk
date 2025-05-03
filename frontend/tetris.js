@@ -126,7 +126,7 @@ function playerDrop() {
             if (typeof window.launchZKConsole === 'function') {
             window.launchZKConsole();
             }
-        }, 100);
+           }, 100);
 
 
             return;  // ✅ Detener ejecución aquí si el jugador ha perdido
