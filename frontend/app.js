@@ -1,4 +1,5 @@
 
+
 import { ethers } from 'https://cdn.jsdelivr.net/npm/ethers@6.7.0/+esm';
 
 const contractAddress = '0x0782D0d995C13D3000F797aA25b5E0399AE7f051';
@@ -24,14 +25,12 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (submitButton) {
         submitButton.onclick = async () => {
             try {
-                // ✅ Recolectar datos del juego
                 const name = window.playerName || 'YOU';
                 const score = window.finalScore || 0;
                 const duration = window.gameDuration || 0;
 
                 console.log('🎮 Enviando al backend SP1:', { name, score, duration });
 
-                // ✅ Llamada al backend SP1 en tu VPS
                 const response = await fetch('http://217.65.144.64:3000/generate-proof', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -45,7 +44,6 @@ document.addEventListener('DOMContentLoaded', async () => {
                 const { proof, publicInputs } = await response.json();
                 console.log('✅ Prueba recibida del backend:', proof, publicInputs);
 
-                // ✅ Enviar transacción a la blockchain
                 const tx = await contract.submitGame(proof, publicInputs, score, {
                     gasLimit: 3000000
                 });
@@ -55,6 +53,9 @@ document.addEventListener('DOMContentLoaded', async () => {
                 loadScores();
 
             } catch (err) {
-                console.error("❌ Error durante el envío:",
-
-
+                console.error("❌ Error durante el envío:", err);
+                alert("Error enviando prueba: " + err.message);
+            }
+        };
+    }
+});
