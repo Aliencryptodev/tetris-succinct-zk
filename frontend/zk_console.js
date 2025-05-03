@@ -1,19 +1,19 @@
-
 // zk_console.js
 import init, { verify_proof } from './verifier.js';
 
-
+export async function launchZKConsole() {
   const logs = document.getElementById('zkLogs');
   const result = document.getElementById('zkResult');
   const shareBtn = document.getElementById('zkShareButton');
   const consoleBox = document.getElementById('zkConsole');
-  consoleBox.style.display = 'block';
 
+  consoleBox.style.display = 'block';
   logs.textContent = '[🧠] Initializing SP1 Verifier...';
-  await init();
 
   try {
+    await init();
     logs.textContent += '\n[📥] Loading proof_output.json...';
+
     const res = await fetch('proof_output.json');
     const data = await res.json();
 
@@ -42,5 +42,4 @@ import init, { verify_proof } from './verifier.js';
   }
 }
 
-window.launchZKConsole = verifyProof;
 
