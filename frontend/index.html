@@ -211,14 +211,17 @@
   <script src="particles.js"></script>
   <script src="sound.js"></script>
   <script type="module">
-  import { launchZKConsole } from './zk_console.js';
-  
-  <script>
-  document.getElementById('startGame').addEventListener('click', startGame);
-  document.getElementById('submit').addEventListener('click', () => {
-  launchZKConsole();
-  });
+    import './zk_console.js';
+
+    window.addEventListener('DOMContentLoaded', () => {
+      document.getElementById('startGame')?.addEventListener('click', () => {
+        window.startGame?.();
+      });
+
+      document.getElementById('submit')?.addEventListener('click', () => {
+        window.launchZKConsole?.();
+      });
+    });
   </script>
 </body>
 </html>
-
