@@ -210,7 +210,8 @@
   <script src="leaderboard.js"></script>
   <script src="particles.js"></script>
   <script src="sound.js"></script>
-  <script type="module" src="zk_console.js"></script> 
+  <script type="module">
+  import { launchZKConsole } from './zk_console.js';
   
   <script>
   document.getElementById('startGame').addEventListener('click', startGame);
