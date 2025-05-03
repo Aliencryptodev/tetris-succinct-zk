@@ -41,3 +41,6 @@ export async function launchZKConsole() {
     result.innerHTML = `<span style="color:red">Error loading or verifying proof.</span>`;
   }
 }
+
+window.launchZKConsole = verifyProof;
+
