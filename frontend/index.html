@@ -189,7 +189,22 @@
     </div>
   </div>
 
-  <!-- Scripts del juego -->
+     </div>
+  </div>
+
+  <!-- 🧠 Consola SP1 visual -->
+  <div id="zkConsole" style="display:none; background:black; color:#00FF66; font-family:monospace; padding:1rem; margin-top:1rem; border:2px solid lime; border-radius:10px; max-width:600px; margin:2rem auto 0 auto;">
+    <h3 style="color:lime; margin-top:0;">SP1 Zero Knowledge Proof Console</h3>
+    <pre id="zkLogs">[🧠] Starting verification...</pre>
+    <div id="zkResult" style="margin-top:1rem;"></div>
+    <button id="zkShareButton" style="display:none; background-color:#1DA1F2; color:white; border:none; padding:10px 20px; margin-top:1rem; border-radius:5px; cursor:pointer;">
+      Share Score on X
+    </button>
+    <button onclick="document.getElementById('zkConsole').style.display='none'" style="margin-left:1rem; padding:10px 20px; background:#222; color:#ccc; border:none; border-radius:5px; cursor:pointer;">
+      Back to Game
+    </button>
+  </div>
+
   <script src="tetris.js"></script>
   <script type="module" src="app.js"></script>
   <script src="leaderboard.js"></script>
