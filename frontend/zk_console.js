@@ -1,3 +1,4 @@
+
 import init, { verify_proof } from './verifier.js';
 
 export async function launchZKConsole() {
@@ -23,7 +24,7 @@ export async function launchZKConsole() {
     if (isValid) {
       logs.innerHTML += '<br><span style="color:#00ffcc">✅ Proof verification SUCCESS</span>';
 
-      // Decodificar los datos hex de public_inputs
+      // Decodificar public_inputs
       const hex = data.public_inputs.replace(/^0x/, '');
       const buf = new Uint8Array(hex.match(/.{1,2}/g).map(b => parseInt(b, 16)));
 
@@ -32,22 +33,22 @@ export async function launchZKConsole() {
       const durationBytes = buf.slice(40, 48);
 
       const decoder = new TextDecoder();
-      const nameFromPlayer = decoder.decode(nameBytes).replace(/\0/g, '') || 'Anonymous';
-      const score = scoreBytes.reduceRight((acc, b, i) => acc + (b << (8 * i)), 0);
-      const durationMs = durationBytes.reduceRight((acc, b, i) => acc + (b << (8 * i)), 0);
-      const durationSec = (durationMs / 1000).toFixed(2);
+      const playerName = decoder.decode(nameBytes).replace(/\0/g, '') || 'Anonymous';
+      const playerScore = scoreBytes.reduceRight((acc, b, i) => acc + (b << (8 * i)), 0);
+      const gameDurationMs = durationBytes.reduceRight((acc, b, i) => acc + (b << (8 * i)), 0);
+      const gameDurationSec = (gameDurationMs / 1000).toFixed(2);
 
       result.innerHTML = `
         <p><strong style="color:#ff00aa">VK:</strong> ${data.vkey_hash}</p>
-        <p><strong style="color:#ff00aa">Player:</strong> ${nameFromPlayer}</p>
-        <p><strong style="color:#ff00aa">Score:</strong> ${score}</p>
-        <p><strong style="color:#ff00aa">Duration:</strong> ${durationSec} sec</p>
+        <p><strong style="color:#ff00aa">Player:</strong> ${playerName}</p>
+        <p><strong style="color:#ff00aa">Score:</strong> ${playerScore}</p>
+        <p><strong style="color:#ff00aa">Duration:</strong> ${gameDurationSec} sec</p>
         <p><strong style="color:#999">Raw Inputs:</strong> ${data.public_inputs}</p>
       `;
 
       shareBtn.style.display = 'inline-block';
       shareBtn.onclick = () => {
-        const msg = `✅ I verified my score using Succinct's zk tech! 🧠\nhttps://tetris-succinct-zk.vercel.app`;
+        const msg = `✅ I verified my score as ${playerName} using Succinct's zk tech! 🧠\nhttps://tetris-succinct-zk.vercel.app`;
         const url = `https://x.com/intent/tweet?text=${encodeURIComponent(msg)}`;
         window.open(url, '_blank');
       };
@@ -61,6 +62,7 @@ export async function launchZKConsole() {
     result.innerHTML = `<span style="color:red">Error loading or verifying proof.</span>`;
   }
 }
+
 
 
 
