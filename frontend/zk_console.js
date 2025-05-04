@@ -1,4 +1,3 @@
-
 import init, { verify_proof } from './verifier.js';
 
 export async function launchZKConsole() {
@@ -24,7 +23,7 @@ export async function launchZKConsole() {
     if (isValid) {
       logs.innerHTML += '<br><span style="color:#00ffcc">✅ Proof verification SUCCESS</span>';
 
-      // Decodificar public_inputs (hex -> bytes)
+      // Decodificar los datos hex de public_inputs
       const hex = data.public_inputs.replace(/^0x/, '');
       const buf = new Uint8Array(hex.match(/.{1,2}/g).map(b => parseInt(b, 16)));
 
@@ -33,18 +32,14 @@ export async function launchZKConsole() {
       const durationBytes = buf.slice(40, 48);
 
       const decoder = new TextDecoder();
-      const nameFromProof = decoder.decode(nameBytes).replace(/\0/g, '') || 'Anonymous';
-
-      const score = scoreBytes.reduce((acc, b, i) => acc + (b << (8 * i)), 0);
-      const durationMs = durationBytes.reduce((acc, b, i) => acc + (b << (8 * i)), 0);
+      const nameFromPlayer = decoder.decode(nameBytes).replace(/\0/g, '') || 'Anonymous';
+      const score = scoreBytes.reduceRight((acc, b, i) => acc + (b << (8 * i)), 0);
+      const durationMs = durationBytes.reduceRight((acc, b, i) => acc + (b << (8 * i)), 0);
       const durationSec = (durationMs / 1000).toFixed(2);
-
-      const nameFromPlayer = window.playerName || 'Anonymous';
 
       result.innerHTML = `
         <p><strong style="color:#ff00aa">VK:</strong> ${data.vkey_hash}</p>
-        <p><strong style="color:#ff00aa">Name (typed):</strong> ${nameFromPlayer}</p>
-        <p><strong style="color:#ff00aa">Name (proof):</strong> ${nameFromProof}</p>
+        <p><strong style="color:#ff00aa">Player:</strong> ${nameFromPlayer}</p>
         <p><strong style="color:#ff00aa">Score:</strong> ${score}</p>
         <p><strong style="color:#ff00aa">Duration:</strong> ${durationSec} sec</p>
         <p><strong style="color:#999">Raw Inputs:</strong> ${data.public_inputs}</p>
