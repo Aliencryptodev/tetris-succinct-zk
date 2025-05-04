@@ -24,19 +24,15 @@ export async function launchZKConsole() {
     if (isValid) {
       logs.innerHTML += '<br><span style="color:#00ffcc">✅ Proof verification SUCCESS</span>';
 
-      // Decodificar public_inputs
       const hex = data.public_inputs.replace(/^0x/, '');
       const buf = new Uint8Array(hex.match(/.{1,2}/g).map(b => parseInt(b, 16)));
 
-      const nameBytes = buf.slice(0, 32);
-      const scoreBytes = buf.slice(32, 40);
       const durationBytes = buf.slice(40, 48);
-
-      const decoder = new TextDecoder();
-      const playerName = decoder.decode(nameBytes).replace(/\0/g, '') || 'Anonymous';
-      const playerScore = scoreBytes.reduceRight((acc, b, i) => acc + (b << (8 * i)), 0);
       const gameDurationMs = durationBytes.reduceRight((acc, b, i) => acc + (b << (8 * i)), 0);
-      const gameDurationSec = (gameDurationMs / 1000).toFixed(2);
+      const gameDurationSec = Math.round(gameDurationMs / 1000);
+
+      const playerName = window.playerName || 'Anonymous';
+      const playerScore = window.finalScore || 0;
 
       result.innerHTML = `
         <p><strong style="color:#ff00aa">VK:</strong> ${data.vkey_hash}</p>
@@ -62,7 +58,6 @@ export async function launchZKConsole() {
     result.innerHTML = `<span style="color:red">Error loading or verifying proof.</span>`;
   }
 }
-
 
 
 
