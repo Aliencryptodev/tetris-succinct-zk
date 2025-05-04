@@ -1,3 +1,4 @@
+
 import init, { verify_proof } from './verifier.js';
 
 export async function launchZKConsole() {
@@ -33,19 +34,20 @@ export async function launchZKConsole() {
 
       const decoder = new TextDecoder();
       const nameFromProof = decoder.decode(nameBytes).replace(/\0/g, '') || 'Anonymous';
-      const nameTyped = window.playerName || 'Anonymous';
 
-      const score = scoreBytes.reduceRight((acc, b, i) => acc + (b << (8 * i)), 0);
-      const durationMs = durationBytes.reduceRight((acc, b, i) => acc + (b << (8 * i)), 0);
+      const score = scoreBytes.reduce((acc, b, i) => acc + (b << (8 * i)), 0);
+      const durationMs = durationBytes.reduce((acc, b, i) => acc + (b << (8 * i)), 0);
       const durationSec = (durationMs / 1000).toFixed(2);
+
+      const nameFromPlayer = window.playerName || 'Anonymous';
 
       result.innerHTML = `
         <p><strong style="color:#ff00aa">VK:</strong> ${data.vkey_hash}</p>
-        <p><strong style="color:#999">Name (typed):</strong> ${nameTyped}</p>
-        <p><strong style="color:#00ffcc">Name (proof):</strong> ${nameFromProof}</p>
+        <p><strong style="color:#ff00aa">Name (typed):</strong> ${nameFromPlayer}</p>
+        <p><strong style="color:#ff00aa">Name (proof):</strong> ${nameFromProof}</p>
         <p><strong style="color:#ff00aa">Score:</strong> ${score}</p>
         <p><strong style="color:#ff00aa">Duration:</strong> ${durationSec} sec</p>
-        <p><strong style="color:#666">Raw Inputs:</strong> ${data.public_inputs}</p>
+        <p><strong style="color:#999">Raw Inputs:</strong> ${data.public_inputs}</p>
       `;
 
       shareBtn.style.display = 'inline-block';
