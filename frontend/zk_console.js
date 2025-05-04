@@ -24,11 +24,14 @@ export async function launchZKConsole() {
     if (isValid) {
       logs.innerHTML += '<br><span style="color:#00ffcc">✅ Proof verification SUCCESS</span>';
 
+      // Decodificar inputs
       const hex = data.public_inputs.replace(/^0x/, '');
       const buf = new Uint8Array(hex.match(/.{1,2}/g).map(b => parseInt(b, 16)));
 
       const durationBytes = buf.slice(40, 48);
-      const gameDurationMs = durationBytes.reduceRight((acc, b, i) => acc + (b << (8 * i)), 0);
+
+      // 👇 CORRECTO: orden natural little-endian
+      const gameDurationMs = durationBytes.reduce((acc, b, i) => acc + (b << (8 * i)), 0);
       const gameDurationSec = Math.round(gameDurationMs / 1000);
 
       const playerName = window.playerName || 'Anonymous';
