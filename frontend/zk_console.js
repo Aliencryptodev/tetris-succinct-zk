@@ -32,7 +32,7 @@ export async function launchZKConsole() {
 
       // 👇 CORRECTO: orden natural little-endian
       const gameDurationMs = durationBytes.reduce((acc, b, i) => acc + (b << (8 * i)), 0);
-      const gameDurationSec = Math.round(gameDurationMs / 1000);
+      const gameDurationSec = gameDurationMs;
 
       const playerName = window.playerName || 'Anonymous';
       const playerScore = window.finalScore || 0;
