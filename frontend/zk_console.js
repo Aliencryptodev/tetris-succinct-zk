@@ -1,4 +1,3 @@
-
 import init, { verify_proof } from './verifier.js';
 
 export async function launchZKConsole() {
@@ -63,4 +62,5 @@ export async function launchZKConsole() {
     result.innerHTML = `<span style="color:red">Error loading or verifying proof.</span>`;
   }
 }
+
 
