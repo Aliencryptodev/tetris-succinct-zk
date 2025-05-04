@@ -24,22 +24,26 @@ export async function launchZKConsole() {
     if (isValid) {
       logs.innerHTML += '<br><span style="color:#00ffcc">✅ Proof verification SUCCESS</span>';
 
-      // Decodificar public_inputs (hex -> bytes -> score, duración)
+      // Decodificar public_inputs (hex -> bytes)
       const hex = data.public_inputs.replace(/^0x/, '');
-      const buf = new Uint8Array(hex.match(/.{1,2}/g).map(byte => parseInt(byte, 16)));
+      const buf = new Uint8Array(hex.match(/.{1,2}/g).map(b => parseInt(b, 16)));
 
+      const nameBytes = buf.slice(0, 32);
       const scoreBytes = buf.slice(32, 40);
       const durationBytes = buf.slice(40, 48);
 
-      const playerName = window.playerName || 'Anonymous';
+      const decoder = new TextDecoder();
+      const playerName = decoder.decode(nameBytes).replace(/\0/g, '') || 'Anonymous';
+
       const playerScore = scoreBytes.reduceRight((acc, b, i) => acc + (b << (8 * i)), 0);
-      const gameDuration = durationBytes.reduceRight((acc, b, i) => acc + (b << (8 * i)), 0);
+      const gameDurationMs = durationBytes.reduceRight((acc, b, i) => acc + (b << (8 * i)), 0);
+      const gameDurationSec = (gameDurationMs / 1000).toFixed(2);
 
       result.innerHTML = `
         <p><strong style="color:#ff00aa">VK:</strong> ${data.vkey_hash}</p>
         <p><strong style="color:#ff00aa">Player:</strong> ${playerName}</p>
         <p><strong style="color:#ff00aa">Score:</strong> ${playerScore}</p>
-        <p><strong style="color:#ff00aa">Duration:</strong> ${gameDuration} sec</p>
+        <p><strong style="color:#ff00aa">Duration:</strong> ${gameDurationSec} sec</p>
         <p><strong style="color:#999">Raw Inputs:</strong> ${data.public_inputs}</p>
       `;
 
