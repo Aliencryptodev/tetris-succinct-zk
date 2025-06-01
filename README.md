@@ -1,6 +1,6 @@
 # Tetris Succinct zkProof 🎮🌸
 
-![Built with ❤️ using SP1]![Tetrisok](https://github.com/user-attachments/assets/54b2fc92-9ed2-4486-8fbd-da85f7c7a764)
+Built with ❤️ using SP1 ![Tetrisok](https://github.com/user-attachments/assets/54b2fc92-9ed2-4486-8fbd-da85f7c7a764)
 
 <p align="center">
   <img src="assets/logo_light.png" width="300" alt="Tetris Succinct zk Logo">
